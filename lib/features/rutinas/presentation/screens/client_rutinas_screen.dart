@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../data/models/plan_entrenamiento_model.dart';
 import '../providers/rutinas_provider.dart';
 import '../widgets/rutina_card_widget.dart';
@@ -34,7 +36,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       body: SafeArea(
         child: Column(
           children: [
@@ -45,26 +47,21 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFE2E8F0),
-                borderRadius: BorderRadius.circular(10),
+                color: AppColors.carbonSurfaceMuted,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
               ),
               child: TabBar(
                 controller: _tabController,
                 indicator: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
+                  color: AppColors.primaryCrimson,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
                 dividerColor: Colors.transparent,
-                labelColor: const Color(0xFF0077D4),
-                unselectedLabelColor: const Color(0xFF64748B),
+                labelColor: Colors.white,
+                unselectedLabelColor: AppColors.textSlateMuted,
                 labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
                 unselectedLabelStyle:
                     const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -108,8 +105,9 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: const Color(0xFF0077D4),
-              borderRadius: BorderRadius.circular(8),
+              color: AppColors.primaryCrimson,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant, width: 1.0),
             ),
             child: const Icon(
               Icons.view_timeline_outlined,
@@ -126,13 +124,13 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w900,
-                  color: Color(0xFF0F172A),
+                  color: AppColors.textWhite,
                   letterSpacing: 0.3,
                 ),
               ),
               Text(
                 'Entrenamiento personalizado DUBSS-GYM',
-                style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
               ),
             ],
           ),
@@ -146,13 +144,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
     final planesAsync = ref.watch(misPlanesUsuarioProvider);
 
     return RefreshIndicator(
-      color: const Color(0xFF0077D4),
+      color: AppColors.accentVibrant,
+      backgroundColor: AppColors.carbonSurface,
       onRefresh: () async {
         ref.invalidate(misPlanesUsuarioProvider);
       },
       child: planesAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+          child: CircularProgressIndicator(color: AppColors.accentVibrant),
         ),
         error: (err, _) => ListView(
           padding: const EdgeInsets.all(24),
@@ -161,12 +160,12 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
             Center(
               child: Column(
                 children: [
-                  const Icon(Icons.cloud_off, size: 48, color: Color(0xFF94A3B8)),
+                  const Icon(Icons.cloud_off, size: 48, color: AppColors.textSlateMuted),
                   const SizedBox(height: 12),
                   Text(
                     'Error al cargar tu plan: $err',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                    style: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
@@ -174,7 +173,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                     icon: const Icon(Icons.refresh, size: 16),
                     label: const Text('Reintentar'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0077D4),
+                      backgroundColor: AppColors.primaryCrimson,
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -190,12 +189,10 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
 
           final planSeleccionado = ref.watch(planSeleccionadoProvider);
 
-          // Si el usuario seleccionó un plan para inspeccionar, mostramos su desglose diario
           if (planSeleccionado != null) {
             return _buildActivePlanView(planSeleccionado, showBackButton: true);
           }
 
-          // Si no hay plan seleccionado, mostramos la lista completa de todas las tarjetas
           return _buildPlanesListView(planes);
         },
       ),
@@ -214,25 +211,23 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
               style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF64748B),
+                color: AppColors.textSlateMuted,
                 letterSpacing: 0.6,
               ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: const Color(0xFF0077D4).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.25),
-                ),
+                color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.accentVibrant, width: 0.8),
               ),
               child: Text(
                 '${planes.length} ${planes.length == 1 ? 'plan' : 'planes'}',
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0077D4),
+                  color: AppColors.accentVibrant,
                 ),
               ),
             ),
@@ -251,25 +246,18 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: isActive ? const Color(0xFF93C5FD) : const Color(0xFFE2E8F0),
-          width: isActive ? 1.5 : 1,
+          color: isActive ? AppColors.accentVibrant : AppColors.borderSubtle,
+          width: isActive ? 1.5 : 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(4),
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(4),
           onTap: () {
             ref.read(planSeleccionadoProvider.notifier).seleccionarPlan(plan);
           },
@@ -285,11 +273,11 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                       decoration: BoxDecoration(
                         color: isActive
-                            ? const Color(0xFF16A34A).withValues(alpha: 0.12)
-                            : const Color(0xFF64748B).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6),
+                            ? AppColors.successEmerald.withValues(alpha: 0.15)
+                            : AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: isActive ? const Color(0xFF16A34A) : const Color(0xFF94A3B8),
+                          color: isActive ? AppColors.successEmerald : AppColors.borderSubtle,
                           width: 0.8,
                         ),
                       ),
@@ -299,7 +287,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                           Icon(
                             isActive ? Icons.check_circle : Icons.history,
                             size: 11,
-                            color: isActive ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+                            color: isActive ? AppColors.successLight : AppColors.textSlateMuted,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -307,7 +295,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
-                              color: isActive ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+                              color: isActive ? AppColors.successLight : AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -317,18 +305,16 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0077D4).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: const Color(0xFF0077D4).withValues(alpha: 0.3),
-                          ),
+                          color: AppColors.solarAmber.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.solarGold.withValues(alpha: 0.4)),
                         ),
                         child: Text(
                           plan.objetivo!.toUpperCase(),
                           style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.solarGold,
                           ),
                         ),
                       ),
@@ -340,7 +326,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF0F172A),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 if (plan.observacion != null && plan.observacion!.trim().isNotEmpty) ...[
@@ -351,7 +337,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 12.5,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSlateLight,
                       height: 1.3,
                     ),
                   ),
@@ -365,15 +351,16 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF1F5F9),
-                          borderRadius: BorderRadius.circular(6),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                         ),
                         child: Text(
                           dia,
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF334155),
+                            color: AppColors.textSlateLight,
                           ),
                         ),
                       );
@@ -389,7 +376,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF94A3B8),
+                        color: AppColors.textSlateMuted,
                       ),
                     ),
                     const Row(
@@ -399,14 +386,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.accentVibrant,
                           ),
                         ),
                         SizedBox(width: 4),
                         Icon(
                           Icons.arrow_forward,
                           size: 14,
-                          color: Color(0xFF0077D4),
+                          color: AppColors.accentVibrant,
                         ),
                       ],
                     ),
@@ -430,13 +417,13 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: const Color(0xFFEFF6FF),
+              color: AppColors.carbonSurface,
               shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFFBFDBFE), width: 1.5),
+              border: Border.all(color: AppColors.borderSubtle, width: 1.5),
             ),
             child: const Icon(
               Icons.fitness_center,
-              color: Color(0xFF0077D4),
+              color: AppColors.accentVibrant,
               size: 36,
             ),
           ),
@@ -448,29 +435,25 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF0F172A),
+            color: AppColors.textWhite,
           ),
         ),
         const SizedBox(height: 8),
         const Text(
           'Tu instructor universitario asignará un plan adaptado a tu condición física, o puedes explorar el catálogo general.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 13, color: Color(0xFF64748B), height: 1.4),
+          style: TextStyle(fontSize: 13, color: AppColors.textSlateMuted, height: 1.4),
         ),
         const SizedBox(height: 24),
         Center(
-          child: ElevatedButton.icon(
+          child: CrimsonButton(
             onPressed: () {
               _tabController.animateTo(1);
             },
-            icon: const Icon(Icons.explore_outlined, size: 18),
-            label: const Text('Explorar Rutinas del Catálogo'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0077D4),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
+            icon: const Icon(Icons.explore_outlined, size: 18, color: Colors.white),
+            label: 'Explorar Rutinas del Catálogo',
+            style: CrimsonButtonStyle.gradient,
+            height: 44,
           ),
         ),
       ],
@@ -493,32 +476,25 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                 onTap: () {
                   ref.read(planSeleccionadoProvider.notifier).seleccionarPlan(null);
                 },
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFCBD5E1)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.arrow_back, size: 16, color: Color(0xFF0077D4)),
+                      Icon(Icons.arrow_back, size: 16, color: AppColors.accentVibrant),
                       SizedBox(width: 6),
                       Text(
                         'Volver a mis planes',
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF0077D4),
+                          color: AppColors.accentVibrant,
                         ),
                       ),
                     ],
@@ -533,16 +509,13 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0077D4), Color(0xFF005BA6)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant, width: 1.0),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.3),
-                  blurRadius: 8,
+                  color: AppColors.accentVibrant.withValues(alpha: 0.15),
+                  blurRadius: 12,
                   offset: const Offset(0, 3),
                 ),
               ],
@@ -556,8 +529,8 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(6),
+                        color: AppColors.primaryCrimson,
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
                         'PLAN ASIGNADO',
@@ -573,13 +546,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF10B981),
-                          borderRadius: BorderRadius.circular(6),
+                          color: AppColors.successEmerald.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.successEmerald, width: 0.8),
                         ),
                         child: Text(
                           plan.objetivo!.toUpperCase(),
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.successLight,
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
                           ),
@@ -587,35 +561,35 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   plan.nombre,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: AppColors.textWhite,
                   ),
                 ),
                 if (plan.observacion != null && plan.observacion!.trim().isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
                     plan.observacion!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: AppColors.textSlateLight,
                     ),
                   ),
                 ],
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    const Icon(Icons.date_range, color: Colors.white70, size: 14),
+                    const Icon(Icons.date_range, color: AppColors.solarGold, size: 14),
                     const SizedBox(width: 5),
                     Text(
                       '${plan.diasConfigurados.length} días de entrenamiento semanal',
                       style: const TextStyle(
                         fontSize: 11.5,
-                        color: Colors.white,
+                        color: AppColors.textSlateLight,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -656,7 +630,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                         style: const TextStyle(
                           fontSize: 14.5,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                         ),
                       ),
                     ),
@@ -665,7 +639,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0077D4),
+                        color: AppColors.accentVibrant,
                       ),
                     ),
                   ],
@@ -678,13 +652,13 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                     padding: const EdgeInsets.all(20),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFCBD5E1)),
+                      color: AppColors.carbonSurface,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: const Text(
                       'No hay ejercicios registrados para este día.',
-                      style: TextStyle(color: Color(0xFF64748B), fontSize: 13),
+                      style: TextStyle(color: AppColors.textSlateMuted, fontSize: 13),
                     ),
                   )
                 else
@@ -700,13 +674,13 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                   padding: const EdgeInsets.all(24),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
                   child: const Text(
                     'Selecciona un día arriba para ver tu rutina programada.',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                    style: TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
                   ),
                 ),
               ],
@@ -735,13 +709,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                 onChanged: (val) {
                   ref.read(rutinasSearchFilterProvider.notifier).setSearch(val);
                 },
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'Buscar rutinas por nombre o enfoque...',
-                  hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
-                  prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF64748B)),
+                  hintStyle: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
+                  prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textSlateMuted),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, size: 16),
+                          icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                           onPressed: () {
                             _searchController.clear();
                             ref
@@ -751,19 +726,19 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                         )
                       : null,
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.carbonSurfaceMuted,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFF0077D4), width: 1.5),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
                   ),
                 ),
               ),
@@ -791,13 +766,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
         // List of Routines
         Expanded(
           child: RefreshIndicator(
-            color: const Color(0xFF0077D4),
+            color: AppColors.accentVibrant,
+            backgroundColor: AppColors.carbonSurface,
             onRefresh: () async {
               ref.invalidate(rutinasCatalogoProvider);
             },
             child: catalogoFiltrado.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+                child: CircularProgressIndicator(color: AppColors.accentVibrant),
               ),
               error: (err, _) => ListView(
                 padding: const EdgeInsets.all(24),
@@ -806,12 +782,12 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                   Center(
                     child: Column(
                       children: [
-                        const Icon(Icons.error_outline, size: 48, color: Color(0xFF94A3B8)),
+                        const Icon(Icons.error_outline, size: 48, color: AppColors.accentVibrant),
                         const SizedBox(height: 12),
                         Text(
                           'Error al cargar catálogo: $err',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                          style: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
@@ -819,7 +795,7 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                           icon: const Icon(Icons.refresh, size: 16),
                           label: const Text('Reintentar'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0077D4),
+                            backgroundColor: AppColors.primaryCrimson,
                             foregroundColor: Colors.white,
                           ),
                         ),
@@ -837,14 +813,14 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
                       Center(
                         child: Column(
                           children: [
-                            Icon(Icons.search_off, size: 48, color: Color(0xFF94A3B8)),
+                            Icon(Icons.search_off, size: 48, color: AppColors.textSlateMuted),
                             SizedBox(height: 12),
                             Text(
                               'No se encontraron rutinas con estos filtros',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF475569),
+                                color: AppColors.textSlateLight,
                               ),
                             ),
                           ],
@@ -880,17 +856,18 @@ class _ClientRutinasScreenState extends ConsumerState<ClientRutinasScreen>
           ref.read(rutinasNivelFilterProvider.notifier).setFilter(valor);
         }
       },
-      selectedColor: const Color(0xFF0077D4),
+      selectedColor: AppColors.primaryCrimson,
       labelStyle: TextStyle(
         fontSize: 11.5,
         fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-        color: isSelected ? Colors.white : const Color(0xFF334155),
+        color: isSelected ? Colors.white : AppColors.textSlateLight,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.carbonSurface,
       side: BorderSide(
-        color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+        color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
+        width: 1.0,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       visualDensity: VisualDensity.compact,
       showCheckmark: false,
     );

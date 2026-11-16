@@ -46,8 +46,9 @@ class _PlanesTarifasAdminScreenState
 
           return Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+              border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1.0)),
             ),
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
@@ -61,10 +62,10 @@ class _PlanesTarifasAdminScreenState
               children: [
                 Center(
                   child: Container(
-                    width: 40,
+                    width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: AppColors.borderSubtle,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -75,35 +76,30 @@ class _PlanesTarifasAdminScreenState
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF003B70),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(height: 14),
                 TextField(
                   controller: nombreCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre del Plan *',
-                    border: OutlineInputBorder(),
-                  ),
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                  decoration: _inputDeco('Nombre del Plan *'),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: duracionCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Duración (días) *',
-                    border: OutlineInputBorder(),
-                  ),
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                  decoration: _inputDeco('Duración (días) *'),
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<int>(
                   initialValue: selectedTarifaId,
+                  dropdownColor: AppColors.carbonSurface,
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                   isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Tarifa / Precio Asociado',
-                    border: OutlineInputBorder(),
-                  ),
-                  hint: const Text('Seleccionar tarifa...'),
+                  decoration: _inputDeco('Tarifa / Precio Asociado'),
+                  hint: const Text('Seleccionar tarifa...', style: TextStyle(color: AppColors.textSlateMuted)),
                   items: tarifas
                       .map((t) => DropdownMenuItem(
                             value: t.id,
@@ -115,10 +111,13 @@ class _PlanesTarifasAdminScreenState
                 ),
                 const SizedBox(height: 10),
                 SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
                   title: const Text('Plan Activo para Socios',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite)),
                   value: estado,
-                  activeTrackColor: const Color(0xFF16A34A),
+                  activeTrackColor: AppColors.successEmerald,
+                  inactiveTrackColor: AppColors.carbonSurfaceMuted,
+                  activeColor: Colors.white,
                   onChanged: (val) => setModalState(() => estado = val),
                 ),
                 const SizedBox(height: 16),
@@ -142,11 +141,19 @@ class _PlanesTarifasAdminScreenState
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF003B70),
+                    backgroundColor: AppColors.primaryCrimson,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      side: const BorderSide(color: AppColors.accentVibrant),
+                    ),
+                    elevation: 0,
                   ),
-                  child: Text(plan != null ? 'Actualizar' : 'Crear Plan'),
+                  child: Text(
+                    plan != null ? 'Actualizar Plan' : 'Crear Plan',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
               ],
             ),
@@ -169,8 +176,9 @@ class _PlanesTarifasAdminScreenState
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+            border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1.0)),
           ),
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
@@ -184,10 +192,10 @@ class _PlanesTarifasAdminScreenState
             children: [
               Center(
                 child: Container(
-                  width: 40,
+                  width: 36,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColors.borderSubtle,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -198,32 +206,31 @@ class _PlanesTarifasAdminScreenState
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF003B70),
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 14),
               TextField(
                 controller: nombreCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre de Tarifa *',
-                  border: OutlineInputBorder(),
-                ),
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                decoration: _inputDeco('Nombre de Tarifa *'),
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: precioCtrl,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Precio (Bs.) *',
-                  border: OutlineInputBorder(),
-                ),
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                decoration: _inputDeco('Precio (Bs.) *'),
               ),
               const SizedBox(height: 10),
               SwitchListTile(
+                contentPadding: EdgeInsets.zero,
                 title: const Text('Tarifa Habilitada',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite)),
                 value: estado,
-                activeTrackColor: const Color(0xFF16A34A),
+                activeTrackColor: AppColors.successEmerald,
+                inactiveTrackColor: AppColors.carbonSurfaceMuted,
+                activeColor: Colors.white,
                 onChanged: (val) => setModalState(() => estado = val),
               ),
               const SizedBox(height: 16),
@@ -246,11 +253,19 @@ class _PlanesTarifasAdminScreenState
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF003B70),
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: const BorderSide(color: AppColors.accentVibrant),
+                  ),
+                  elevation: 0,
                 ),
-                child: Text(tarifa != null ? 'Actualizar' : 'Crear Tarifa'),
+                child: Text(
+                  tarifa != null ? 'Actualizar Tarifa' : 'Crear Tarifa',
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
               ),
             ],
           ),
@@ -264,21 +279,25 @@ class _PlanesTarifasAdminScreenState
     final state = ref.watch(planesTarifasNotifierProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Planes & Tarifas DUBSS',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             onPressed: () => ref
                 .read(planesTarifasNotifierProvider.notifier)
                 .cargarTodo(),
@@ -286,10 +305,11 @@ class _PlanesTarifasAdminScreenState
         ],
         bottom: TabBar(
           controller: _tabCtrl,
-          indicatorColor: const Color(0xFFD97706),
+          indicatorColor: AppColors.primaryCrimson,
           indicatorWeight: 3,
           labelColor: Colors.white,
-          unselectedLabelColor: const Color(0xFF94A3B8),
+          unselectedLabelColor: AppColors.textSlateMuted,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
           tabs: [
             Tab(text: 'Planes (${state.planes.length})'),
             Tab(text: 'Tarifas (${state.tarifas.length})'),
@@ -304,17 +324,21 @@ class _PlanesTarifasAdminScreenState
             _abrirModalTarifa();
           }
         },
-        backgroundColor: const Color(0xFF003B70),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
         icon: const Icon(Icons.add, size: 20),
         label: Text(
           _tabCtrl.index == 0 ? 'Nuevo Plan' : 'Nueva Tarifa',
-          style: const TextStyle(fontWeight: FontWeight.w800),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
         ),
       ),
       body: state.isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.navyBlue),
+              child: CircularProgressIndicator(color: AppColors.accentVibrant),
             )
           : TabBarView(
               controller: _tabCtrl,
@@ -328,7 +352,9 @@ class _PlanesTarifasAdminScreenState
 
   Widget _buildPlanesList(List<PlanItem> planes) {
     if (planes.isEmpty) {
-      return const Center(child: Text('No hay planes registrados'));
+      return const Center(
+        child: Text('No hay planes registrados', style: TextStyle(color: AppColors.textSlateMuted)),
+      );
     }
 
     return ListView.separated(
@@ -340,20 +366,21 @@ class _PlanesTarifasAdminScreenState
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFEF3C7),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.4)),
                 ),
                 child: const Icon(Icons.card_membership_rounded,
-                    color: Color(0xFFD97706), size: 22),
+                    color: AppColors.solarGold, size: 22),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -365,7 +392,7 @@ class _PlanesTarifasAdminScreenState
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -373,7 +400,7 @@ class _PlanesTarifasAdminScreenState
                       'Duración: ${p.duracionDias} días • ${p.precioTarifa != null ? 'Bs. ${p.precioTarifa}' : 'Sin arancel'}',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSlateLight,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -381,7 +408,7 @@ class _PlanesTarifasAdminScreenState
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF003B70)),
+                icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.solarGold),
                 onPressed: () => _abrirModalPlan(p),
               ),
             ],
@@ -393,7 +420,9 @@ class _PlanesTarifasAdminScreenState
 
   Widget _buildTarifasList(List<TarifaItem> tarifas) {
     if (tarifas.isEmpty) {
-      return const Center(child: Text('No hay tarifas registradas'));
+      return const Center(
+        child: Text('No hay tarifas registradas', style: TextStyle(color: AppColors.textSlateMuted)),
+      );
     }
 
     return ListView.separated(
@@ -405,20 +434,21 @@ class _PlanesTarifasAdminScreenState
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDCFCE7),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.successEmerald.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.successEmerald.withValues(alpha: 0.4)),
                 ),
                 child: const Icon(Icons.monetization_on_outlined,
-                    color: Color(0xFF16A34A), size: 22),
+                    color: AppColors.successEmerald, size: 22),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -430,7 +460,7 @@ class _PlanesTarifasAdminScreenState
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -439,20 +469,42 @@ class _PlanesTarifasAdminScreenState
                       style: const TextStyle(
                         fontSize: 14.5,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF16A34A),
+                        color: AppColors.successEmerald,
                       ),
                     ),
                   ],
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF003B70)),
+                icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.solarGold),
                 onPressed: () => _abrirModalTarifa(t),
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  InputDecoration _inputDeco(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
+      ),
     );
   }
 }

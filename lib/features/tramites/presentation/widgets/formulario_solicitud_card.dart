@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/formulario_solicitud_model.dart';
 import '../screens/visor_pdf_screen.dart';
 import 'documentos_solicitud_modal.dart';
@@ -22,17 +23,17 @@ class FormularioSolicitudCard extends StatelessWidget {
     final Color statusBorder;
 
     if (isAprobado) {
-      statusColor = const Color(0xFF10B981);
-      statusBg = const Color(0xFFECFDF5);
-      statusBorder = const Color(0xFFA7F3D0);
+      statusColor = AppColors.successLight;
+      statusBg = AppColors.successEmerald.withValues(alpha: 0.15);
+      statusBorder = AppColors.successEmerald;
     } else if (isPendiente) {
-      statusColor = const Color(0xFFD97706);
-      statusBg = const Color(0xFFFFFBEB);
-      statusBorder = const Color(0xFFFDE68A);
+      statusColor = AppColors.solarGold;
+      statusBg = AppColors.solarAmber.withValues(alpha: 0.15);
+      statusBorder = AppColors.solarGold;
     } else {
-      statusColor = const Color(0xFFDC2626);
-      statusBg = const Color(0xFFFEF2F2);
-      statusBorder = const Color(0xFFFECACA);
+      statusColor = AppColors.accentVibrant;
+      statusBg = AppColors.accentVibrant.withValues(alpha: 0.15);
+      statusBorder = AppColors.accentVibrant;
     }
 
     final fechaStr = formulario.fechaRegistro != null
@@ -42,25 +43,18 @@ class FormularioSolicitudCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              height: 3,
-              color: isAprobado ? const Color(0xFF10B981) : const Color(0xFF0077D4),
+              height: 3.0,
+              color: isAprobado ? AppColors.successEmerald : AppColors.primaryCrimson,
             ),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -76,7 +70,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(Icons.assignment_outlined,
-                                size: 16, color: Color(0xFF0077D4)),
+                                size: 16, color: AppColors.solarGold),
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
@@ -86,7 +80,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.w800,
-                                  color: Color(0xFF0077D4),
+                                  color: AppColors.solarGold,
                                 ),
                               ),
                             ),
@@ -99,7 +93,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: statusBg,
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: statusBorder),
+                          border: Border.all(color: statusBorder, width: 0.8),
                         ),
                         child: Text(
                           formulario.estadoLabel,
@@ -120,7 +114,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                     ),
                   ),
 
@@ -129,14 +123,14 @@ class FormularioSolicitudCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.schedule, size: 14, color: Color(0xFF64748B)),
+                        const Icon(Icons.schedule, size: 14, color: AppColors.textSlateMuted),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             formulario.horarioTexto!,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF475569),
+                              color: AppColors.textSlateLight,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -150,14 +144,14 @@ class FormularioSolicitudCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.credit_card, size: 14, color: Color(0xFF059669)),
+                        const Icon(Icons.credit_card, size: 14, color: AppColors.successLight),
                         const SizedBox(width: 4),
                         Text(
                           formulario.planNombre!,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF059669),
+                            color: AppColors.successLight,
                           ),
                         ),
                         if (formulario.tarifaPrecio != null) ...[
@@ -167,7 +161,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -180,13 +174,13 @@ class FormularioSolicitudCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.person_outline, size: 14, color: Color(0xFF64748B)),
+                        const Icon(Icons.person_outline, size: 14, color: AppColors.textSlateMuted),
                         const SizedBox(width: 4),
                         Text(
                           formulario.usuarioNombre!,
                           style: const TextStyle(
                             fontSize: 11.5,
-                            color: Color(0xFF334155),
+                            color: AppColors.textSlateLight,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -195,7 +189,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                   ],
 
                   const SizedBox(height: 12),
-                  const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                  const Divider(height: 1, color: AppColors.borderSubtle),
                   const SizedBox(height: 10),
 
                   // Acciones y Fecha
@@ -206,13 +200,13 @@ class FormularioSolicitudCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.calendar_today_outlined,
-                              size: 13, color: Color(0xFF94A3B8)),
+                              size: 13, color: AppColors.textSlateMuted),
                           const SizedBox(width: 4),
                           Text(
                             fechaStr,
                             style: const TextStyle(
                               fontSize: 11,
-                              color: Color(0xFF94A3B8),
+                              color: AppColors.textSlateMuted,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -220,26 +214,26 @@ class FormularioSolicitudCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () => DocumentosSolicitudModal.show(context, formulario),
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(4),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFEFF6FF),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(color: const Color(0xFFBAE6FD)),
+                                  color: AppColors.carbonSurfaceMuted,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.borderSubtle),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const Icon(Icons.folder_shared_outlined,
-                                        size: 12, color: Color(0xFF0284C7)),
+                                        size: 12, color: AppColors.solarGold),
                                     const SizedBox(width: 4),
                                     Text(
                                       'Docs (${formulario.documentosCount})',
                                       style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w700,
-                                        color: Color(0xFF0284C7),
+                                        color: AppColors.solarGold,
                                       ),
                                     ),
                                   ],
@@ -251,7 +245,7 @@ class FormularioSolicitudCard extends StatelessWidget {
                       ),
 
                       // Botón Ver PDF DUBSS-FR-03
-                      FilledButton.icon(
+                      OutlinedButton.icon(
                         onPressed: () {
                           VisorPdfScreen.open(
                             context,
@@ -260,14 +254,13 @@ class FormularioSolicitudCard extends StatelessWidget {
                                 PdfFormularioDubssBuilder.buildPdf(formulario),
                           );
                         },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFFFEF3C7),
-                          foregroundColor: const Color(0xFFD97706),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.solarGold,
+                          side: const BorderSide(color: AppColors.borderSubtle),
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            side: const BorderSide(color: Color(0xFFFCD34D)),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           visualDensity: VisualDensity.compact,
                         ),

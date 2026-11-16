@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 
 class CtaBannerWidget extends StatelessWidget {
   final VoidCallback? onRegisterTap;
@@ -15,85 +16,80 @@ class CtaBannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.navyBlueDark,
-            AppColors.primaryRedDark,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryRedDark.withValues(alpha: 0.3),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          const Text(
-            'Únete al Gimnasio Universitario UAGRM',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.w900,
-              height: 1.25,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Consulta los requisitos en Bienestar Social (D.U.B.S.) e inicia hoy tu entrenamiento físico.',
-            style: TextStyle(
-              color: Color(0xFFCBD5E1),
-              fontSize: 12,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: onRegisterTap,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentGold,
-                    foregroundColor: AppColors.textPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Preinscribirme',
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
-                  ),
+          // Radial glow sutil de fondo
+          Positioned(
+            right: -30,
+            bottom: -30,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    Color(0x33990000), // rgba(153, 0, 0, 0.2)
+                    Colors.transparent,
+                  ],
+                  radius: 0.8,
                 ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: onRequirementsTap,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white60),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Ver Requisitos',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Únete al Gimnasio Universitario UAGRM',
+                  style: TextStyle(
+                    color: AppColors.textWhite,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w900,
+                    height: 1.25,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                const Text(
+                  'Consulta los requisitos en Bienestar Social (D.U.B.S.) e inicia hoy tu entrenamiento físico.',
+                  style: TextStyle(
+                    color: AppColors.textSlateLight,
+                    fontSize: 12,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CrimsonButton(
+                        onPressed: onRegisterTap,
+                        label: 'Preinscribirme',
+                        style: CrimsonButtonStyle.gradient,
+                        height: 44,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: CrimsonButton(
+                        onPressed: onRequirementsTap,
+                        label: 'Ver Requisitos',
+                        style: CrimsonButtonStyle.glassPill,
+                        height: 44,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

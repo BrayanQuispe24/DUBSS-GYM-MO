@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../data/models/plan_model.dart';
 
 class PlanCardWidget extends StatelessWidget {
   final PlanModel plan;
   final VoidCallback? onSelect;
+  final VoidCallback? onInscribirse;
 
   const PlanCardWidget({
     super.key,
     required this.plan,
     this.onSelect,
+    this.onInscribirse,
   });
 
   @override
@@ -17,28 +20,21 @@ class PlanCardWidget extends StatelessWidget {
     final isActivo = plan.isActivo;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFCBD5E1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Top Accent Line
+            // Top Accent Line Oficial
             Container(
-              height: 3.5,
-              color: isActivo ? const Color(0xFF0077D4) : const Color(0xFF94A3B8),
+              height: 3.0,
+              color: isActivo ? AppColors.primaryCrimson : AppColors.borderSubtle,
             ),
 
             Padding(
@@ -52,28 +48,31 @@ class PlanCardWidget extends StatelessWidget {
                     children: [
                       // Diamond icon inside soft square
                       Container(
-                        width: 38,
-                        height: 38,
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                         ),
                         child: const Icon(
                           Icons.diamond_outlined,
-                          color: Color(0xFF0077D4),
-                          size: 20,
+                          color: AppColors.solarGold,
+                          size: 18,
                         ),
                       ),
 
                       // Status Badge (● ACTIVO)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: isActivo ? const Color(0xFFECFDF5) : const Color(0xFFFEF2F2),
+                          color: isActivo
+                              ? AppColors.successEmerald.withValues(alpha: 0.15)
+                              : AppColors.accentVibrant.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
-                            color: isActivo ? const Color(0xFFA7F3D0) : const Color(0xFFFECACA),
+                            color: isActivo ? AppColors.successEmerald : AppColors.accentVibrant,
+                            width: 0.8,
                           ),
                         ),
                         child: Row(
@@ -84,7 +83,7 @@ class PlanCardWidget extends StatelessWidget {
                               height: 6,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isActivo ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                                color: isActivo ? AppColors.successEmerald : AppColors.accentVibrant,
                               ),
                             ),
                             const SizedBox(width: 5),
@@ -94,7 +93,7 @@ class PlanCardWidget extends StatelessWidget {
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.5,
-                                color: isActivo ? const Color(0xFF047857) : const Color(0xFFB91C1C),
+                                color: isActivo ? AppColors.successLight : AppColors.accentVibrant,
                               ),
                             ),
                           ],
@@ -110,7 +109,7 @@ class PlanCardWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                       letterSpacing: -0.2,
                     ),
                   ),
@@ -122,9 +121,9 @@ class PlanCardWidget extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0F7FF),
+                        color: AppColors.carbonSurfaceMuted,
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: const Color(0xFFBAE6FD)),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -132,7 +131,7 @@ class PlanCardWidget extends StatelessWidget {
                           const Icon(
                             Icons.local_offer_outlined,
                             size: 11,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.solarGold,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -140,7 +139,7 @@ class PlanCardWidget extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF0077D4),
+                              color: AppColors.solarGold,
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -155,7 +154,7 @@ class PlanCardWidget extends StatelessWidget {
                         : 'Sin especificaciones registradas para este plan institucional.',
                     style: const TextStyle(
                       fontSize: 12.5,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSlateLight,
                       height: 1.4,
                     ),
                   ),
@@ -165,9 +164,9 @@ class PlanCardWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,17 +175,17 @@ class PlanCardWidget extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: const Color(0xFFCBD5E1)),
+                                color: AppColors.carbonSurface,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                               ),
                               child: const Icon(
                                 Icons.access_time,
-                                size: 16,
-                                color: Color(0xFF0077D4),
+                                size: 15,
+                                color: AppColors.solarGold,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -198,7 +197,7 @@ class PlanCardWidget extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 9.5,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFF64748B),
+                                    color: AppColors.textSlateMuted,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -207,7 +206,7 @@ class PlanCardWidget extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w800,
-                                    color: Color(0xFF1E293B),
+                                    color: AppColors.textWhite,
                                   ),
                                 ),
                               ],
@@ -224,7 +223,7 @@ class PlanCardWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 9.5,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF64748B),
+                                color: AppColors.textSlateMuted,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -233,7 +232,7 @@ class PlanCardWidget extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF0077D4),
+                                color: AppColors.textWhite,
                               ),
                             ),
                           ],
@@ -246,25 +245,11 @@ class PlanCardWidget extends StatelessWidget {
                   // Mobile Action Button
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: onSelect ?? () => _showPlanDetails(context),
-                      icon: const Icon(Icons.arrow_forward, size: 15, color: Color(0xFF0077D4)),
-                      label: const Text(
-                        'Solicitar Membresía',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF0077D4),
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF0077D4)),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        backgroundColor: const Color(0xFFF0F7FF),
-                      ),
+                    child: CrimsonButton(
+                      onPressed: onInscribirse ?? onSelect ?? () => _showPlanDetails(context),
+                      label: 'Solicitar Membresía',
+                      style: CrimsonButtonStyle.gradient,
+                      height: 42,
                     ),
                   ),
                 ],
@@ -280,23 +265,29 @@ class PlanCardWidget extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.carbonSurface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+          border: Border(
+            top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+            left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+            right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          ),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
-                  width: 40,
+                  width: 36,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColors.borderSubtle,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -308,11 +299,11 @@ class PlanCardWidget extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0F7FF),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFFBAE6FD)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                     ),
-                    child: const Icon(Icons.diamond_outlined, color: Color(0xFF0077D4)),
+                    child: const Icon(Icons.diamond_outlined, color: AppColors.solarGold),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -324,7 +315,7 @@ class PlanCardWidget extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         if (plan.tarifa != null)
@@ -332,7 +323,7 @@ class PlanCardWidget extends StatelessWidget {
                             'Tarifa: ${plan.tarifa!.nombre}',
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF0077D4),
+                              color: AppColors.solarGold,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -347,21 +338,21 @@ class PlanCardWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 plan.descripcion ?? 'Acceso a las áreas deportivas del Gimnasio UAGRM.',
-                style: const TextStyle(fontSize: 12.5, color: Color(0xFF64748B), height: 1.4),
+                style: const TextStyle(fontSize: 12.5, color: AppColors.textSlateLight, height: 1.4),
               ),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  color: AppColors.carbonSurfaceMuted,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -370,21 +361,21 @@ class PlanCardWidget extends StatelessWidget {
                       children: [
                         const Text(
                           'DURACIÓN',
-                          style: TextStyle(fontSize: 10, color: Color(0xFF64748B), fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 10, color: AppColors.textSlateMuted, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '${plan.duracionDias} DÍAS',
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textWhite),
                         ),
                       ],
                     ),
-                    Container(height: 24, width: 1, color: const Color(0xFFCBD5E1)),
+                    Container(height: 24, width: 1, color: AppColors.borderSubtle),
                     Column(
                       children: [
                         const Text(
                           'TOTAL ARANCEL',
-                          style: TextStyle(fontSize: 10, color: Color(0xFF64748B), fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 10, color: AppColors.textSlateMuted, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -392,7 +383,7 @@ class PlanCardWidget extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.textWhite,
                           ),
                         ),
                       ],
@@ -403,27 +394,24 @@ class PlanCardWidget extends StatelessWidget {
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
+                child: CrimsonButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Solicitud para ${plan.nombre} iniciada. Pase por caja/trámites.'),
-                        backgroundColor: AppColors.success,
-                      ),
-                    );
+                    if (onInscribirse != null) {
+                      onInscribirse!();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Solicitud para ${plan.nombre} iniciada. Pase por caja/trámites.'),
+                          backgroundColor: AppColors.carbonSurfaceMuted,
+                        ),
+                      );
+                    }
                   },
-                  icon: const Icon(Icons.check_circle_outline, size: 18),
-                  label: const Text(
-                    'Confirmar y Solicitar Boleta de Pago',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0077D4),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
+                  icon: const Icon(Icons.check_circle_outline, size: 18, color: Colors.white),
+                  label: 'Confirmar y Solicitar Boleta de Pago',
+                  style: CrimsonButtonStyle.gradient,
+                  height: 46,
                 ),
               ),
             ],

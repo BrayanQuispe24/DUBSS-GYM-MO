@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ComidaDetailCard extends StatefulWidget {
   final int index;
@@ -45,11 +46,11 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
 
   Color _getTipoComidaColor(String tipo) {
     final t = tipo.toLowerCase();
-    if (t.contains('desayuno')) return const Color(0xFFF59E0B);
-    if (t.contains('almuerzo')) return const Color(0xFF0077D4);
-    if (t.contains('cena')) return const Color(0xFF8B5CF6);
-    if (t.contains('merienda') || t.contains('media')) return const Color(0xFF10B981);
-    return const Color(0xFF0284C7);
+    if (t.contains('desayuno')) return AppColors.solarGold;
+    if (t.contains('almuerzo')) return AppColors.accentVibrant;
+    if (t.contains('cena')) return AppColors.solarAmber;
+    if (t.contains('merienda') || t.contains('media')) return AppColors.successEmerald;
+    return AppColors.accentVibrant;
   }
 
   @override
@@ -59,26 +60,19 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: _expanded ? color.withValues(alpha: 0.4) : const Color(0xFFE2E8F0),
-          width: _expanded ? 1.5 : 1,
+          color: _expanded ? color : AppColors.borderSubtle,
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header clickable
           InkWell(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(4),
             onTap: () {
               setState(() {
                 _expanded = !_expanded;
@@ -96,9 +90,9 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                         decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: color.withValues(alpha: 0.3)),
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: color),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -121,14 +115,14 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       Row(
                         children: [
                           if (widget.horarioSugerido.isNotEmpty) ...[
-                            Icon(Icons.access_time, size: 12, color: Colors.grey.shade600),
+                            const Icon(Icons.access_time, size: 12, color: AppColors.textSlateMuted),
                             const SizedBox(width: 3),
                             Text(
                               widget.horarioSugerido,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
+                                color: AppColors.textSlateLight,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -136,20 +130,20 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFEF2F2),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: const Color(0xFFFECACA)),
+                              color: AppColors.accentVibrant.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.accentVibrant),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.local_fire_department, size: 11, color: Color(0xFFDC2626)),
+                                const Icon(Icons.local_fire_department, size: 11, color: AppColors.accentVibrant),
                                 const SizedBox(width: 2),
                                 Text(
                                   '${widget.calorias} kcal',
                                   style: const TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w800,
-                                    color: Color(0xFFDC2626),
+                                    color: AppColors.accentVibrant,
                                   ),
                                 ),
                               ],
@@ -158,7 +152,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                           const SizedBox(width: 6),
                           Icon(
                             _expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                            color: const Color(0xFF64748B),
+                            color: AppColors.textSlateMuted,
                             size: 20,
                           ),
                         ],
@@ -171,7 +165,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                       height: 1.3,
                     ),
                   ),
@@ -181,9 +175,9 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                     spacing: 6,
                     runSpacing: 4,
                     children: [
-                      _buildMacroBadge('P', '${widget.proteinasG.toStringAsFixed(0)}g', const Color(0xFF0077D4)),
-                      _buildMacroBadge('C', '${widget.carbohidratosG.toStringAsFixed(0)}g', const Color(0xFFD97706)),
-                      _buildMacroBadge('G', '${widget.grasasG.toStringAsFixed(0)}g', const Color(0xFF059669)),
+                      _buildMacroBadge('P', '${widget.proteinasG.toStringAsFixed(0)}g', AppColors.primaryCrimson),
+                      _buildMacroBadge('C', '${widget.carbohidratosG.toStringAsFixed(0)}g', AppColors.solarGold),
+                      _buildMacroBadge('G', '${widget.grasasG.toStringAsFixed(0)}g', AppColors.successLight),
                     ],
                   ),
                 ],
@@ -193,7 +187,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
 
           // Collapsible detail body
           if (_expanded) ...[
-            const Divider(height: 1, color: Color(0xFFF1F5F9)),
+            const Divider(height: 1, color: AppColors.borderSubtle),
             Padding(
               padding: const EdgeInsets.all(14),
               child: Column(
@@ -203,7 +197,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                   if (widget.ingredientes.isNotEmpty) ...[
                     _buildSectionHeader(
                       icon: Icons.kitchen,
-                      color: const Color(0xFF0077D4),
+                      color: AppColors.solarGold,
                       title: 'INGREDIENTES Y PORCIONES',
                     ),
                     const SizedBox(height: 6),
@@ -211,9 +205,9 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +220,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                                 const Text(
                                   '• ',
                                   style: TextStyle(
-                                    color: Color(0xFF0077D4),
+                                    color: AppColors.accentVibrant,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 13,
                                   ),
@@ -236,7 +230,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                                     ing,
                                     style: const TextStyle(
                                       fontSize: 12.5,
-                                      color: Color(0xFF334155),
+                                      color: AppColors.textSlateLight,
                                       height: 1.35,
                                     ),
                                   ),
@@ -255,7 +249,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       widget.instruccionesPreparacion!.trim().isNotEmpty) ...[
                     _buildSectionHeader(
                       icon: Icons.soup_kitchen_outlined,
-                      color: const Color(0xFF16A34A),
+                      color: AppColors.successLight,
                       title: 'INSTRUCCIONES DE PREPARACIÓN',
                     ),
                     const SizedBox(height: 6),
@@ -263,15 +257,15 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0FDF4),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFBBF7D0)),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Text(
                         widget.instruccionesPreparacion!.trim(),
                         style: const TextStyle(
                           fontSize: 12.5,
-                          color: Color(0xFF166534),
+                          color: AppColors.textSlateLight,
                           height: 1.4,
                         ),
                       ),
@@ -283,7 +277,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                   if (widget.sustitutosAccesibles.isNotEmpty) ...[
                     _buildSectionHeader(
                       icon: Icons.monetization_on_outlined,
-                      color: const Color(0xFFD97706),
+                      color: AppColors.solarAmber,
                       title: 'SUSTITUTOS ECONÓMICOS SUGERIDOS',
                     ),
                     const SizedBox(height: 6),
@@ -291,9 +285,9 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFFBEB),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFFDE68A)),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +300,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                                 const Text(
                                   '⇄ ',
                                   style: TextStyle(
-                                    color: Color(0xFFD97706),
+                                    color: AppColors.solarAmber,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 12,
                                   ),
@@ -316,7 +310,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
                                     sus,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFF92400E),
+                                      color: AppColors.textSlateLight,
                                       height: 1.35,
                                     ),
                                   ),
@@ -341,9 +335,9 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -361,7 +355,7 @@ class _ComidaDetailCardState extends State<ComidaDetailCard> {
             style: const TextStyle(
               fontSize: 10.5,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF334155),
+              color: AppColors.textSlateLight,
             ),
           ),
         ],

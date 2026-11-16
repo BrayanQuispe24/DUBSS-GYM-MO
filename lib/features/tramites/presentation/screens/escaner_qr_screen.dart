@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
+import '../../../auth/presentation/providers/auth_notifier.dart';
 import '../../data/datasources/tramites_remote_datasource.dart';
 import '../widgets/resultado_acceso_dialog.dart';
 
@@ -86,6 +89,70 @@ class _EscanerQRScreenState extends ConsumerState<EscanerQRScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = ref.watch(authNotifierProvider).user;
+    final canScanQr = currentUser?.canScanQr ?? false;
+
+    if (!canScanQr) {
+      return Scaffold(
+        backgroundColor: AppColors.obsidianBase,
+        appBar: AppBar(
+          backgroundColor: AppColors.obsidianBase,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text(
+            'Acceso Restringido',
+            style: TextStyle(color: AppColors.textWhite, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: const Icon(Icons.lock_outline, size: 36, color: AppColors.accentVibrant),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Función Exclusiva para Personal',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textWhite,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'El escaneo y validación de pases QR de torniquete está reservado exclusivamente para el personal de Recepción y Administración.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.textSlateMuted, fontSize: 13, height: 1.4),
+                ),
+                const SizedBox(height: 24),
+                CrimsonButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  label: 'Volver a Trámites',
+                  style: CrimsonButtonStyle.gradient,
+                  icon: const Icon(Icons.arrow_back, size: 16, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ejercicio_model.dart';
 import 'ejercicio_galeria_modal.dart';
 
@@ -14,10 +15,7 @@ class EjercicioDetailModal extends StatelessWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (ctx) => EjercicioDetailModal(ejercicio: ejercicio),
     );
   }
@@ -27,23 +25,32 @@ class EjercicioDetailModal extends StatelessWidget {
     final tipoNombre = ejercicio.tipoEjercicio?.nombre ?? 'General';
     final hasImages = ejercicio.imagenes.isNotEmpty;
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.78,
-      minChildSize: 0.45,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (context, scrollController) {
-        return Column(
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.88,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
           children: [
             // Drag handle
             Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              padding: const EdgeInsets.only(top: 10, bottom: 6),
               child: Center(
                 child: Container(
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColors.borderSubtle,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -59,10 +66,11 @@ class EjercicioDetailModal extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0077D4),
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
-                    child: const Icon(Icons.fitness_center, color: Colors.white, size: 20),
+                    child: const Icon(Icons.fitness_center, color: AppColors.accentVibrant, size: 20),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -74,14 +82,14 @@ class EjercicioDetailModal extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         Text(
                           'Tipo: $tipoNombre',
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.solarGold,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -89,18 +97,17 @@ class EjercicioDetailModal extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Color(0xFF64748B)),
+                    icon: const Icon(Icons.close, color: AppColors.textSlateMuted),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
             ),
-            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+            const Divider(height: 1, color: AppColors.borderSubtle),
 
             // Content List
             Expanded(
               child: ListView(
-                controller: scrollController,
                 padding: const EdgeInsets.all(20),
                 children: [
                   // Specs Grid Cards
@@ -141,17 +148,17 @@ class EjercicioDetailModal extends StatelessWidget {
                         Navigator.pop(context);
                         EjercicioGaleriaModal.show(context, ejercicio);
                       },
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(4),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F7FF),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFBAE6FD)),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentVibrant),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.photo_library, color: Color(0xFF0077D4), size: 22),
+                            const Icon(Icons.photo_library, color: AppColors.accentVibrant, size: 22),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Column(
@@ -162,17 +169,17 @@ class EjercicioDetailModal extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w800,
-                                      color: Color(0xFF0077D4),
+                                      color: AppColors.accentVibrant,
                                     ),
                                   ),
                                   const Text(
                                     'Ver posturas paso a paso en pantalla completa',
-                                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                                    style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                                   ),
                                 ],
                               ),
                             ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Color(0xFF0077D4)),
+                            const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.accentVibrant),
                           ],
                         ),
                       ),
@@ -187,7 +194,7 @@ class EjercicioDetailModal extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -198,16 +205,16 @@ class EjercicioDetailModal extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8FAFC),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: const Color(0xFFCBD5E1)),
+                            color: AppColors.carbonSurfaceMuted,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.borderSubtle),
                           ),
                           child: Text(
                             g.nombre,
                             style: const TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1E293B),
+                              color: AppColors.textSlateLight,
                             ),
                           ),
                         );
@@ -222,16 +229,16 @@ class EjercicioDetailModal extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Text(
                       ejercicio.descripcion?.isNotEmpty == true
@@ -239,7 +246,7 @@ class EjercicioDetailModal extends StatelessWidget {
                           : 'No se registraron instrucciones específicas para este movimiento.',
                       style: const TextStyle(
                         fontSize: 12.5,
-                        color: Color(0xFF334155),
+                        color: AppColors.textSlateLight,
                         height: 1.5,
                       ),
                     ),
@@ -251,34 +258,32 @@ class EjercicioDetailModal extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFFBEB),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFFDE68A)),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.play_circle_fill, color: Color(0xFFD97706), size: 24),
-                          const SizedBox(width: 10),
+                          const Icon(Icons.videocam, color: AppColors.accentVibrant, size: 20),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               'Video disponible: ${ejercicio.urlVideo}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12, color: Color(0xFF92400E)),
+                              style: const TextStyle(fontSize: 12, color: AppColors.accentVibrant),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ],
-
-                  const SizedBox(height: 24),
                 ],
               ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -288,41 +293,44 @@ class EjercicioDetailModal extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      width: 155,
+      width: 140,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        color: AppColors.carbonSurfaceMuted,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF0077D4)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          Row(
+            children: [
+              Icon(icon, size: 14, color: AppColors.accentVibrant),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF64748B),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF0F172A),
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSlateMuted,
+                    letterSpacing: 0.3,
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textWhite,
             ),
           ),
         ],

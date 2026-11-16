@@ -87,6 +87,11 @@ class DescansoTimerNotifier extends Notifier<DescansoTimerState> {
     state = state.copyWith(isRunning: false);
   }
 
+  void stop() {
+    _timer?.cancel();
+    reset();
+  }
+
   void resume() {
     if (state.remainingSeconds <= 0 || state.isRunning) return;
 

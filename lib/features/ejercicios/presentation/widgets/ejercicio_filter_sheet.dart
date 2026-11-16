@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../providers/ejercicios_providers.dart';
 
 class EjercicioFilterSheet extends ConsumerStatefulWidget {
@@ -9,10 +11,7 @@ class EjercicioFilterSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (ctx) => const EjercicioFilterSheet(),
     );
   }
@@ -44,6 +43,15 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.82,
         ),
+        decoration: const BoxDecoration(
+          color: AppColors.carbonSurface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+          border: Border(
+            top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+            left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+            right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,7 +61,7 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: AppColors.borderSubtle,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -66,14 +74,14 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.tune, color: Color(0xFF0077D4), size: 20),
+                    Icon(Icons.tune, color: AppColors.accentVibrant, size: 20),
                     SizedBox(width: 8),
                     Text(
                       'Filtros de Ejercicios',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                   ],
@@ -87,12 +95,12 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                   },
                   child: const Text(
                     'Limpiar',
-                    style: TextStyle(color: Color(0xFFDC2626), fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColors.accentVibrant, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
             ),
-            const Divider(height: 16),
+            const Divider(height: 16, color: AppColors.borderSubtle),
 
             // Scrollable Content
             Expanded(
@@ -104,7 +112,7 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1E293B),
+                      color: AppColors.textWhite,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -117,15 +125,16 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                         return ChoiceChip(
                           label: Text(t.nombre),
                           selected: isSelected,
-                          selectedColor: const Color(0xFF0077D4),
-                          backgroundColor: Colors.white,
+                          selectedColor: AppColors.primaryCrimson,
+                          backgroundColor: AppColors.carbonSurfaceMuted,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : const Color(0xFF334155),
+                            color: isSelected ? Colors.white : AppColors.textSlateLight,
                             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                             fontSize: 12,
                           ),
                           side: BorderSide(
-                            color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+                            color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
                           ),
                           onSelected: (val) {
                             setState(() {
@@ -137,9 +146,9 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                     ),
                     loading: () => const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentVibrant),
                     ),
-                    error: (err, stack) => const Text('Error al cargar tipos'),
+                    error: (err, stack) => const Text('Error al cargar tipos', style: TextStyle(color: AppColors.accentVibrant)),
                   ),
 
                   const SizedBox(height: 20),
@@ -150,7 +159,7 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1E293B),
+                      color: AppColors.textWhite,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -163,15 +172,16 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                         return ChoiceChip(
                           label: Text(g.nombre),
                           selected: isSelected,
-                          selectedColor: const Color(0xFF0077D4),
-                          backgroundColor: Colors.white,
+                          selectedColor: AppColors.primaryCrimson,
+                          backgroundColor: AppColors.carbonSurfaceMuted,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : const Color(0xFF334155),
+                            color: isSelected ? Colors.white : AppColors.textSlateLight,
                             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                             fontSize: 12,
                           ),
                           side: BorderSide(
-                            color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+                            color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
                           ),
                           onSelected: (val) {
                             setState(() {
@@ -183,9 +193,9 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
                     ),
                     loading: () => const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentVibrant),
                     ),
-                    error: (err, stack) => const Text('Error al cargar grupos musculares'),
+                    error: (err, stack) => const Text('Error al cargar grupos musculares', style: TextStyle(color: AppColors.accentVibrant)),
                   ),
                   const SizedBox(height: 20),
                 ],
@@ -195,22 +205,17 @@ class _EjercicioFilterSheetState extends ConsumerState<EjercicioFilterSheet> {
             // Apply Button
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: CrimsonButton(
                 onPressed: () {
                   final notifier = ref.read(ejerciciosFilterProvider.notifier);
                   notifier.setTipo(_tempTipoId);
                   notifier.setGrupo(_tempGrupoId);
                   Navigator.pop(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0077D4),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text(
-                  'Aplicar Filtros',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+                icon: const Icon(Icons.check, size: 18, color: Colors.white),
+                label: 'Aplicar Filtros',
+                style: CrimsonButtonStyle.gradient,
+                height: 46,
               ),
             ),
           ],

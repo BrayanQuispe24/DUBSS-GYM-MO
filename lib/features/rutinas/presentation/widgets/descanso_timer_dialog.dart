@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../providers/rutina_timer_provider.dart';
 
 class DescansoTimerDialog extends ConsumerWidget {
-  final int segundosIniciales;
   final String ejercicioNombre;
 
   const DescansoTimerDialog({
     super.key,
-    required this.segundosIniciales,
     required this.ejercicioNombre,
   });
 
@@ -21,10 +21,15 @@ class DescansoTimerDialog extends ConsumerWidget {
       context: context,
       barrierDismissible: true,
       builder: (ctx) => DescansoTimerDialog(
-        segundosIniciales: segundos,
         ejercicioNombre: ejercicioNombre,
       ),
     );
+  }
+
+  String _formatTime(int totalSeconds) {
+    final m = totalSeconds ~/ 60;
+    final s = totalSeconds % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -33,9 +38,12 @@ class DescansoTimerDialog extends ConsumerWidget {
     final timerNotifier = ref.read(descansoTimerProvider.notifier);
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      backgroundColor: Colors.white,
-      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: AppColors.borderSubtle, width: 1.0),
+      ),
+      backgroundColor: AppColors.carbonSurface,
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
         child: Column(
@@ -50,12 +58,13 @@ class DescansoTimerDialog extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0F9FF),
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.accentVibrant, width: 0.8),
                       ),
                       child: const Icon(
                         Icons.timer_outlined,
-                        color: Color(0xFF0284C7),
+                        color: AppColors.solarGold,
                         size: 20,
                       ),
                     ),
@@ -65,13 +74,13 @@ class DescansoTimerDialog extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, size: 20, color: Color(0xFF64748B)),
+                  icon: const Icon(Icons.close, size: 20, color: AppColors.textSlateMuted),
                   onPressed: () => Navigator.of(context).pop(),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -89,15 +98,15 @@ class DescansoTimerDialog extends ConsumerWidget {
               style: const TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF64748B),
+                color: AppColors.textSlateLight,
               ),
             ),
             const SizedBox(height: 24),
 
             // Circular Countdown Display
             SizedBox(
-              width: 180,
-              height: 180,
+              width: 170,
+              height: 170,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -107,12 +116,12 @@ class DescansoTimerDialog extends ConsumerWidget {
                         : (timerState.totalSeconds > 0
                             ? (timerState.remainingSeconds / timerState.totalSeconds)
                             : 0),
-                    strokeWidth: 9,
-                    backgroundColor: const Color(0xFFF1F5F9),
+                    strokeWidth: 8,
+                    backgroundColor: AppColors.carbonSurfaceMuted,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       timerState.isFinished
-                          ? const Color(0xFF10B981)
-                          : const Color(0xFF0077D4),
+                          ? AppColors.successEmerald
+                          : AppColors.accentVibrant,
                     ),
                   ),
                   Center(
@@ -122,7 +131,7 @@ class DescansoTimerDialog extends ConsumerWidget {
                         if (timerState.isFinished) ...[
                           const Icon(
                             Icons.check_circle_outline,
-                            color: Color(0xFF10B981),
+                            color: AppColors.successEmerald,
                             size: 42,
                           ),
                           const SizedBox(height: 4),
@@ -131,35 +140,34 @@ class DescansoTimerDialog extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF10B981),
+                              color: AppColors.successLight,
                             ),
                           ),
                           const Text(
                             'Siguiente serie',
                             style: TextStyle(
                               fontSize: 11,
-                              color: Color(0xFF64748B),
-                              fontWeight: FontWeight.w600,
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ] else ...[
                           Text(
-                            timerState.formattedTime,
+                            _formatTime(timerState.remainingSeconds),
                             style: const TextStyle(
-                              fontSize: 38,
+                              fontSize: 34,
                               fontWeight: FontWeight.w900,
-                              color: Color(0xFF0F172A),
-                              letterSpacing: 1.5,
+                              color: AppColors.textWhite,
+                              letterSpacing: 1.0,
                             ),
                           ),
+                          const SizedBox(height: 2),
                           Text(
-                            timerState.isRunning ? 'Descansando...' : 'En pausa',
-                            style: TextStyle(
-                              fontSize: 11.5,
-                              fontWeight: FontWeight.w600,
-                              color: timerState.isRunning
-                                  ? const Color(0xFF0077D4)
-                                  : const Color(0xFF94A3B8),
+                            timerState.isRunning ? 'DESCANSANDO' : 'PAUSADO',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.solarGold,
+                              letterSpacing: 0.8,
                             ),
                           ),
                         ],
@@ -171,79 +179,82 @@ class DescansoTimerDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            // Control Buttons
+            // Quick add seconds row (+15s, +30s)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Reset / Restart
-                IconButton.filledTonal(
-                  onPressed: () {
-                    timerNotifier.start(segundosIniciales);
-                  },
-                  icon: const Icon(Icons.replay, size: 20),
-                  style: IconButton.styleFrom(
-                    backgroundColor: const Color(0xFFF1F5F9),
-                    foregroundColor: const Color(0xFF334155),
-                  ),
-                  tooltip: 'Reiniciar',
-                ),
-                const SizedBox(width: 14),
+                _buildQuickAddButton(label: '+15s', onTap: () => timerNotifier.addSeconds(15)),
+                const SizedBox(width: 8),
+                _buildQuickAddButton(label: '+30s', onTap: () => timerNotifier.addSeconds(30)),
+                const SizedBox(width: 8),
+                _buildQuickAddButton(label: '+60s', onTap: () => timerNotifier.addSeconds(60)),
+              ],
+            ),
+            const SizedBox(height: 20),
 
-                // Main Play/Pause Button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (timerState.isFinished) {
-                      timerNotifier.start(segundosIniciales);
-                    } else if (timerState.isRunning) {
-                      timerNotifier.pause();
-                    } else {
-                      if (timerState.remainingSeconds <= 0) {
-                        timerNotifier.start(segundosIniciales);
+            // Control Buttons (Pause/Resume, Reset, Terminar)
+            Row(
+              children: [
+                Expanded(
+                  child: CrimsonButton(
+                    onPressed: () {
+                      if (timerState.isRunning) {
+                        timerNotifier.pause();
                       } else {
                         timerNotifier.resume();
                       }
-                    }
-                  },
-                  icon: Icon(
-                    timerState.isRunning ? Icons.pause : Icons.play_arrow,
-                    size: 22,
-                  ),
-                  label: Text(
-                    timerState.isFinished
-                        ? 'Repetir'
-                        : (timerState.isRunning ? 'Pausar' : 'Iniciar'),
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0077D4),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    elevation: 0,
+                    },
+                    icon: Icon(
+                      timerState.isRunning ? Icons.pause : Icons.play_arrow,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    label: timerState.isRunning ? 'Pausar' : 'Reanudar',
+                    style: CrimsonButtonStyle.gradient,
+                    height: 42,
                   ),
                 ),
-                const SizedBox(width: 14),
-
-                // +15 Seconds Button
-                OutlinedButton(
-                  onPressed: () {
-                    timerNotifier.addSeconds(15);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF0284C7),
-                    side: const BorderSide(color: Color(0xFFBAE6FD)),
-                    backgroundColor: const Color(0xFFF0F9FF),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: const Text(
-                    '+15s',
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: CrimsonButton(
+                    onPressed: () {
+                      timerNotifier.stop();
+                      Navigator.of(context).pop();
+                    },
+                    label: 'Listo',
+                    style: CrimsonButtonStyle.outline,
+                    height: 42,
                   ),
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickAddButton({
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: AppColors.carbonSurfaceMuted,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.borderSubtle, width: 1.0),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: AppColors.solarGold,
+          ),
         ),
       ),
     );

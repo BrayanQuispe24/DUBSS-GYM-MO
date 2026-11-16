@@ -44,27 +44,31 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     final userAsync = ref.watch(userDetailFutureProvider(widget.userId));
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Expediente del Socio',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             onPressed: () =>
                 ref.invalidate(userDetailFutureProvider(widget.userId)),
           ),
           userAsync.when(
             data: (user) => IconButton(
-              icon: const Icon(Icons.edit_outlined, color: Colors.white),
+              icon: const Icon(Icons.edit_outlined, color: AppColors.solarGold),
               onPressed: () {
                 UserFormModal.show(
                   context,
@@ -80,10 +84,10 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
         ],
         bottom: TabBar(
           controller: _tabCtrl,
-          indicatorColor: const Color(0xFFD97706),
+          indicatorColor: AppColors.primaryCrimson,
           indicatorWeight: 3,
           labelColor: Colors.white,
-          unselectedLabelColor: const Color(0xFF94A3B8),
+          unselectedLabelColor: AppColors.textSlateMuted,
           labelStyle:
               const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
           isScrollable: true,
@@ -97,7 +101,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
       ),
       body: userAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.navyBlue),
+          child: CircularProgressIndicator(color: AppColors.accentVibrant),
         ),
         error: (e, _) => Center(
           child: Padding(
@@ -105,12 +109,20 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                const Icon(Icons.error_outline, color: AppColors.accentVibrant, size: 40),
                 const SizedBox(height: 8),
-                Text('Error al cargar expediente: $e',
-                    textAlign: TextAlign.center),
+                Text(
+                  'Error al cargar expediente: $e',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AppColors.accentVibrant),
+                ),
                 const SizedBox(height: 12),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryCrimson,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  ),
                   onPressed: () =>
                       ref.invalidate(userDetailFutureProvider(widget.userId)),
                   child: const Text('Reintentar'),
@@ -137,32 +149,31 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Tarjeta principal con avatar y nombre
+        // Tarjeta principal con avatar y nombre (Boxed-Sharpness)
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: const Color(0xFF003B70).withValues(alpha: 0.1),
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryCrimson.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.accentVibrant, width: 1.0),
+                ),
+                alignment: Alignment.center,
                 child: Text(
                   user.nombre.isNotEmpty ? user.nombre[0].toUpperCase() : 'U',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF003B70),
+                    color: AppColors.solarGold,
                   ),
                 ),
               ),
@@ -176,7 +187,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -184,7 +195,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                       user.email,
                       style: const TextStyle(
                         fontSize: 12.5,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSlateLight,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -194,15 +205,16 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE0F2FE),
+                            color: AppColors.carbonSurfaceMuted,
                             borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.borderSubtle),
                           ),
                           child: Text(
                             user.rolLabel,
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0369A1),
+                              color: AppColors.solarGold,
                             ),
                           ),
                         ),
@@ -212,9 +224,14 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: user.isActivo
-                                ? const Color(0xFFDCFCE7)
-                                : const Color(0xFFFEE2E2),
+                                ? AppColors.successEmerald.withValues(alpha: 0.15)
+                                : AppColors.accentVibrant.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: user.isActivo
+                                  ? AppColors.successEmerald.withValues(alpha: 0.4)
+                                  : AppColors.accentVibrant.withValues(alpha: 0.4),
+                            ),
                           ),
                           child: Text(
                             user.isActivo ? 'ACTIVO' : 'SUSPENDIDO',
@@ -222,8 +239,8 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
                               color: user.isActivo
-                                  ? const Color(0xFF15803D)
-                                  : const Color(0xFFB91C1C),
+                                  ? AppColors.successEmerald
+                                  : AppColors.accentVibrant,
                             ),
                           ),
                         ),
@@ -264,12 +281,12 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.health_and_safety_outlined,
-                  size: 44, color: Colors.grey),
+                  size: 44, color: AppColors.textSlateMuted),
               SizedBox(height: 10),
               Text(
                 'No existen fichas médicas o evaluaciones físicas registradas.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 13, color: AppColors.textSlateLight),
               ),
             ],
           ),
@@ -286,9 +303,9 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,14 +318,15 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF003B70),
+                      color: AppColors.accentVibrant,
                     ),
                   ),
                   Text(
                     h['fecha']?.toString() ?? '',
                     style: const TextStyle(
                       fontSize: 11,
-                      color: Color(0xFF64748B),
+                      color: AppColors.solarGold,
+                      fontFamily: 'monospace',
                     ),
                   ),
                 ],
@@ -316,7 +334,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
               const SizedBox(height: 6),
               Text(
                 h['observaciones']?.toString() ?? 'Sin observaciones anotadas',
-                style: const TextStyle(fontSize: 12, color: Color(0xFF334155)),
+                style: const TextStyle(fontSize: 12, color: AppColors.textSlateLight),
               ),
             ],
           ),
@@ -354,12 +372,12 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.folder_open_outlined, size: 44, color: Colors.grey),
+              Icon(Icons.folder_open_outlined, size: 44, color: AppColors.textSlateMuted),
               SizedBox(height: 10),
               Text(
                 'El socio aún no ha anexado documentos digitales (matrícula, CI o certificado).',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 13, color: AppColors.textSlateLight),
               ),
             ],
           ),
@@ -376,14 +394,14 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Row(
             children: [
-              const Icon(Icons.picture_as_pdf_rounded,
-                  color: Colors.red, size: 24),
+              const Icon(Icons.picture_as_pdf_outlined,
+                  color: AppColors.accentVibrant, size: 24),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -391,7 +409,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                   style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
+                    color: AppColors.textWhite,
                   ),
                 ),
               ),
@@ -410,29 +428,29 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF003B70), size: 20),
+              Icon(icon, color: AppColors.accentVibrant, size: 20),
               const SizedBox(width: 8),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
+                  color: AppColors.textWhite,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+          const Divider(height: 1, color: AppColors.borderSubtle),
           const SizedBox(height: 10),
           ...items.map(
             (row) => Padding(
@@ -444,7 +462,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                     row.label,
                     style: const TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSlateMuted,
                     ),
                   ),
                   Text(
@@ -452,7 +470,7 @@ class _UserDetailScreenState extends ConsumerState<UserDetailScreen>
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 
 class HeroSectionWidget extends StatelessWidget {
   final VoidCallback? onExploreTap;
@@ -18,153 +19,147 @@ class HeroSectionWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.navyBlueDark,
-            AppColors.navyBlue,
-            AppColors.primaryRedDark,
-          ],
+        color: AppColors.obsidianBase,
+        border: Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // DUBS Institutional Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+          // Textura ambiental tenue de fondo (10% de opacidad, cero interferencia visual)
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.10,
+              child: Image.asset(
+                'assets/images/gym_auth_banner.png',
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              ),
             ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
+          ),
+
+          // Resplandor carmesí muy suave en esquina superior derecha
+          Positioned(
+            top: -60,
+            right: -60,
+            child: Container(
+              width: 240,
+              height: 240,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    Color(0x28990000), // Resplandor muy tenue
+                    Colors.transparent,
+                  ],
+                  radius: 0.7,
+                ),
+              ),
+            ),
+          ),
+
+          // Contenido limpio y aireado
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 26),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.auto_awesome, color: AppColors.accentGold, size: 14),
-                SizedBox(width: 6),
-                Text(
-                  'BIENESTAR SOCIAL (D.U.B.S.)',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 11,
-                    letterSpacing: 0.8,
+                // Tag discreto
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle, width: 1.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 5,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accentVibrant,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
+                        'INFRAESTRUCTURA DEPORTIVA',
+                        style: TextStyle(
+                          color: AppColors.solarGold,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 10,
+                          letterSpacing: 0.6,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
-          // Main Hero Title
-          RichText(
-            text: const TextSpan(
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                height: 1.25,
-                letterSpacing: -0.5,
-              ),
-              children: [
-                TextSpan(text: 'Gimnasio Universitario '),
-                TextSpan(
-                  text: 'UAGRM\n',
-                  style: TextStyle(color: AppColors.accentGold),
-                ),
-                TextSpan(
-                  text: 'Salud, Deporte & Rendimiento',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFFE2E8F0),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Description paragraph
-          const Text(
-            'Espacio deportivo universitario diseñado exclusivamente para Estudiantes, Administrativos y Docentes de la UAGRM.',
-            style: TextStyle(
-              color: Color(0xFFCBD5E1),
-              fontSize: 13,
-              height: 1.45,
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // Hero Image Card
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.35),
-                  blurRadius: 18,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Image.asset(
-                  'assets/images/gym_auth_banner.png',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
-                      fit: BoxFit.cover,
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 22),
-
-          // Action Buttons Row
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: onExploreTap,
-                  icon: const Icon(Icons.explore, size: 16),
-                  label: const Text('Disciplinas'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryRed,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                // Título motivacional de alto impacto (cero repetición)
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textWhite,
+                      height: 1.2,
+                      letterSpacing: -0.4,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    children: [
+                      TextSpan(text: 'Transforma tu\n'),
+                      TextSpan(
+                        text: 'Potencial Físico',
+                        style: TextStyle(
+                          color: AppColors.solarGold,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: onMembershipsTap,
-                  icon: const Icon(Icons.badge, size: 16),
-                  label: const Text('Membresías'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white70),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 8),
+
+                // Una sola línea descriptiva clara
+                const Text(
+                  'Instalaciones de primer nivel y acondicionamiento profesional con aranceles subvencionados.',
+                  style: TextStyle(
+                    color: AppColors.textSlateLight,
+                    fontSize: 12.5,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Acciones claras y sin amontonamiento
+                Row(
+                  children: [
+                    CrimsonButton(
+                      onPressed: onMembershipsTap,
+                      icon: const Icon(Icons.card_membership_rounded, size: 15, color: Colors.white),
+                      label: 'Ver Membresías',
+                      style: CrimsonButtonStyle.gradient,
+                      height: 40,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
+                    const SizedBox(width: 14),
+                    TextButton.icon(
+                      onPressed: onExploreTap,
+                      icon: const Icon(Icons.arrow_downward_rounded, size: 15, color: AppColors.textSlateMuted),
+                      label: const Text(
+                        'Disciplinas',
+                        style: TextStyle(
+                          color: AppColors.textSlateLight,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

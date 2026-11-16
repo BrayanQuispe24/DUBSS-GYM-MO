@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/plan_entrenamiento_model.dart';
 
 class RutinaDiasSelector extends StatelessWidget {
@@ -19,7 +20,7 @@ class RutinaDiasSelector extends StatelessWidget {
     if (dias.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
-      height: 48,
+      height: 44,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -33,48 +34,33 @@ class RutinaDiasSelector extends StatelessWidget {
 
           return InkWell(
             onTap: () => onDiaSelected(dia),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(4),
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              duration: const Duration(milliseconds: 180),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF0077D4) : Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                color: isSelected ? AppColors.primaryCrimson : AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
-                  width: isSelected ? 1.5 : 1.0,
+                  color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
+                  width: 1.0,
                 ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: const Color(0xFF0077D4).withValues(alpha: 0.25),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.02),
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.fitness_center,
-                    size: 15,
-                    color: isSelected ? Colors.white : const Color(0xFF64748B),
+                    size: 14,
+                    color: isSelected ? Colors.white : AppColors.textSlateMuted,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     dia,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12.5,
                       fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: isSelected ? Colors.white : const Color(0xFF1E293B),
+                      color: isSelected ? Colors.white : AppColors.textSlateLight,
                     ),
                   ),
                   if (totalEjercicios > 0) ...[
@@ -84,15 +70,15 @@ class RutinaDiasSelector extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? Colors.white.withValues(alpha: 0.25)
-                            : const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(10),
+                            : AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         '$totalEjercicios',
                         style: TextStyle(
-                          fontSize: 10.5,
+                          fontSize: 10,
                           fontWeight: FontWeight.w800,
-                          color: isSelected ? Colors.white : const Color(0xFF475569),
+                          color: isSelected ? Colors.white : AppColors.textSlateLight,
                         ),
                       ),
                     ),

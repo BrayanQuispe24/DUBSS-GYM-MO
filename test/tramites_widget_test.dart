@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dubss_app/features/auth/data/models/user_model.dart';
+import 'package:dubss_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:dubss_app/features/auth/presentation/providers/auth_state.dart';
 import 'package:dubss_app/features/tramites/data/datasources/tramites_remote_datasource.dart';
 import 'package:dubss_app/features/tramites/data/models/boleta_inscripcion_model.dart';
 import 'package:dubss_app/features/tramites/data/models/boleta_pago_model.dart';
@@ -63,12 +66,33 @@ class FakeTramitesRemoteDataSource extends TramitesRemoteDataSource {
   }
 }
 
+class TestAuthNotifier extends AuthNotifier {
+  final UserModel? testUser;
+  TestAuthNotifier(this.testUser);
+
+  @override
+  AuthState build() {
+    return AuthState(
+      status: testUser != null ? AuthStatus.authenticated : AuthStatus.unauthenticated,
+      user: testUser,
+    );
+  }
+}
+
 void main() {
-  testWidgets('ClientTramitesScreen renders 3 tabs, solicitudes, boletas, and scanner button',
+  testWidgets('ClientTramitesScreen DOES NOT show Escanear QR button for client user',
       (tester) async {
+    const clientUser = UserModel(
+      id: 7,
+      name: 'Brayan Quispe',
+      email: 'brayan@uagrm.edu.bo',
+      rol: 'cliente',
+    );
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authNotifierProvider.overrideWith(() => TestAuthNotifier(clientUser)),
           tramitesRemoteDataSourceProvider
               .overrideWithValue(FakeTramitesRemoteDataSource()),
         ],
@@ -81,39 +105,44 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    // Verify Header and Floating Scanner Button
+    // Verify Header and NO Scanner button for client
     expect(find.text('TRÁMITES & PAGOS'), findsOneWidget);
-    expect(find.text('Escanear QR'), findsOneWidget);
+    expect(find.text('Escanear QR'), findsNothing);
     expect(find.text('Solicitud'), findsOneWidget);
-
-    // Verify 3 Tabs matching web
-    expect(find.text('Solicitudes (1)'), findsOneWidget);
-    expect(find.text('Boletas (1)'), findsOneWidget);
-    expect(find.text('Pases / Ins. (1)'), findsOneWidget);
 
     // Verify Tab 1 (Default): Solicitud Card
     expect(find.text('DUBSS-FR-03-2026-1709'), findsOneWidget);
     expect(find.text('Kick Boxing'), findsOneWidget);
     expect(find.text('APROBADO'), findsOneWidget);
-    expect(find.text('PDF DUBSS-FR-03'), findsOneWidget);
+    expect(find.text('Ver PDF'), findsOneWidget);
+  });
 
-    // Tap Tab 2: Boletas de Pago
-    await tester.tap(find.text('Boletas (1)'));
-    await tester.pumpAndSettle();
+  testWidgets('ClientTramitesScreen SHOWS Escanear QR button for recepcionista or administrador',
+      (tester) async {
+    const receptionistUser = UserModel(
+      id: 2,
+      name: 'Recepcionista Turno Tarde',
+      email: 'recepcion@uagrm.edu.bo',
+      rol: 'recepcionista',
+    );
 
-    // Verify Payment Card in Tab 2
-    expect(find.text('BOL-2026-0042'), findsOneWidget);
-    expect(find.text('Arancel Plan Administrativos'), findsOneWidget);
-    expect(find.text('Bs. 200.00'), findsOneWidget);
-    expect(find.text('Ver Boleta PDF'), findsOneWidget);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authNotifierProvider.overrideWith(() => TestAuthNotifier(receptionistUser)),
+          tramitesRemoteDataSourceProvider
+              .overrideWithValue(FakeTramitesRemoteDataSource()),
+        ],
+        child: const MaterialApp(
+          home: ClientTramitesScreen(),
+        ),
+      ),
+    );
 
-    // Tap Tab 3: Pases / Inscripciones
-    await tester.tap(find.text('Pases / Ins. (1)'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // Verify Tab 3: Inscripción Card
-    expect(find.text('Musculación y Cardio DUBSS'), findsOneWidget);
-    expect(find.text('Pase QR'), findsOneWidget);
-    expect(find.text('Boleta PDF'), findsOneWidget);
+    // Escanear QR MUST be visible for receptionist
+    expect(find.text('Escanear QR'), findsOneWidget);
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/boleta_pago_model.dart';
 import '../screens/visor_pdf_screen.dart';
 import 'pdf_boleta_pago_builder.dart';
@@ -14,9 +15,11 @@ class BoletaPagoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSuccess = boleta.isPagado;
-    final statusColor = isSuccess ? const Color(0xFF10B981) : const Color(0xFFF59E0B);
-    final statusBg = isSuccess ? const Color(0xFFECFDF5) : const Color(0xFFFFFBEB);
-    final statusBorder = isSuccess ? const Color(0xFFA7F3D0) : const Color(0xFFFDE68A);
+    final statusColor = isSuccess ? AppColors.successEmerald : AppColors.solarGold;
+    final statusBg = isSuccess
+        ? AppColors.successEmerald.withValues(alpha: 0.15)
+        : AppColors.solarAmber.withValues(alpha: 0.15);
+    final statusBorder = isSuccess ? AppColors.successEmerald : AppColors.solarGold;
 
     final fechaStr = boleta.fechaPago != null
         ? '${boleta.fechaPago!.day.toString().padLeft(2, '0')}/${boleta.fechaPago!.month.toString().padLeft(2, '0')}/${boleta.fechaPago!.year}'
@@ -25,23 +28,16 @@ class BoletaPagoCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(height: 3, color: const Color(0xFF0077D4)),
+            Container(height: 3.0, color: AppColors.primaryCrimson),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -53,14 +49,14 @@ class BoletaPagoCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.receipt_outlined, size: 16, color: Color(0xFF0077D4)),
+                          const Icon(Icons.receipt_outlined, size: 16, color: AppColors.solarGold),
                           const SizedBox(width: 6),
                           Text(
                             boleta.numeroBoleta,
                             style: const TextStyle(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0077D4),
+                              color: AppColors.solarGold,
                             ),
                           ),
                         ],
@@ -70,7 +66,7 @@ class BoletaPagoCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: statusBg,
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: statusBorder),
+                          border: Border.all(color: statusBorder, width: 0.8),
                         ),
                         child: Text(
                           boleta.estadoLabel,
@@ -91,7 +87,7 @@ class BoletaPagoCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                     ),
                   ),
 
@@ -99,26 +95,27 @@ class BoletaPagoCard extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       'Plan: ${boleta.planNombre}',
-                      style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSlateLight,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
 
                   const SizedBox(height: 12),
 
-                  // Date, Method and Amount
+                  // Arancel & Fecha
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
+                          const Icon(Icons.calendar_today, size: 12, color: AppColors.textSlateMuted),
+                          const SizedBox(width: 4),
                           Text(
                             'Fecha: $fechaStr',
-                            style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
-                          ),
-                          Text(
-                            boleta.metodoPago,
-                            style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
+                            style: const TextStyle(fontSize: 11.5, color: AppColors.textSlateMuted),
                           ),
                         ],
                       ),
@@ -127,15 +124,15 @@ class BoletaPagoCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
-                          color: Color(0xFF0077D4),
+                          color: AppColors.textWhite,
                         ),
                       ),
                     ],
                   ),
 
-                  const Divider(height: 20),
+                  const Divider(color: AppColors.borderSubtle, height: 20),
 
-                  // Actions: Ver Boleta PDF
+                  // Ver Boleta PDF Button
                   Align(
                     alignment: Alignment.centerRight,
                     child: OutlinedButton.icon(
@@ -146,15 +143,14 @@ class BoletaPagoCard extends StatelessWidget {
                           documentBuilder: () => PdfBoletaPagoBuilder.buildPdf(boleta),
                         );
                       },
-                      icon: const Icon(Icons.picture_as_pdf_outlined, size: 16),
-                      label: const Text('Ver Boleta PDF'),
+                      icon: const Icon(Icons.picture_as_pdf_outlined, size: 15, color: AppColors.textSlateLight),
+                      label: const Text('Descargar Comprobante PDF'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFF0077D4),
-                        side: const BorderSide(color: Color(0xFFBAE6FD)),
-                        backgroundColor: const Color(0xFFF0F9FF),
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        foregroundColor: AppColors.textSlateLight,
+                        side: const BorderSide(color: AppColors.borderSubtle),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         visualDensity: VisualDensity.compact,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       ),
                     ),
                   ),

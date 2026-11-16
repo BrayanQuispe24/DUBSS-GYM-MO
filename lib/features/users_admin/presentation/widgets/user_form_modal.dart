@@ -123,7 +123,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                   ? 'Usuario actualizado correctamente'
                   : 'Usuario registrado con éxito',
             ),
-            backgroundColor: AppColors.success,
+            backgroundColor: AppColors.successEmerald,
           ),
         );
       }
@@ -132,7 +132,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: AppColors.danger,
+            backgroundColor: AppColors.accentVibrant,
           ),
         );
       }
@@ -150,8 +150,9 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
         maxHeight: MediaQuery.of(context).size.height * 0.90,
       ),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1.0)),
       ),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
@@ -166,10 +167,10 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
+              width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: AppColors.borderSubtle,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -183,18 +184,18 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
               Text(
                 isEdit ? 'Editar Usuario' : 'Nuevo Usuario / Socio',
                 style: const TextStyle(
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF003B70),
+                  color: AppColors.textWhite,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.grey),
+                icon: const Icon(Icons.close, color: AppColors.textSlateMuted, size: 20),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
-          const Divider(height: 1),
+          const Divider(height: 1, color: AppColors.borderSubtle),
           const SizedBox(height: 14),
 
           // Form body
@@ -210,7 +211,8 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                         Expanded(
                           child: TextFormField(
                             controller: _nombreCtrl,
-                            decoration: _inputDeco('Nombre *', Icons.person),
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                            decoration: _inputDeco('Nombre *', Icons.person_outline),
                             validator: (v) => v == null || v.trim().isEmpty
                                 ? 'Requerido'
                                 : null,
@@ -220,6 +222,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                         Expanded(
                           child: TextFormField(
                             controller: _apellidoCtrl,
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                             decoration: _inputDeco('Apellido *', Icons.person_outline),
                             validator: (v) => v == null || v.trim().isEmpty
                                 ? 'Requerido'
@@ -234,6 +237,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                     TextFormField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
+                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                       decoration: _inputDeco('Correo Electrónico *', Icons.email_outlined),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Ingrese un correo';
@@ -247,6 +251,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                     TextFormField(
                       controller: _passwordCtrl,
                       obscureText: _obscurePassword,
+                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                       decoration: _inputDeco(
                         isEdit ? 'Nueva Contraseña (opcional)' : 'Contraseña *',
                         Icons.lock_outline,
@@ -257,7 +262,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                             size: 18,
-                            color: Colors.grey,
+                            color: AppColors.textSlateMuted,
                           ),
                           onPressed: () => setState(
                               () => _obscurePassword = !_obscurePassword),
@@ -279,6 +284,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                           child: TextFormField(
                             controller: _ciCtrl,
                             keyboardType: TextInputType.text,
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                             decoration: _inputDeco('C.I. / Documento', Icons.badge_outlined),
                           ),
                         ),
@@ -287,6 +293,7 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                           child: TextFormField(
                             controller: _codigoCtrl,
                             keyboardType: TextInputType.number,
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                             decoration: _inputDeco('R.U. / Código', Icons.school_outlined),
                           ),
                         ),
@@ -298,7 +305,8 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                     TextFormField(
                       controller: _celularCtrl,
                       keyboardType: TextInputType.phone,
-                      decoration: _inputDeco('Celular / Teléfono', Icons.phone_android),
+                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                      decoration: _inputDeco('Celular / Teléfono', Icons.phone_android_outlined),
                     ),
                     const SizedBox(height: 12),
 
@@ -308,6 +316,8 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             initialValue: _rol,
+                            dropdownColor: AppColors.carbonSurface,
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                             isExpanded: true,
                             decoration: _inputDeco('Rol del Sistema', Icons.shield_outlined),
                             items: const [
@@ -323,6 +333,8 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             initialValue: _tipoUsuario,
+                            dropdownColor: AppColors.carbonSurface,
+                            style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                             isExpanded: true,
                             decoration: _inputDeco('Tipo Universitario', Icons.category_outlined),
                             items: const [
@@ -341,6 +353,8 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
                     // Estado
                     DropdownButtonFormField<String>(
                       initialValue: _estado,
+                      dropdownColor: AppColors.carbonSurface,
+                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                       isExpanded: true,
                       decoration: _inputDeco('Estado de Cuenta', Icons.toggle_on_outlined),
                       items: const [
@@ -360,12 +374,14 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
           ElevatedButton(
             onPressed: _isLoading ? null : _handleSubmit,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF003B70),
+              backgroundColor: AppColors.primaryCrimson,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(4),
+                side: const BorderSide(color: AppColors.accentVibrant),
               ),
+              elevation: 0,
             ),
             child: _isLoading
                 ? const SizedBox(
@@ -392,17 +408,22 @@ class _UserFormModalState extends ConsumerState<UserFormModal> {
   InputDecoration _inputDeco(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
-      prefixIcon: Icon(icon, color: const Color(0xFF003B70), size: 18),
+      labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      prefixIcon: Icon(icon, color: AppColors.accentVibrant, size: 18),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFF003B70), width: 1.5),
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
       ),
     );
   }

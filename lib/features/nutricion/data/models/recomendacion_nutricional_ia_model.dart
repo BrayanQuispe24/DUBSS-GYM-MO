@@ -140,8 +140,8 @@ class RecomendacionNutricionalResponse {
       gastoEnergeticoTotal: (json['gasto_energetico_total'] is num)
           ? (json['gasto_energetico_total'] as num).toInt()
           : 0,
-      macronutrientesTotales: json['macronutrientes_totales'] is Map<String, dynamic>
-          ? MacronutrientesTotalesModel.fromJson(json['macronutrientes_totales'] as Map<String, dynamic>)
+      macronutrientesTotales: json['macronutrientes_totales'] is Map
+          ? MacronutrientesTotalesModel.fromJson(Map<String, dynamic>.from(json['macronutrientes_totales'] as Map))
           : const MacronutrientesTotalesModel(proteinasG: 0, carbohidratosG: 0, grasasG: 0),
       resumenEstrategia: json['resumen_estrategia']?.toString() ?? '',
       hidratacionRecomendadaLitros: (json['hidratacion_recomendada_litros'] is num)
@@ -152,8 +152,8 @@ class RecomendacionNutricionalResponse {
           : [],
       comidas: (json['comidas'] is List)
           ? (json['comidas'] as List)
-              .whereType<Map<String, dynamic>>()
-              .map((c) => ComidaPlanModel.fromJson(c))
+              .whereType<Map>()
+              .map((c) => ComidaPlanModel.fromJson(Map<String, dynamic>.from(c)))
               .toList()
           : [],
     );

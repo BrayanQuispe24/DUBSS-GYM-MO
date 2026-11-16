@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/plan_alimentacion_model.dart';
 import '../providers/nutricion_provider.dart';
 import '../widgets/comida_detail_card.dart';
@@ -26,12 +27,16 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
       // Si no está en memoria, buscar en la lista general de planes
       final planesAsync = ref.watch(planesAlimentacionProvider);
       return Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: AppColors.obsidianBase,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.obsidianBase,
           elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          shape: const Border(
+            bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+            icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
             onPressed: () => context.pop(),
           ),
           title: const Text(
@@ -39,13 +44,13 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF0F172A),
+              color: AppColors.textWhite,
             ),
           ),
         ),
         body: planesAsync.when(
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+            child: CircularProgressIndicator(color: AppColors.accentVibrant),
           ),
           error: (err, _) => Center(
             child: Padding(
@@ -53,7 +58,7 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
               child: Text(
                 'Error al cargar el plan: $err',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Color(0xFFEF4444)),
+                style: const TextStyle(color: AppColors.accentVibrant),
               ),
             ),
           ),
@@ -61,7 +66,7 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
             final found = planes.where((p) => p.id == planId).firstOrNull;
             if (found == null) {
               return const Center(
-                child: Text('Plan nutricional no encontrado.'),
+                child: Text('Plan nutricional no encontrado.', style: TextStyle(color: AppColors.textWhite)),
               );
             }
             return _buildDetailContent(context, ref, found);
@@ -71,13 +76,16 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => context.pop(),
         ),
         title: const Text(
@@ -85,7 +93,7 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF0F172A),
+            color: AppColors.textWhite,
           ),
         ),
       ),
@@ -123,19 +131,9 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF0077D4), Color(0xFF0284C7)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF0077D4).withValues(alpha: 0.35),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle, width: 1.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,13 +144,14 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(6),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: const Text(
                       'PLAN NUTRICIONAL OFICIAL',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.solarGold,
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
@@ -162,13 +161,18 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                     decoration: BoxDecoration(
-                      color: plan.estado ? const Color(0xFF10B981) : Colors.white24,
-                      borderRadius: BorderRadius.circular(6),
+                      color: plan.estado
+                          ? AppColors.successEmerald.withValues(alpha: 0.15)
+                          : AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: plan.estado ? AppColors.successEmerald : AppColors.borderSubtle,
+                      ),
                     ),
                     child: Text(
                       plan.estado ? 'ACTIVO' : 'HISTÓRICO',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: plan.estado ? AppColors.successLight : AppColors.textSlateMuted,
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                       ),
@@ -182,7 +186,7 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                  color: AppColors.textWhite,
                   height: 1.25,
                 ),
               ),
@@ -190,27 +194,27 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 6),
                 Text(
                   plan.objetivo!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12.5,
-                    color: Colors.white.withValues(alpha: 0.95),
+                    color: AppColors.textSlateLight,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
               const SizedBox(height: 14),
-              const Divider(color: Colors.white24, height: 1),
+              const Divider(color: AppColors.borderSubtle, height: 1),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.person, color: Colors.white70, size: 15),
+                      const Icon(Icons.person, color: AppColors.textSlateMuted, size: 15),
                       const SizedBox(width: 5),
                       Text(
                         plan.usuarioNombre,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textWhite,
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
@@ -220,12 +224,12 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                   if (plan.fechaInicio != null)
                     Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: Colors.white70, size: 13),
+                        const Icon(Icons.calendar_today, color: AppColors.textSlateMuted, size: 13),
                         const SizedBox(width: 4),
                         Text(
                           plan.fechaInicio!,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textSlateLight,
                             fontSize: 11.5,
                             fontWeight: FontWeight.w600,
                           ),
@@ -245,23 +249,23 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFFEFF6FF),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFBFDBFE)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.auto_awesome, color: Color(0xFF0077D4), size: 16),
+                    Icon(Icons.auto_awesome, color: AppColors.solarGold, size: 16),
                     SizedBox(width: 6),
                     Text(
                       'ESTRATEGIA NUTRICIONAL',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0077D4),
+                        color: AppColors.solarGold,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -272,7 +276,7 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
                   plan.observacion!.trim(),
                   style: const TextStyle(
                     fontSize: 12.5,
-                    color: Color(0xFF1E3A8A),
+                    color: AppColors.textSlateLight,
                     height: 1.4,
                   ),
                 ),
@@ -303,22 +307,23 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF475569),
+                color: AppColors.textSlateLight,
                 letterSpacing: 0.6,
               ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
               decoration: BoxDecoration(
-                color: const Color(0xFF0077D4).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Text(
                 '${plan.detalles.length} comidas',
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0077D4),
+                  color: AppColors.accentVibrant,
                 ),
               ),
             ),
@@ -331,13 +336,13 @@ class PlanNutricionalDetailScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: const Text(
               'Este plan no tiene platos prescritos registrados.',
-              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              style: TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
             ),
           )
         else

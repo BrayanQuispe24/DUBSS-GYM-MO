@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/ejercicio_model.dart';
 
 class EjercicioGaleriaModal extends StatefulWidget {
@@ -44,18 +45,30 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
 
     if (images.isEmpty) {
       return Dialog(
+        backgroundColor: AppColors.carbonSurface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.borderSubtle),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.broken_image, size: 48, color: Colors.grey),
+              const Icon(Icons.broken_image, size: 48, color: AppColors.textSlateMuted),
               const SizedBox(height: 12),
-              const Text('No hay imágenes disponibles para este ejercicio.'),
+              const Text(
+                'No hay imágenes disponibles para este ejercicio.',
+                style: TextStyle(color: AppColors.textWhite),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cerrar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryCrimson,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                ),
+                child: const Text('Cerrar', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -70,8 +83,9 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF0F172A),
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.carbonSurface,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.borderSubtle, width: 1.0),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -90,7 +104,7 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textWhite,
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                           ),
@@ -98,7 +112,7 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                         Text(
                           'Paso ${_currentIndex + 1} de ${images.length}',
                           style: const TextStyle(
-                            color: Color(0xFF38BDF8),
+                            color: AppColors.solarGold,
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                           ),
@@ -107,7 +121,7 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close, color: AppColors.textSlateMuted),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -124,7 +138,7 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                 itemBuilder: (context, index) {
                   final img = images[index];
                   return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                     child: InteractiveViewer(
                       maxScale: 3.0,
                       child: Center(
@@ -132,10 +146,10 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                           imageUrl: img.resolvedUrl,
                           fit: BoxFit.contain,
                           placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(color: Colors.white),
+                            child: CircularProgressIndicator(color: AppColors.accentVibrant),
                           ),
                           errorWidget: (context, url, error) => const Center(
-                            child: Icon(Icons.broken_image, color: Colors.grey, size: 48),
+                            child: Icon(Icons.broken_image, color: AppColors.textSlateMuted, size: 48),
                           ),
                         ),
                       ),
@@ -152,7 +166,7 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                 child: Text(
                   currentImg.descripcion!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 11.5, color: Color(0xFFCBD5E1)),
+                  style: const TextStyle(fontSize: 11.5, color: AppColors.textSlateLight),
                 ),
               ),
 
@@ -176,8 +190,11 @@ class _EjercicioGaleriaModalState extends State<EjercicioGaleriaModal> {
                       width: isSelected ? 20 : 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF0077D4) : const Color(0xFF475569),
+                        color: isSelected ? AppColors.accentVibrant : AppColors.carbonSurfaceMuted,
                         borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
+                        ),
                       ),
                     ),
                   );

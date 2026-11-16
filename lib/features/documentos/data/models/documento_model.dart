@@ -57,29 +57,7 @@ class DocumentoModel {
   }
 
   /// Resuelve la URL pública completa para descarga o visualización
-  String get fullFileUrl {
-    final raw = rawFilePath.trim();
-    if (raw.isEmpty) return '';
-    if (raw.startsWith('http://') || raw.startsWith('https://')) {
-      return raw;
-    }
-
-    // Extraer base URL del servidor sin '/api/'
-    var serverBase = AppEnv.apiBaseUrl;
-    if (serverBase.endsWith('/api/')) {
-      serverBase = serverBase.substring(0, serverBase.length - 5);
-    } else if (serverBase.endsWith('/api')) {
-      serverBase = serverBase.substring(0, serverBase.length - 4);
-    } else if (serverBase.endsWith('/')) {
-      serverBase = serverBase.substring(0, serverBase.length - 1);
-    }
-
-    final cleanPath = raw.startsWith('/') ? raw : '/$raw';
-    if (cleanPath.startsWith('/storage')) {
-      return '$serverBase$cleanPath';
-    }
-    return '$serverBase/storage$cleanPath';
-  }
+  String get fullFileUrl => AppEnv.resolveStorageUrl(rawFilePath);
 
   String get formattedDate {
     if (createdAt == null) return 'Fecha no disponible';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../providers/nutricion_provider.dart';
 import '../widgets/plan_nutricional_card.dart';
 
@@ -26,7 +27,7 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
     final filtroEstado = ref.watch(filtroEstadoPlanProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       body: SafeArea(
         child: Column(
           children: [
@@ -40,16 +41,17 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                 children: [
                   TextField(
                     controller: _searchController,
+                    style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                     onChanged: (val) {
                       ref.read(searchNutricionProvider.notifier).setSearch(val);
                     },
                     decoration: InputDecoration(
                       hintText: 'Buscar plan por nombre, objetivo...',
-                      hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
-                      prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF64748B)),
+                      hintStyle: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
+                      prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textSlateMuted),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear, size: 16),
+                              icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                               onPressed: () {
                                 _searchController.clear();
                                 ref.read(searchNutricionProvider.notifier).setSearch('');
@@ -57,19 +59,19 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                             )
                           : null,
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppColors.carbonSurfaceMuted,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.borderSubtle),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.borderSubtle),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFF0077D4), width: 1.5),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
                       ),
                     ),
                   ),
@@ -102,13 +104,14 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
             // Content List / Refresh
             Expanded(
               child: RefreshIndicator(
-                color: const Color(0xFF0077D4),
+                color: AppColors.accentVibrant,
+                backgroundColor: AppColors.carbonSurface,
                 onRefresh: () async {
                   ref.invalidate(planesAlimentacionProvider);
                 },
                 child: planesAsync.when(
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+                    child: CircularProgressIndicator(color: AppColors.accentVibrant),
                   ),
                   error: (err, _) => ListView(
                     padding: const EdgeInsets.all(24),
@@ -117,12 +120,12 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                       Center(
                         child: Column(
                           children: [
-                            const Icon(Icons.cloud_off, size: 48, color: Color(0xFF94A3B8)),
+                            const Icon(Icons.cloud_off, size: 48, color: AppColors.accentVibrant),
                             const SizedBox(height: 12),
                             Text(
                               'Error al cargar planes: $err',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                              style: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
                             ),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
@@ -130,8 +133,9 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                               icon: const Icon(Icons.refresh, size: 16),
                               label: const Text('Reintentar'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0077D4),
+                                backgroundColor: AppColors.primaryCrimson,
                                 foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                               ),
                             ),
                           ],
@@ -171,10 +175,14 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
         onPressed: () {
           context.push('/client/nutricion/generar-ia');
         },
-        backgroundColor: const Color(0xFF0077D4),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
-        elevation: 4,
-        icon: const Icon(Icons.auto_awesome, size: 20),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
+        icon: const Icon(Icons.auto_awesome, size: 20, color: AppColors.solarGold),
         label: const Text(
           'Generar con IA',
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
@@ -184,8 +192,12 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+      decoration: const BoxDecoration(
+        color: AppColors.obsidianBase,
+        border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -195,23 +207,13 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0077D4), Color(0xFF0284C7)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF0077D4).withValues(alpha: 0.3),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: AppColors.carbonSurface,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: const Icon(
                   Icons.restaurant_menu,
-                  color: Colors.white,
+                  color: AppColors.accentVibrant,
                   size: 20,
                 ),
               ),
@@ -224,13 +226,13 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                       letterSpacing: 0.3,
                     ),
                   ),
                   Text(
                     'Prescripción inteligente DUBSS & Gemini IA',
-                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                    style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                   ),
                 ],
               ),
@@ -238,7 +240,7 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
           ),
           IconButton(
             onPressed: () => context.pop(),
-            icon: const Icon(Icons.close, color: Color(0xFF64748B)),
+            icon: const Icon(Icons.close, color: AppColors.textSlateMuted),
             tooltip: 'Volver',
           ),
         ],
@@ -253,14 +255,14 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(4),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF0077D4) : Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          color: selected ? AppColors.primaryCrimson : AppColors.carbonSurface,
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: selected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+            color: selected ? AppColors.accentVibrant : AppColors.borderSubtle,
           ),
         ),
         child: Text(
@@ -268,7 +270,7 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-            color: selected ? Colors.white : const Color(0xFF475569),
+            color: selected ? Colors.white : AppColors.textSlateLight,
           ),
         ),
       ),
@@ -285,13 +287,13 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
             width: 76,
             height: 76,
             decoration: BoxDecoration(
-              color: const Color(0xFFEFF6FF),
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFFBFDBFE), width: 1.5),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle, width: 1.0),
             ),
             child: const Icon(
               Icons.restaurant_menu_outlined,
-              color: Color(0xFF0077D4),
+              color: AppColors.accentVibrant,
               size: 38,
             ),
           ),
@@ -303,14 +305,14 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF0F172A),
+            color: AppColors.textWhite,
           ),
         ),
         const SizedBox(height: 8),
         const Text(
           'Genera tu plan personalizado con Inteligencia Artificial adaptado a tus medidas, objetivos deportivos y presupuesto accesible.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 13, color: Color(0xFF64748B), height: 1.4),
+          style: TextStyle(fontSize: 13, color: AppColors.textSlateMuted, height: 1.4),
         ),
         const SizedBox(height: 24),
         Center(
@@ -318,13 +320,13 @@ class _ClientNutricionScreenState extends ConsumerState<ClientNutricionScreen> {
             onPressed: () {
               context.push('/client/nutricion/generar-ia');
             },
-            icon: const Icon(Icons.auto_awesome, size: 18),
+            icon: const Icon(Icons.auto_awesome, size: 18, color: AppColors.solarGold),
             label: const Text('Generar Plan con Gemini IA'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0077D4),
+              backgroundColor: AppColors.primaryCrimson,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
         ),

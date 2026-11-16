@@ -14,7 +14,9 @@ class DubssApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Gimnasio Universitario UAGRM - DUBS',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       routerConfig: router,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

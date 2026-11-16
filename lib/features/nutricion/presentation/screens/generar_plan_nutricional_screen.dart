@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../../auth/presentation/providers/auth_notifier.dart';
 import '../../data/models/recomendacion_nutricional_ia_model.dart';
 import '../providers/generar_plan_ia_provider.dart';
@@ -68,9 +70,9 @@ class _GenerarPlanNutricionalScreenState
       nivelActividad: _nivelActividad,
       objetivo: _objetivo,
       comidasAlDia: _comidasAlDia,
+      presupuesto: _presupuesto,
       restricciones: restricciones,
       alimentosNoDeseados: alimentosNoDeseados,
-      presupuesto: _presupuesto,
       observacionesAdicionales: _observacionesController.text.trim().isNotEmpty
           ? _observacionesController.text.trim()
           : null,
@@ -84,8 +86,8 @@ class _GenerarPlanNutricionalScreenState
       final err = ref.read(generarPlanIaProvider).generationError;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(err ?? 'Error al contactar al servicio de IA.'),
-          backgroundColor: const Color(0xFFDC2626),
+          content: Text(err ?? 'Error al generar la recomendación.'),
+          backgroundColor: AppColors.accentVibrant,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -93,14 +95,12 @@ class _GenerarPlanNutricionalScreenState
   }
 
   void _guardarPlanOficial() async {
-    final authState = ref.read(authNotifierProvider);
-    final user = authState.user;
-
+    final user = ref.read(authNotifierProvider).user;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Debes iniciar sesión para guardar el plan oficial.'),
-          backgroundColor: Color(0xFFDC2626),
+          backgroundColor: AppColors.accentVibrant,
         ),
       );
       return;
@@ -126,7 +126,7 @@ class _GenerarPlanNutricionalScreenState
               ),
             ],
           ),
-          backgroundColor: Color(0xFF16A34A),
+          backgroundColor: AppColors.successEmerald,
           behavior: SnackBarBehavior.floating,
           duration: Duration(seconds: 3),
         ),
@@ -137,7 +137,7 @@ class _GenerarPlanNutricionalScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err ?? 'Error al guardar el plan oficial.'),
-          backgroundColor: const Color(0xFFDC2626),
+          backgroundColor: AppColors.accentVibrant,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -165,19 +165,22 @@ class _GenerarPlanNutricionalScreenState
     final state = ref.watch(generarPlanIaProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => context.pop(),
         ),
         title: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.auto_awesome, color: Color(0xFF0077D4), size: 20),
+            Icon(Icons.auto_awesome, color: AppColors.solarGold, size: 20),
             SizedBox(width: 8),
             Flexible(
               child: Text(
@@ -186,7 +189,7 @@ class _GenerarPlanNutricionalScreenState
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
+                  color: AppColors.textWhite,
                 ),
               ),
             ),
@@ -212,23 +215,13 @@ class _GenerarPlanNutricionalScreenState
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0077D4), Color(0xFF38BDF8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF0077D4).withValues(alpha: 0.35),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle),
               ),
               child: const Icon(
                 Icons.auto_awesome,
-                color: Colors.white,
+                color: AppColors.solarGold,
                 size: 40,
               ),
             ),
@@ -239,7 +232,7 @@ class _GenerarPlanNutricionalScreenState
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
-                color: Color(0xFF0F172A),
+                color: AppColors.textWhite,
               ),
             ),
             const SizedBox(height: 10),
@@ -248,7 +241,7 @@ class _GenerarPlanNutricionalScreenState
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
-                color: Color(0xFF64748B),
+                color: AppColors.textSlateMuted,
                 height: 1.4,
               ),
             ),
@@ -256,8 +249,8 @@ class _GenerarPlanNutricionalScreenState
             const SizedBox(
               width: 140,
               child: LinearProgressIndicator(
-                color: Color(0xFF0077D4),
-                backgroundColor: Color(0xFFE2E8F0),
+                color: AppColors.accentVibrant,
+                backgroundColor: AppColors.carbonSurfaceMuted,
               ),
             ),
           ],
@@ -276,19 +269,9 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0077D4), Color(0xFF0284C7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Row(
               children: [
@@ -296,10 +279,11 @@ class _GenerarPlanNutricionalScreenState
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.carbonSurfaceMuted,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
-                  child: const Icon(Icons.psychology, color: Colors.white, size: 26),
+                  child: const Icon(Icons.psychology, color: AppColors.solarGold, size: 26),
                 ),
                 const SizedBox(width: 14),
                 const Expanded(
@@ -309,7 +293,7 @@ class _GenerarPlanNutricionalScreenState
                       Text(
                         'Prescripción Inteligente',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textWhite,
                           fontSize: 15,
                           fontWeight: FontWeight.w900,
                         ),
@@ -318,7 +302,7 @@ class _GenerarPlanNutricionalScreenState
                       Text(
                         'Completa tus datos y la IA diseñará un plan estructurado con recetas, porciones y sustitutos económicos.',
                         style: TextStyle(
-                          color: Colors.white70,
+                          color: AppColors.textSlateMuted,
                           fontSize: 11.5,
                           height: 1.3,
                         ),
@@ -338,9 +322,9 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               children: [
@@ -350,7 +334,7 @@ class _GenerarPlanNutricionalScreenState
                     const Expanded(
                       child: Text(
                         'Sexo Biológico',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                       ),
                     ),
                     ChoiceChip(
@@ -359,14 +343,16 @@ class _GenerarPlanNutricionalScreenState
                       visualDensity: VisualDensity.compact,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: const EdgeInsets.symmetric(horizontal: 4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       onSelected: (val) {
                         if (val) setState(() => _sexo = 'masculino');
                       },
-                      selectedColor: const Color(0xFF0077D4).withValues(alpha: 0.2),
+                      selectedColor: AppColors.primaryCrimson,
+                      backgroundColor: AppColors.carbonSurfaceMuted,
                       labelStyle: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: _sexo == 'masculino' ? const Color(0xFF0077D4) : const Color(0xFF64748B),
+                        color: _sexo == 'masculino' ? Colors.white : AppColors.textSlateLight,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -376,19 +362,21 @@ class _GenerarPlanNutricionalScreenState
                       visualDensity: VisualDensity.compact,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: const EdgeInsets.symmetric(horizontal: 4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       onSelected: (val) {
                         if (val) setState(() => _sexo = 'femenino');
                       },
-                      selectedColor: const Color(0xFF0077D4).withValues(alpha: 0.2),
+                      selectedColor: AppColors.primaryCrimson,
+                      backgroundColor: AppColors.carbonSurfaceMuted,
                       labelStyle: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: _sexo == 'femenino' ? const Color(0xFF0077D4) : const Color(0xFF64748B),
+                        color: _sexo == 'femenino' ? Colors.white : AppColors.textSlateLight,
                       ),
                     ),
                   ],
                 ),
-                const Divider(height: 20, color: Color(0xFFF1F5F9)),
+                const Divider(height: 20, color: AppColors.borderSubtle),
 
                 // Edad
                 Row(
@@ -396,7 +384,7 @@ class _GenerarPlanNutricionalScreenState
                     const Expanded(
                       child: Text(
                         'Edad (años)',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                       ),
                     ),
                     SizedBox(
@@ -405,6 +393,7 @@ class _GenerarPlanNutricionalScreenState
                         initialValue: '$_edad',
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                         decoration: _inputDecoration('años'),
                         onChanged: (v) => _edad = int.tryParse(v) ?? _edad,
                         validator: (v) {
@@ -416,7 +405,7 @@ class _GenerarPlanNutricionalScreenState
                     ),
                   ],
                 ),
-                const Divider(height: 20, color: Color(0xFFF1F5F9)),
+                const Divider(height: 20, color: AppColors.borderSubtle),
 
                 // Peso
                 Row(
@@ -424,7 +413,7 @@ class _GenerarPlanNutricionalScreenState
                     const Expanded(
                       child: Text(
                         'Peso Corporal (kg)',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                       ),
                     ),
                     SizedBox(
@@ -433,6 +422,7 @@ class _GenerarPlanNutricionalScreenState
                         initialValue: '$_pesoKg',
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                         decoration: _inputDecoration('kg'),
                         onChanged: (v) => _pesoKg = double.tryParse(v) ?? _pesoKg,
                         validator: (v) {
@@ -444,7 +434,7 @@ class _GenerarPlanNutricionalScreenState
                     ),
                   ],
                 ),
-                const Divider(height: 20, color: Color(0xFFF1F5F9)),
+                const Divider(height: 20, color: AppColors.borderSubtle),
 
                 // Altura
                 Row(
@@ -452,7 +442,7 @@ class _GenerarPlanNutricionalScreenState
                     const Expanded(
                       child: Text(
                         'Altura (cm)',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                       ),
                     ),
                     SizedBox(
@@ -461,6 +451,7 @@ class _GenerarPlanNutricionalScreenState
                         initialValue: '$_alturaCm',
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                         decoration: _inputDecoration('cm'),
                         onChanged: (v) => _alturaCm = double.tryParse(v) ?? _alturaCm,
                         validator: (v) {
@@ -484,21 +475,22 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Objetivo Nutricional Principal',
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                 ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _objetivo,
+                  dropdownColor: AppColors.carbonSurface,
                   decoration: _selectDecoration(),
                   items: const [
                     DropdownMenuItem(
@@ -507,7 +499,7 @@ class _GenerarPlanNutricionalScreenState
                         'Aumento de Masa Muscular (Hipertrofia)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -516,7 +508,7 @@ class _GenerarPlanNutricionalScreenState
                         'Pérdida de Grasa & Definición',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -525,7 +517,7 @@ class _GenerarPlanNutricionalScreenState
                         'Mantenimiento & Salud General',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -534,7 +526,7 @@ class _GenerarPlanNutricionalScreenState
                         'Definición Muscular Extrema',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -543,7 +535,7 @@ class _GenerarPlanNutricionalScreenState
                         'Rendimiento Atlético / Fuerza',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                   ],
@@ -554,12 +546,13 @@ class _GenerarPlanNutricionalScreenState
                 const SizedBox(height: 14),
                 const Text(
                   'Nivel de Actividad Física Habitual',
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                 ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _nivelActividad,
+                  dropdownColor: AppColors.carbonSurface,
                   decoration: _selectDecoration(),
                   items: const [
                     DropdownMenuItem(
@@ -568,7 +561,7 @@ class _GenerarPlanNutricionalScreenState
                         'Sedentario (Poco o ningún ejercicio)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -577,7 +570,7 @@ class _GenerarPlanNutricionalScreenState
                         'Ligero (1-2 días de entreno / semana)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -586,7 +579,7 @@ class _GenerarPlanNutricionalScreenState
                         'Moderado (3-5 días de entreno / semana)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -595,7 +588,7 @@ class _GenerarPlanNutricionalScreenState
                         'Intenso (6-7 días de entreno intenso)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -604,7 +597,7 @@ class _GenerarPlanNutricionalScreenState
                         'Muy Intenso (Atleta de alto rendimiento)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                   ],
@@ -624,9 +617,9 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -636,7 +629,7 @@ class _GenerarPlanNutricionalScreenState
                     const Expanded(
                       child: Text(
                         'Comidas al día prescritas',
-                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                       ),
                     ),
                     Wrap(
@@ -645,19 +638,22 @@ class _GenerarPlanNutricionalScreenState
                         final isSel = _comidasAlDia == numComidas;
                         return InkWell(
                           onTap: () => setState(() => _comidasAlDia = numComidas),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(4),
                           child: Container(
                             width: 34,
                             height: 32,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: isSel ? const Color(0xFF0077D4) : const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(6),
+                              color: isSel ? AppColors.primaryCrimson : AppColors.carbonSurfaceMuted,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: isSel ? AppColors.accentVibrant : AppColors.borderSubtle,
+                              ),
                             ),
                             child: Text(
                               '$numComidas',
                               style: TextStyle(
-                                color: isSel ? Colors.white : const Color(0xFF334155),
+                                color: isSel ? Colors.white : AppColors.textSlateLight,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
                               ),
@@ -668,16 +664,17 @@ class _GenerarPlanNutricionalScreenState
                     ),
                   ],
                 ),
-                const Divider(height: 20, color: Color(0xFFF1F5F9)),
+                const Divider(height: 20, color: AppColors.borderSubtle),
 
                 const Text(
                   'Presupuesto Culinario',
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                 ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _presupuesto,
+                  dropdownColor: AppColors.carbonSurface,
                   decoration: _selectDecoration(),
                   items: const [
                     DropdownMenuItem(
@@ -686,7 +683,7 @@ class _GenerarPlanNutricionalScreenState
                         'Económico (Canasta básica universitaria accesible)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -695,7 +692,7 @@ class _GenerarPlanNutricionalScreenState
                         'Estándar (Variedad balanceada)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                     DropdownMenuItem(
@@ -704,7 +701,7 @@ class _GenerarPlanNutricionalScreenState
                         'Flexible / Premium (Cortes magros, suplementos)',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 12.5),
+                        style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                       ),
                     ),
                   ],
@@ -724,15 +721,16 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
                   controller: _restriccionesController,
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                   decoration: _textFieldDecoration(
                     label: 'Alergias o restricciones médicas',
                     hint: 'ej: sin lactosa, celíaco, vegetariano',
@@ -741,6 +739,7 @@ class _GenerarPlanNutricionalScreenState
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _alimentosEvitarController,
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                   decoration: _textFieldDecoration(
                     label: 'Alimentos no deseados o que no te gusten',
                     hint: 'ej: pescado, cebolla, avena',
@@ -750,6 +749,7 @@ class _GenerarPlanNutricionalScreenState
                 TextFormField(
                   controller: _observacionesController,
                   maxLines: 2,
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                   decoration: _textFieldDecoration(
                     label: 'Observaciones adicionales para la IA',
                     hint: 'ej: Tengo poco tiempo para cocinar en el almuerzo...',
@@ -762,21 +762,14 @@ class _GenerarPlanNutricionalScreenState
           const SizedBox(height: 28),
 
           // Botón de Generar
-          ElevatedButton.icon(
-            onPressed: _ejecutarGeneracion,
-            icon: const Icon(Icons.auto_awesome, size: 20),
-            label: const Text(
-              'Generar Plan Nutricional con IA',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0077D4),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 3,
+          SizedBox(
+            width: double.infinity,
+            child: CrimsonButton(
+              onPressed: _ejecutarGeneracion,
+              icon: const Icon(Icons.auto_awesome, size: 20, color: Colors.white),
+              label: 'Generar Plan Nutricional con IA',
+              style: CrimsonButtonStyle.gradient,
+              height: 48,
             ),
           ),
         ],
@@ -795,19 +788,9 @@ class _GenerarPlanNutricionalScreenState
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF059669), Color(0xFF10B981)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF059669).withValues(alpha: 0.35),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -818,13 +801,14 @@ class _GenerarPlanNutricionalScreenState
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(6),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: const Text(
                       'DISEÑADO POR GEMINI 2.5 FLASH',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.solarGold,
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
@@ -838,10 +822,11 @@ class _GenerarPlanNutricionalScreenState
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(6),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
-                      child: const Icon(Icons.refresh, color: Colors.white, size: 16),
+                      child: const Icon(Icons.refresh, color: AppColors.accentVibrant, size: 16),
                     ),
                   ),
                 ],
@@ -852,7 +837,7 @@ class _GenerarPlanNutricionalScreenState
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 4),
@@ -860,7 +845,7 @@ class _GenerarPlanNutricionalScreenState
                 '${rec.caloriasDiariasRecomendadas} kcal/día • ${rec.comidas.length} comidas diarias estructuradas',
                 style: const TextStyle(
                   fontSize: 12.5,
-                  color: Colors.white,
+                  color: AppColors.textSlateLight,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -885,23 +870,23 @@ class _GenerarPlanNutricionalScreenState
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: const Color(0xFFEFF6FF),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFBFDBFE)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.borderSubtle),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Row(
                 children: [
-                  Icon(Icons.lightbulb_outline, color: Color(0xFF0077D4), size: 16),
+                  Icon(Icons.lightbulb_outline, color: AppColors.solarGold, size: 16),
                   SizedBox(width: 6),
                   Text(
                     'ESTRATEGIA CLÍNICA DE LA IA',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0077D4),
+                      color: AppColors.solarGold,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -912,7 +897,7 @@ class _GenerarPlanNutricionalScreenState
                 rec.resumenEstrategia,
                 style: const TextStyle(
                   fontSize: 12.5,
-                  color: Color(0xFF1E3A8A),
+                  color: AppColors.textSlateLight,
                   height: 1.4,
                 ),
               ),
@@ -929,9 +914,9 @@ class _GenerarPlanNutricionalScreenState
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
               children: rec.consejosClave.map((c) {
@@ -940,12 +925,12 @@ class _GenerarPlanNutricionalScreenState
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.check_circle_outline, size: 14, color: Color(0xFF10B981)),
+                      const Icon(Icons.check_circle_outline, size: 14, color: AppColors.successLight),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           c,
-                          style: const TextStyle(fontSize: 12, color: Color(0xFF334155), height: 1.3),
+                          style: const TextStyle(fontSize: 12, color: AppColors.textSlateLight, height: 1.3),
                         ),
                       ),
                     ],
@@ -981,25 +966,15 @@ class _GenerarPlanNutricionalScreenState
         const SizedBox(height: 20),
 
         // Botón de Guardado Oficial
-        ElevatedButton.icon(
-          onPressed: isSaving ? null : _guardarPlanOficial,
-          icon: isSaving
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                )
-              : const Icon(Icons.save, size: 20),
-          label: Text(
-            isSaving ? 'Guardando en Base de Datos...' : 'Guardar como Plan Oficial',
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF16A34A),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 3,
+        SizedBox(
+          width: double.infinity,
+          child: CrimsonButton(
+            onPressed: isSaving ? null : _guardarPlanOficial,
+            isLoading: isSaving,
+            icon: const Icon(Icons.save, size: 20, color: Colors.white),
+            label: 'Guardar como Plan Oficial',
+            style: CrimsonButtonStyle.gradient,
+            height: 48,
           ),
         ),
       ],
@@ -1012,7 +987,7 @@ class _GenerarPlanNutricionalScreenState
       style: const TextStyle(
         fontSize: 11.5,
         fontWeight: FontWeight.w800,
-        color: Color(0xFF64748B),
+        color: AppColors.accentVibrant,
         letterSpacing: 0.6,
       ),
     );
@@ -1021,8 +996,22 @@ class _GenerarPlanNutricionalScreenState
   InputDecoration _inputDecoration(String suffix) {
     return InputDecoration(
       suffixText: suffix,
+      suffixStyle: const TextStyle(color: AppColors.textSlateMuted, fontSize: 12),
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
+      ),
       isDense: true,
     );
   }
@@ -1030,7 +1019,20 @@ class _GenerarPlanNutricionalScreenState
   InputDecoration _selectDecoration() {
     return InputDecoration(
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
+      ),
       isDense: true,
     );
   }
@@ -1038,9 +1040,23 @@ class _GenerarPlanNutricionalScreenState
   InputDecoration _textFieldDecoration({required String label, required String hint}) {
     return InputDecoration(
       labelText: label,
+      labelStyle: const TextStyle(color: AppColors.textSlateLight, fontSize: 12),
       hintText: hint,
-      hintStyle: const TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      hintStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
+      ),
       isDense: true,
     );
   }

@@ -1,19 +1,19 @@
 import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
+
 import '../../../../core/network/dio_client.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/documento_model.dart';
 
 class DocumentoPreviewScreen extends ConsumerStatefulWidget {
   final DocumentoModel documento;
 
-  const DocumentoPreviewScreen({
-    super.key,
-    required this.documento,
-  });
+  const DocumentoPreviewScreen({super.key, required this.documento});
 
   static void open(BuildContext context, DocumentoModel documento) {
     Navigator.of(context).push(
@@ -54,9 +54,7 @@ class _DocumentoPreviewScreenState
 
       final response = await dio.get<List<int>>(
         url,
-        options: Options(
-          responseType: ResponseType.bytes,
-        ),
+        options: Options(responseType: ResponseType.bytes),
       );
 
       if (response.data != null) {
@@ -85,7 +83,7 @@ class _DocumentoPreviewScreenState
     final isPdf = doc.isPdf;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,22 +95,26 @@ class _DocumentoPreviewScreenState
               style: const TextStyle(
                 fontSize: 14.5,
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: AppColors.textWhite,
               ),
             ),
             Text(
               doc.displayTipoNombre,
               style: const TextStyle(
                 fontSize: 11,
-                color: Color(0xFF94A3B8),
+                color: AppColors.textSlateMuted,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        backgroundColor: const Color(0xFF0B1727),
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.obsidianBase,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
+        iconTheme: const IconThemeData(color: AppColors.textWhite),
       ),
       body: isPdf ? _buildPdfBody() : _buildImageBody(),
     );
@@ -124,11 +126,11 @@ class _DocumentoPreviewScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: Color(0xFF0077D4)),
+            CircularProgressIndicator(color: AppColors.accentVibrant),
             SizedBox(height: 16),
             Text(
               'Descargando documento...',
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+              style: TextStyle(color: AppColors.textSlateMuted, fontSize: 13),
             ),
           ],
         ),
@@ -142,12 +144,19 @@ class _DocumentoPreviewScreenState
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded, color: Color(0xFFEF4444), size: 48),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: AppColors.accentVibrant,
+                size: 48,
+              ),
               const SizedBox(height: 14),
               Text(
                 _errorMessage!,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontSize: 13.5),
+                style: const TextStyle(
+                  color: AppColors.textWhite,
+                  fontSize: 13.5,
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
@@ -155,8 +164,11 @@ class _DocumentoPreviewScreenState
                 icon: const Icon(Icons.refresh_rounded, size: 16),
                 label: const Text('Reintentar'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0077D4),
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
               ),
             ],
@@ -169,7 +181,7 @@ class _DocumentoPreviewScreenState
       return const Center(
         child: Text(
           'Documento no disponible.',
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppColors.textSlateMuted),
         ),
       );
     }
@@ -181,7 +193,7 @@ class _DocumentoPreviewScreenState
       canDebug: false,
       maxPageWidth: 700,
       loadingWidget: const Center(
-        child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+        child: CircularProgressIndicator(color: AppColors.accentVibrant),
       ),
       pdfFileName: '${docSafeName(widget.documento.displayTitle)}.pdf',
       actions: const [],
@@ -194,7 +206,7 @@ class _DocumentoPreviewScreenState
       return const Center(
         child: Text(
           'URL de imagen inválida',
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppColors.textSlateMuted),
         ),
       );
     }
@@ -209,17 +221,24 @@ class _DocumentoPreviewScreenState
           imageUrl: url,
           fit: BoxFit.contain,
           placeholder: (context, _) => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+            child: CircularProgressIndicator(color: AppColors.accentVibrant),
           ),
           errorWidget: (context, url, error) => const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.broken_image_outlined, color: Colors.white54, size: 48),
+                Icon(
+                  Icons.broken_image_outlined,
+                  color: AppColors.textSlateMuted,
+                  size: 48,
+                ),
                 SizedBox(height: 12),
                 Text(
                   'No se pudo cargar la imagen',
-                  style: TextStyle(color: Colors.white70, fontSize: 13),
+                  style: TextStyle(
+                    color: AppColors.textSlateMuted,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),

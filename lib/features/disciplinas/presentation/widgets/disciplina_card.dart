@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/disciplina_model.dart';
 import 'disciplina_detail_modal.dart';
 
@@ -36,36 +37,29 @@ class DisciplinaCard extends StatelessWidget {
 
     final Color occupancyColor;
     if (ratio >= 0.95) {
-      occupancyColor = const Color(0xFFDC2626); // Rojo
+      occupancyColor = AppColors.accentVibrant; // Rojo Carmin
     } else if (ratio >= 0.70) {
-      occupancyColor = const Color(0xFFD97706); // Ámbar
+      occupancyColor = AppColors.solarAmber; // Ámbar Solar
     } else {
-      occupancyColor = const Color(0xFF10B981); // Verde
+      occupancyColor = AppColors.successEmerald; // Verde Esmeralda
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Top Accent Bar
+            // Top Accent Bar (Crimson o Muted)
             Container(
-              height: 3.5,
-              color: isActive ? const Color(0xFF0077D4) : const Color(0xFF94A3B8),
+              height: 3.0,
+              color: isActive ? AppColors.accentVibrant : AppColors.borderSubtle,
             ),
 
             Padding(
@@ -81,13 +75,13 @@ class DisciplinaCard extends StatelessWidget {
                         width: 42,
                         height: 42,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE0F2FE),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFBAE6FD)),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.borderSubtle),
                         ),
                         child: Icon(
                           _getIconForDisciplina(disciplina.nombre),
-                          color: const Color(0xFF003B70),
+                          color: AppColors.accentVibrant,
                           size: 22,
                         ),
                       ),
@@ -103,7 +97,7 @@ class DisciplinaCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF0F172A),
+                                color: AppColors.textWhite,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -111,7 +105,7 @@ class DisciplinaCard extends StatelessWidget {
                               '${disciplina.disciplinaHorarios.length} turnos programados',
                               style: const TextStyle(
                                 fontSize: 11.5,
-                                color: Color(0xFF64748B),
+                                color: AppColors.textSlateMuted,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -122,10 +116,13 @@ class DisciplinaCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: isActive ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
-                          borderRadius: BorderRadius.circular(6),
+                          color: isActive
+                              ? AppColors.successEmerald.withValues(alpha: 0.15)
+                              : AppColors.accentVibrant.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
                           border: Border.all(
-                            color: isActive ? const Color(0xFF86EFAC) : const Color(0xFFFECACA),
+                            color: isActive ? AppColors.successEmerald : AppColors.accentVibrant,
+                            width: 1,
                           ),
                         ),
                         child: Text(
@@ -133,7 +130,7 @@ class DisciplinaCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: isActive ? const Color(0xFF15803D) : const Color(0xFFB91C1C),
+                            color: isActive ? AppColors.successLight : AppColors.accentVibrant,
                           ),
                         ),
                       ),
@@ -150,7 +147,7 @@ class DisciplinaCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF475569),
+                        color: AppColors.textSlateLight,
                         height: 1.35,
                       ),
                     ),
@@ -169,12 +166,12 @@ class DisciplinaCard extends StatelessWidget {
                             children: [
                               Icon(Icons.people_alt_outlined, size: 14, color: occupancyColor),
                               const SizedBox(width: 4),
-                              Text(
+                              const Text(
                                 'Ocupación de Sala:',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF475569),
+                                  color: AppColors.textSlateLight,
                                 ),
                               ),
                             ],
@@ -194,7 +191,7 @@ class DisciplinaCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
                           value: ratio,
-                          backgroundColor: const Color(0xFFF1F5F9),
+                          backgroundColor: AppColors.carbonSurfaceMuted,
                           valueColor: AlwaysStoppedAnimation<Color>(occupancyColor),
                           minHeight: 6,
                         ),
@@ -213,21 +210,21 @@ class DisciplinaCard extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8FAFC),
+                            color: AppColors.carbonSurfaceMuted,
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                            border: Border.all(color: AppColors.borderSubtle),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.calendar_today, size: 11, color: Color(0xFF0077D4)),
+                              const Icon(Icons.calendar_today, size: 11, color: AppColors.accentVibrant),
                               const SizedBox(width: 4),
                               Text(
                                 dia,
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF334155),
+                                  color: AppColors.textSlateLight,
                                 ),
                               ),
                             ],
@@ -238,7 +235,7 @@ class DisciplinaCard extends StatelessWidget {
                   ],
 
                   const SizedBox(height: 12),
-                  const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                  const Divider(height: 1, color: AppColors.borderSubtle),
                   const SizedBox(height: 10),
 
                   // Bottom Action Row
@@ -250,7 +247,7 @@ class DisciplinaCard extends StatelessWidget {
                           Icon(
                             totalDisp > 0 ? Icons.check_circle_outline : Icons.cancel_outlined,
                             size: 14,
-                            color: totalDisp > 0 ? const Color(0xFF10B981) : const Color(0xFFDC2626),
+                            color: totalDisp > 0 ? AppColors.successEmerald : AppColors.accentVibrant,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -258,7 +255,7 @@ class DisciplinaCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w700,
-                              color: totalDisp > 0 ? const Color(0xFF10B981) : const Color(0xFFDC2626),
+                              color: totalDisp > 0 ? AppColors.successLight : AppColors.accentVibrant,
                             ),
                           ),
                         ],
@@ -266,11 +263,12 @@ class DisciplinaCard extends StatelessWidget {
                       OutlinedButton.icon(
                         onPressed: () => DisciplinaDetailModal.show(context, disciplina),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF0077D4),
-                          side: const BorderSide(color: Color(0xFF0077D4)),
+                          foregroundColor: AppColors.accentVibrant,
+                          side: const BorderSide(color: AppColors.accentVibrant),
+                          backgroundColor: AppColors.carbonSurfaceMuted,
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           visualDensity: VisualDensity.compact,
                         ),

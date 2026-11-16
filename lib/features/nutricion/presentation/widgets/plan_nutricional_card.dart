@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/plan_alimentacion_model.dart';
 
 class PlanNutricionalCard extends StatelessWidget {
@@ -19,25 +20,18 @@ class PlanNutricionalCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: isActive ? const Color(0xFF93C5FD) : const Color(0xFFE2E8F0),
-          width: isActive ? 1.5 : 1,
+          color: isActive ? AppColors.accentVibrant : AppColors.borderSubtle,
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(4),
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(4),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -52,12 +46,12 @@ class PlanNutricionalCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                       decoration: BoxDecoration(
                         color: isActive
-                            ? const Color(0xFF16A34A).withValues(alpha: 0.12)
-                            : const Color(0xFF64748B).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6),
+                            ? AppColors.successEmerald.withValues(alpha: 0.15)
+                            : AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: isActive ? const Color(0xFF16A34A) : const Color(0xFF94A3B8),
-                          width: 0.8,
+                          color: isActive ? AppColors.successEmerald : AppColors.borderSubtle,
+                          width: 1,
                         ),
                       ),
                       child: Row(
@@ -66,7 +60,7 @@ class PlanNutricionalCard extends StatelessWidget {
                           Icon(
                             isActive ? Icons.check_circle : Icons.history,
                             size: 11,
-                            color: isActive ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+                            color: isActive ? AppColors.successLight : AppColors.textSlateMuted,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -74,7 +68,7 @@ class PlanNutricionalCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
-                              color: isActive ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+                              color: isActive ? AppColors.successLight : AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -84,20 +78,20 @@ class PlanNutricionalCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFEF2F2),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFFECACA)),
+                          color: AppColors.accentVibrant.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentVibrant),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.local_fire_department, size: 12, color: Color(0xFFDC2626)),
+                            const Icon(Icons.local_fire_department, size: 12, color: AppColors.accentVibrant),
                             const SizedBox(width: 3),
                             Text(
                               '${totalCal.toStringAsFixed(0)} kcal',
                               style: const TextStyle(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFFDC2626),
+                                color: AppColors.accentVibrant,
                               ),
                             ),
                           ],
@@ -114,12 +108,13 @@ class PlanNutricionalCard extends StatelessWidget {
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0077D4).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(6),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: const Icon(
                         Icons.restaurant_menu,
-                        color: Color(0xFF0077D4),
+                        color: AppColors.accentVibrant,
                         size: 16,
                       ),
                     ),
@@ -132,7 +127,7 @@ class PlanNutricionalCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w900,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                         ),
                       ),
                     ),
@@ -145,9 +140,9 @@ class PlanNutricionalCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFFBFDBFE)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Text(
                       plan.objetivo!,
@@ -156,7 +151,7 @@ class PlanNutricionalCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0077D4),
+                        color: AppColors.solarGold,
                       ),
                     ),
                   ),
@@ -171,14 +166,14 @@ class PlanNutricionalCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSlateLight,
                       height: 1.35,
                     ),
                   ),
                 ],
 
                 const SizedBox(height: 12),
-                const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                const Divider(height: 1, color: AppColors.borderSubtle),
                 const SizedBox(height: 10),
 
                 // Bottom row: athlete + count of meals + action
@@ -190,14 +185,14 @@ class PlanNutricionalCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.person_outline, size: 13, color: Color(0xFF64748B)),
+                            const Icon(Icons.person_outline, size: 13, color: AppColors.textSlateMuted),
                             const SizedBox(width: 4),
                             Text(
                               plan.usuarioNombre,
                               style: const TextStyle(
                                 fontSize: 11.5,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF334155),
+                                color: AppColors.textSlateLight,
                               ),
                             ),
                           ],
@@ -207,7 +202,7 @@ class PlanNutricionalCard extends StatelessWidget {
                           '${plan.detalles.length} ${plan.detalles.length == 1 ? 'comida prescrita' : 'comidas prescritas'}',
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textSlateMuted,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -220,11 +215,11 @@ class PlanNutricionalCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.accentVibrant,
                           ),
                         ),
                         SizedBox(width: 4),
-                        Icon(Icons.arrow_forward, size: 14, color: Color(0xFF0077D4)),
+                        Icon(Icons.arrow_forward, size: 14, color: AppColors.accentVibrant),
                       ],
                     ),
                   ],

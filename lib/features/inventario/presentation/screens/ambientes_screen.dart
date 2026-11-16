@@ -23,8 +23,9 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) => Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            color: AppColors.carbonSurface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+            border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1.0)),
           ),
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
@@ -38,10 +39,10 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
             children: [
               Center(
                 child: Container(
-                  width: 40,
+                  width: 36,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColors.borderSubtle,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -52,35 +53,30 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF003B70),
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 14),
               TextField(
                 controller: nombreCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre de la Sala / Espacio *',
-                  hintText: 'Ej: Sala de Musculación, Área Cardio...',
-                  border: OutlineInputBorder(),
-                ),
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                decoration: _inputDeco('Nombre de la Sala / Espacio *',
+                    hint: 'Ej: Sala de Musculación, Área Cardio...'),
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: descCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Descripción / Ubicación',
-                  border: OutlineInputBorder(),
-                ),
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                decoration: _inputDeco('Descripción / Ubicación'),
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 initialValue: estado,
+                dropdownColor: AppColors.carbonSurface,
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                 isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Estado Operativo',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: _inputDeco('Estado Operativo'),
                 items: const [
                   DropdownMenuItem(value: 'operativo', child: Text('Operativo / Disponible')),
                   DropdownMenuItem(value: 'mantenimiento', child: Text('En Mantenimiento')),
@@ -107,17 +103,25 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                     messenger.showSnackBar(
                       SnackBar(
                         content: Text(amb != null ? 'Sala actualizada' : 'Sala registrada'),
-                        backgroundColor: AppColors.success,
+                        backgroundColor: AppColors.successEmerald,
                       ),
                     );
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF003B70),
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: const BorderSide(color: AppColors.accentVibrant),
+                  ),
+                  elevation: 0,
                 ),
-                child: Text(amb != null ? 'Actualizar Sala' : 'Crear Sala'),
+                child: Text(
+                  amb != null ? 'Actualizar Sala' : 'Crear Sala',
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
               ),
             ],
           ),
@@ -131,21 +135,25 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
     final state = ref.watch(inventarioNotifierProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Ambientes & Espacios',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             onPressed: () =>
                 ref.read(inventarioNotifierProvider.notifier).cargarTodo(),
           ),
@@ -153,23 +161,27 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _abrirModalAmbiente(),
-        backgroundColor: const Color(0xFF003B70),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
         icon: const Icon(Icons.add, size: 20),
         label: const Text(
           'Nueva Sala',
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
         ),
       ),
       body: state.isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.navyBlue),
+              child: CircularProgressIndicator(color: AppColors.accentVibrant),
             )
           : state.ambientes.isEmpty
               ? const Center(
                   child: Text(
                     'No hay ambientes registrados en el sistema',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                    style: TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
                   ),
                 )
               : ListView.separated(
@@ -183,28 +195,30 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                         .where((e) => e.idAmbiente == amb.id)
                         .length;
 
+                    final badgeBg = isOp
+                        ? AppColors.successEmerald.withValues(alpha: 0.15)
+                        : AppColors.accentVibrant.withValues(alpha: 0.15);
+                    final badgeColor = isOp ? AppColors.successEmerald : AppColors.accentVibrant;
+
                     return Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        color: AppColors.carbonSurface,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isOp
-                                  ? const Color(0xFFDCFCE7)
-                                  : const Color(0xFFFEE2E2),
-                              borderRadius: BorderRadius.circular(10),
+                              color: badgeBg,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: badgeColor.withValues(alpha: 0.4)),
                             ),
                             child: Icon(
                               Icons.meeting_room_outlined,
-                              color: isOp
-                                  ? const Color(0xFF16A34A)
-                                  : const Color(0xFFDC2626),
+                              color: badgeColor,
                               size: 24,
                             ),
                           ),
@@ -220,7 +234,7 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                                       style: const TextStyle(
                                         fontSize: 14.5,
                                         fontWeight: FontWeight.w800,
-                                        color: Color(0xFF0F172A),
+                                        color: AppColors.textWhite,
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -228,19 +242,16 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 6, vertical: 2),
                                       decoration: BoxDecoration(
-                                        color: isOp
-                                            ? const Color(0xFFDCFCE7)
-                                            : const Color(0xFFFEE2E2),
+                                        color: badgeBg,
                                         borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(color: badgeColor.withValues(alpha: 0.4)),
                                       ),
                                       child: Text(
                                         isOp ? 'OPERATIVO' : 'MANTENIMIENTO',
                                         style: TextStyle(
                                           fontSize: 9.5,
                                           fontWeight: FontWeight.w800,
-                                          color: isOp
-                                              ? const Color(0xFF15803D)
-                                              : const Color(0xFFB91C1C),
+                                          color: badgeColor,
                                         ),
                                       ),
                                     ),
@@ -253,7 +264,7 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                                     amb.descripcion!,
                                     style: const TextStyle(
                                       fontSize: 11.5,
-                                      color: Color(0xFF64748B),
+                                      color: AppColors.textSlateLight,
                                     ),
                                   ),
                                 ],
@@ -262,8 +273,8 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                                   'Equipos en sala: $totalEquipos máquinas',
                                   style: const TextStyle(
                                     fontSize: 11.5,
-                                    color: Color(0xFF0077D4),
-                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.solarGold,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ],
@@ -271,7 +282,7 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.edit_outlined,
-                                color: Color(0xFF003B70), size: 20),
+                                color: AppColors.solarGold, size: 20),
                             onPressed: () => _abrirModalAmbiente(amb),
                           ),
                         ],
@@ -279,6 +290,30 @@ class _AmbientesScreenState extends ConsumerState<AmbientesScreen> {
                     );
                   },
                 ),
+    );
+  }
+
+  InputDecoration _inputDeco(String label, {String? hint}) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      hintStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
+      ),
     );
   }
 }

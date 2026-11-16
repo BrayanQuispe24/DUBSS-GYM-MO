@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../../auth/presentation/providers/auth_notifier.dart';
 
 class ClientProfileScreen extends ConsumerWidget {
@@ -12,7 +13,7 @@ class ClientProfileScreen extends ConsumerWidget {
     final authState = ref.watch(authNotifierProvider);
     final user = authState.user;
 
-    final displayName = user?.nombreCompleto ?? 'mama mama';
+    final displayName = user?.nombreCompleto ?? 'Usuario UAGRM';
     final email = user?.email ?? 'cliente@uagrm.edu.bo';
     final ru = user?.registroUniversitario ?? '218000000';
     final ci = user?.ci ?? '8943210';
@@ -21,26 +22,23 @@ class ClientProfileScreen extends ConsumerWidget {
         : 'CLIENTE UNIVERSITARIO';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Credencial Digital Card
+            // Credencial Digital Card Oficial
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0F172A), Color(0xFF1E3A8A)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1E3A8A).withValues(alpha: 0.3),
-                    blurRadius: 12,
+                    color: AppColors.primaryCrimson.withValues(alpha: 0.12),
+                    blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -57,16 +55,17 @@ class ClientProfileScreen extends ConsumerWidget {
                           Text(
                             'GIMNASIO UAGRM',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.textWhite,
                               fontSize: 14,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.5,
                             ),
                           ),
+                          SizedBox(height: 2),
                           Text(
                             'CREDENCIAL DIGITAL D.U.B.S.',
                             style: TextStyle(
-                              color: Color(0xFF38BDF8),
+                              color: AppColors.solarGold,
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.6,
@@ -75,38 +74,40 @@ class ClientProfileScreen extends ConsumerWidget {
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF10B981),
+                          color: AppColors.successEmerald.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.successEmerald, width: 0.8),
                         ),
                         child: const Text(
                           'ACTIVO',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.successLight,
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
+                            letterSpacing: 0.4,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Container(
-                        width: 56,
-                        height: 56,
+                        width: 54,
+                        height: 54,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0077D4),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.white, width: 2),
+                          gradient: AppColors.crimsonGradient,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           displayName.length >= 2
                               ? displayName.substring(0, 2).toUpperCase()
-                              : 'MM',
+                              : 'GU',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -122,7 +123,7 @@ class ClientProfileScreen extends ConsumerWidget {
                             Text(
                               displayName,
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: AppColors.textWhite,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                               ),
@@ -131,7 +132,7 @@ class ClientProfileScreen extends ConsumerWidget {
                             Text(
                               role,
                               style: const TextStyle(
-                                color: Color(0xFF93C5FD),
+                                color: AppColors.solarGold,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -141,12 +142,13 @@ class ClientProfileScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,7 +156,7 @@ class ClientProfileScreen extends ConsumerWidget {
                         Text(
                           'R.U.: $ru',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textSlateLight,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -162,7 +164,7 @@ class ClientProfileScreen extends ConsumerWidget {
                         Text(
                           'C.I.: $ci',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textSlateLight,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -173,15 +175,15 @@ class ClientProfileScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // Quick Access QR Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFCBD5E1)),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
               ),
               child: Column(
                 children: [
@@ -191,8 +193,9 @@ class ClientProfileScreen extends ConsumerWidget {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0077D4),
-                          borderRadius: BorderRadius.circular(5),
+                          color: AppColors.primaryCrimson,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                         ),
                         child: const Icon(Icons.qr_code, color: Colors.white, size: 18),
                       ),
@@ -202,43 +205,43 @@ class ClientProfileScreen extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
                   Container(
-                    width: 150,
-                    height: 150,
-                    padding: const EdgeInsets.all(8),
+                    width: 160,
+                    height: 160,
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFCBD5E1)),
+                      color: Colors.white, // Blanco para lectura óptica QR por torniquete
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                     ),
                     child: const Icon(
                       Icons.qr_code_2,
-                      size: 130,
-                      color: Color(0xFF0F172A),
+                      size: 140,
+                      color: Color(0xFF0B0B0D),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   const Text(
                     'Presenta este código en el molinete de acceso',
-                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                    style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // Profile Info Details
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFCBD5E1)),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
               ),
               child: Column(
                 children: [
@@ -252,33 +255,22 @@ class ClientProfileScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             // Cerrar Sesión Button
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton.icon(
+              child: CrimsonButton(
                 onPressed: () async {
                   await ref.read(authNotifierProvider.notifier).logout();
                   if (context.mounted) {
                     context.go('/');
                   }
                 },
-                icon: const Icon(Icons.logout, size: 18, color: AppColors.primaryRed),
-                label: const Text(
-                  'Cerrar Sesión',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryRed,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFFFCA5A5)),
-                  backgroundColor: const Color(0xFFFEF2F2),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
+                icon: const Icon(Icons.logout, size: 16, color: AppColors.accentVibrant),
+                label: 'Cerrar Sesión',
+                style: CrimsonButtonStyle.outline,
+                height: 44,
               ),
             ),
             const SizedBox(height: 24),
@@ -291,14 +283,23 @@ class ClientProfileScreen extends ConsumerWidget {
   Widget _buildDetailTile(IconData icon, String label, String value) {
     return ListTile(
       dense: true,
-      leading: Icon(icon, color: const Color(0xFF0077D4), size: 20),
+      leading: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: AppColors.carbonSurfaceMuted,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.borderSubtle, width: 1.0),
+        ),
+        child: Icon(icon, color: AppColors.accentVibrant, size: 18),
+      ),
       title: Text(
         label,
-        style: const TextStyle(fontSize: 11, color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+        style: const TextStyle(fontSize: 11, color: AppColors.textSlateMuted, fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
         value,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF0F172A), fontWeight: FontWeight.w700),
+        style: const TextStyle(fontSize: 13, color: AppColors.textWhite, fontWeight: FontWeight.w700),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/disciplina_horario_model.dart';
 import '../providers/disciplinas_provider.dart';
 
@@ -41,19 +42,20 @@ class CronogramaSemanalView extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                        color: isSelected ? Colors.white : const Color(0xFF475569),
+                        color: isSelected ? Colors.white : AppColors.textSlateLight,
                       ),
                     ),
                     selected: isSelected,
                     onSelected: (_) {
                       ref.read(cronogramaDiaProvider.notifier).setDia(dia);
                     },
-                    selectedColor: const Color(0xFF0077D4),
-                    backgroundColor: Colors.white,
+                    selectedColor: AppColors.primaryCrimson,
+                    backgroundColor: AppColors.carbonSurface,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                     side: BorderSide(
                       color: isSelected
-                          ? const Color(0xFF0077D4)
-                          : const Color(0xFFCBD5E1),
+                          ? AppColors.accentVibrant
+                          : AppColors.borderSubtle,
                     ),
                     visualDensity: VisualDensity.compact,
                   ),
@@ -67,12 +69,12 @@ class CronogramaSemanalView extends ConsumerWidget {
         Expanded(
           child: horariosAsync.when(
             loading: () => const Center(
-              child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+              child: CircularProgressIndicator(color: AppColors.accentVibrant),
             ),
             error: (err, _) => Center(
               child: Text(
                 'Error al cargar cronograma: $err',
-                style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                style: const TextStyle(fontSize: 13, color: AppColors.textSlateMuted),
               ),
             ),
             data: (turnos) {
@@ -85,21 +87,21 @@ class CronogramaSemanalView extends ConsumerWidget {
                       child: Column(
                         children: [
                           Icon(Icons.event_busy_outlined,
-                              size: 48, color: Color(0xFF94A3B8)),
+                              size: 48, color: AppColors.textSlateMuted),
                           SizedBox(height: 12),
                           Text(
                             'No hay clases programadas para este filtro',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF475569),
+                              color: AppColors.textWhite,
                             ),
                           ),
                           SizedBox(height: 6),
                           Text(
                             'Prueba seleccionando otro día o ajustando el término de búsqueda.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
+                            style: TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
                           ),
                         ],
                       ),
@@ -132,16 +134,9 @@ class CronogramaSemanalView extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -151,13 +146,13 @@ class CronogramaSemanalView extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFE0F2FE),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFBAE6FD)),
+                color: AppColors.carbonSurfaceMuted,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Column(
                 children: [
-                  const Icon(Icons.schedule, size: 16, color: Color(0xFF003B70)),
+                  const Icon(Icons.schedule, size: 16, color: AppColors.accentVibrant),
                   const SizedBox(height: 3),
                   Text(
                     horas,
@@ -165,7 +160,7 @@ class CronogramaSemanalView extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF003B70),
+                      color: AppColors.accentVibrant,
                     ),
                   ),
                 ],
@@ -185,14 +180,14 @@ class CronogramaSemanalView extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: AppColors.textWhite,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Row(
                     children: [
                       const Icon(Icons.calendar_month,
-                          size: 13, color: Color(0xFF64748B)),
+                          size: 13, color: AppColors.textSlateMuted),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -201,7 +196,7 @@ class CronogramaSemanalView extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateLight,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -215,8 +210,8 @@ class CronogramaSemanalView extends ConsumerWidget {
                         tieneCupos ? Icons.check_circle_outline : Icons.cancel_outlined,
                         size: 12,
                         color: tieneCupos
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626),
+                            ? AppColors.successEmerald
+                            : AppColors.accentVibrant,
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -225,8 +220,8 @@ class CronogramaSemanalView extends ConsumerWidget {
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: tieneCupos
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFDC2626),
+                              ? AppColors.successLight
+                              : AppColors.accentVibrant,
                         ),
                       ),
                     ],

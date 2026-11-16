@@ -37,7 +37,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
         : 'CLIENTE UNIVERSITARIO';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: AppColors.obsidianBase,
       body: SafeArea(
         child: Column(
           children: [
@@ -169,11 +169,11 @@ class ClientFullMenuScreen extends ConsumerWidget {
                     const SizedBox(height: 18),
 
                     // Footer branding
-                    Center(
+                    const Center(
                       child: Text(
                         'D.U.B.S.S. GIMNASIO UAGRM • v1.0.0',
                         style: TextStyle(
-                          color: const Color(0xFF64748B).withValues(alpha: 0.8),
+                          color: AppColors.textSlateMuted,
                           fontSize: 10.5,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.8,
@@ -196,9 +196,9 @@ class ClientFullMenuScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFF0F172A),
+        color: AppColors.obsidianBase,
         border: Border(
-          bottom: BorderSide(color: Color(0xFF1E293B), width: 1),
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1),
         ),
       ),
       child: Row(
@@ -207,15 +207,12 @@ class ClientFullMenuScreen extends ConsumerWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0077D4), Color(0xFF0284C7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(10),
+              gradient: AppColors.crimsonGradient,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant, width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.35),
+                  color: AppColors.accentVibrant.withValues(alpha: 0.35),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -236,7 +233,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                 Text(
                   'GIMNASIO UAGRM',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textWhite,
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.5,
@@ -245,7 +242,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                 Text(
                   'D.U.B.S.S. SYSTEM • MENÚ PRINCIPAL',
                   style: TextStyle(
-                    color: Color(0xFF38BDF8),
+                    color: AppColors.solarGold,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.8,
@@ -257,18 +254,18 @@ class ClientFullMenuScreen extends ConsumerWidget {
           // Close button
           InkWell(
             onTap: () => Navigator.of(context).pop(),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(4),
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF334155), width: 1),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1),
               ),
               child: const Icon(
                 Icons.close,
-                color: Colors.white,
-                size: 20,
+                color: AppColors.textWhite,
+                size: 18,
               ),
             ),
           ),
@@ -287,20 +284,9 @@ class ClientFullMenuScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E293B), Color(0xFF0B132B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF334155), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Row(
         children: [
@@ -308,15 +294,12 @@ class ClientFullMenuScreen extends ConsumerWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0077D4), Color(0xFF38BDF8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
+              gradient: AppColors.crimsonGradient,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant, width: 1),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.4),
+                  color: AppColors.accentVibrant.withValues(alpha: 0.25),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -346,7 +329,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textWhite,
                           fontSize: 14.5,
                           fontWeight: FontWeight.w800,
                         ),
@@ -356,14 +339,14 @@ class ClientFullMenuScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF16A34A).withValues(alpha: 0.2),
+                        color: AppColors.successEmerald.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: const Color(0xFF16A34A), width: 0.8),
+                        border: Border.all(color: AppColors.successEmerald, width: 0.8),
                       ),
                       child: const Text(
                         'Activo',
                         style: TextStyle(
-                          color: Color(0xFF4ADE80),
+                          color: AppColors.successLight,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                         ),
@@ -377,7 +360,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Color(0xFF38BDF8),
+                    color: AppColors.solarGold,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.4,
@@ -389,7 +372,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textSlateMuted,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -408,7 +391,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
       child: Text(
         title,
         style: const TextStyle(
-          color: Color(0xFF94A3B8),
+          color: AppColors.textSlateMuted,
           fontSize: 11,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.9,
@@ -423,37 +406,37 @@ class ClientFullMenuScreen extends ConsumerWidget {
         index: 0,
         title: 'Planes y Tarifas',
         icon: Icons.diamond_outlined,
-        color: const Color(0xFF0284C7),
+        color: AppColors.solarGold,
       ),
       _QuickItem(
         index: -1,
         title: 'Ejercicios',
         icon: Icons.fitness_center,
-        color: const Color(0xFF2563EB),
+        color: AppColors.accentVibrant,
       ),
       _QuickItem(
         index: 1,
         title: 'Rutinas',
         icon: Icons.view_timeline_outlined,
-        color: const Color(0xFF10B981),
+        color: AppColors.successEmerald,
       ),
       _QuickItem(
         index: -2,
         title: 'Nutrición IA',
         icon: Icons.restaurant_menu,
-        color: const Color(0xFF06B6D4),
+        color: AppColors.solarAmber,
       ),
       _QuickItem(
         index: 2,
         title: 'Trámites y Pagos',
         icon: Icons.receipt_long_outlined,
-        color: const Color(0xFFF59E0B),
+        color: AppColors.primaryCrimson,
       ),
       _QuickItem(
         index: 3,
         title: 'Mi Perfil',
         icon: Icons.person_outline,
-        color: const Color(0xFF8B5CF6),
+        color: AppColors.textSlateLight,
       ),
     ];
 
@@ -463,8 +446,8 @@ class ClientFullMenuScreen extends ConsumerWidget {
       itemCount: quickItems.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
         childAspectRatio: 1.7,
       ),
       itemBuilder: (ctx, i) {
@@ -482,16 +465,16 @@ class ClientFullMenuScreen extends ConsumerWidget {
               onSelectTab(item.index);
             }
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(4),
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isSelected
-                  ? const Color(0xFF0077D4).withValues(alpha: 0.2)
-                  : const Color(0xFF1E293B),
-              borderRadius: BorderRadius.circular(12),
+                  ? AppColors.primaryCrimson.withValues(alpha: 0.15)
+                  : AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: isSelected ? const Color(0xFF38BDF8) : const Color(0xFF334155),
+                color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
                 width: isSelected ? 1.5 : 1,
               ),
             ),
@@ -502,7 +485,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                   height: 38,
                   decoration: BoxDecoration(
                     color: item.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: item.color.withValues(alpha: 0.3)),
                   ),
                   child: Icon(
@@ -522,7 +505,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: isSelected ? Colors.white : const Color(0xFFE2E8F0),
+                          color: isSelected ? AppColors.textWhite : AppColors.textSlateLight,
                           fontSize: 12,
                           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                         ),
@@ -532,7 +515,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
                         const Text(
                           'En pantalla',
                           style: TextStyle(
-                            color: Color(0xFF38BDF8),
+                            color: AppColors.accentVibrant,
                             fontSize: 9.5,
                             fontWeight: FontWeight.w700,
                           ),
@@ -559,13 +542,13 @@ class ClientFullMenuScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF334155), width: 1),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(4),
         child: ListTile(
           onTap: onTap,
           dense: true,
@@ -574,16 +557,16 @@ class ClientFullMenuScreen extends ConsumerWidget {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: const Color(0xFF0F172A),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFF334155)),
+              color: AppColors.carbonSurfaceMuted,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
-            child: Icon(icon, color: const Color(0xFF38BDF8), size: 18),
+            child: Icon(icon, color: AppColors.accentVibrant, size: 18),
           ),
           title: Text(
             title,
             style: const TextStyle(
-              color: Color(0xFFF1F5F9),
+              color: AppColors.textWhite,
               fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
@@ -593,13 +576,13 @@ class ClientFullMenuScreen extends ConsumerWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              color: Color(0xFF94A3B8),
+              color: AppColors.textSlateMuted,
               fontSize: 11,
             ),
           ),
           trailing: const Icon(
             Icons.chevron_right,
-            color: Color(0xFF64748B),
+            color: AppColors.textSlateMuted,
             size: 18,
           ),
         ),
@@ -610,24 +593,24 @@ class ClientFullMenuScreen extends ConsumerWidget {
   Widget _buildLogoutButton(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () => _confirmLogout(context, ref),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(4),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFF450A0A),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF991B1B), width: 1),
+          color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.4), width: 1),
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: Color(0xFFF87171), size: 18),
+            Icon(Icons.logout, color: AppColors.accentVibrant, size: 18),
             SizedBox(width: 8),
             Text(
               'Cerrar Sesión Segura',
               style: TextStyle(
-                color: Color(0xFFFCA5A5),
+                color: AppColors.accentVibrant,
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.3,
@@ -643,7 +626,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$module estará disponible en la próxima actualización.'),
-        backgroundColor: const Color(0xFF0077D4),
+        backgroundColor: AppColors.carbonSurfaceMuted,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
@@ -654,19 +637,23 @@ class ClientFullMenuScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
+        backgroundColor: AppColors.carbonSurface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.borderSubtle),
+        ),
         title: const Text(
           'Cerrar Sesión',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
         ),
         content: const Text(
           '¿Está seguro de que desea salir del sistema UAGRM?',
-          style: TextStyle(color: Color(0xFFCBD5E1)),
+          style: TextStyle(color: AppColors.textSlateLight),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancelar', style: TextStyle(color: Color(0xFF94A3B8))),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -678,7 +665,7 @@ class ClientFullMenuScreen extends ConsumerWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryRed,
+              backgroundColor: AppColors.primaryCrimson,
               foregroundColor: Colors.white,
             ),
             child: const Text('Salir', style: TextStyle(fontWeight: FontWeight.bold)),

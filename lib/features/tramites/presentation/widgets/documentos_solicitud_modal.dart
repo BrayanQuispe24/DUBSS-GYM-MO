@@ -28,8 +28,13 @@ class DocumentosSolicitudModal extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(maxHeight: maxH),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -44,7 +49,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                 width: 38,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
+                  color: AppColors.borderSubtle,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -54,19 +59,20 @@ class DocumentosSolicitudModal extends StatelessWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(18, 8, 18, 14),
               decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+                border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE0F2FE),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                     ),
                     child: const Icon(
                       Icons.folder_shared_outlined,
-                      color: Color(0xFF0284C7),
+                      color: AppColors.accentVibrant,
                       size: 22,
                     ),
                   ),
@@ -80,7 +86,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 15.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         Text(
@@ -88,7 +94,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF64748B),
+                            color: AppColors.solarGold,
                           ),
                         ),
                       ],
@@ -96,7 +102,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close_rounded, size: 20),
-                    color: const Color(0xFF64748B),
+                    color: AppColors.textSlateMuted,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
@@ -108,16 +114,16 @@ class DocumentosSolicitudModal extends StatelessWidget {
               margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                color: AppColors.carbonSurfaceMuted,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: AppColors.navyBlue.withValues(alpha: 0.1),
-                    child: const Icon(Icons.person_rounded, size: 18, color: AppColors.navyBlue),
+                    backgroundColor: AppColors.primaryCrimson.withValues(alpha: 0.2),
+                    child: const Icon(Icons.person_rounded, size: 18, color: AppColors.accentVibrant),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -129,7 +135,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -137,7 +143,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                           'C.I.: ${formulario.usuarioCi ?? 'S/N'} • R.U.: ${formulario.usuarioRegistro ?? 'S/N'}',
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateMuted,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -147,15 +153,16 @@ class DocumentosSolicitudModal extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(6),
+                      color: AppColors.primaryCrimson.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.35)),
                     ),
                     child: Text(
                       '${docs.length} ${docs.length == 1 ? 'doc' : 'docs'}',
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0284C7),
+                        color: AppColors.solarGold,
                       ),
                     ),
                   ),
@@ -174,13 +181,14 @@ class DocumentosSolicitudModal extends StatelessWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.all(14),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFFEF3C7),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryCrimson.withValues(alpha: 0.15),
                                 shape: BoxShape.circle,
+                                border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                               ),
                               child: const Icon(
                                 Icons.folder_open_rounded,
-                                color: Color(0xFFD97706),
+                                color: AppColors.accentVibrant,
                                 size: 36,
                               ),
                             ),
@@ -190,7 +198,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14.5,
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF0F172A),
+                                color: AppColors.textWhite,
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -199,7 +207,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0xFF64748B),
+                                color: AppColors.textSlateMuted,
                               ),
                             ),
                           ],
@@ -215,36 +223,35 @@ class DocumentosSolicitudModal extends StatelessWidget {
                         final isPdf = doc.isPdf;
 
                         return Material(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(4),
                             onTap: () {
                               DocumentoPreviewScreen.open(context, doc);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: const Color(0xFFE2E8F0)),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.borderSubtle),
                               ),
                               child: Row(
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: isPdf
-                                          ? const Color(0xFFFEE2E2)
-                                          : const Color(0xFFE0F2FE),
-                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                                     ),
                                     child: Icon(
                                       isPdf
                                           ? Icons.picture_as_pdf_rounded
                                           : Icons.image_rounded,
                                       color: isPdf
-                                          ? const Color(0xFFDC2626)
-                                          : const Color(0xFF0284C7),
+                                          ? AppColors.accentVibrant
+                                          : AppColors.solarGold,
                                       size: 22,
                                     ),
                                   ),
@@ -258,7 +265,7 @@ class DocumentosSolicitudModal extends StatelessWidget {
                                           style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w700,
-                                            color: Color(0xFF0F172A),
+                                            color: AppColors.textWhite,
                                           ),
                                         ),
                                         const SizedBox(height: 3),
@@ -269,17 +276,17 @@ class DocumentosSolicitudModal extends StatelessWidget {
                                               style: const TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w600,
-                                                color: Color(0xFF0284C7),
+                                                color: AppColors.accentVibrant,
                                               ),
                                             ),
                                             const SizedBox(width: 6),
-                                            const Text('•', style: TextStyle(color: Color(0xFFCBD5E1))),
+                                            const Text('•', style: TextStyle(color: AppColors.borderSubtle)),
                                             const SizedBox(width: 6),
                                             Text(
                                               doc.formattedDate,
                                               style: const TextStyle(
                                                 fontSize: 11,
-                                                color: Color(0xFF94A3B8),
+                                                color: AppColors.textSlateMuted,
                                               ),
                                             ),
                                           ],
@@ -290,19 +297,20 @@ class DocumentosSolicitudModal extends StatelessWidget {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFF1F5F9),
-                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.carbonSurface,
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(color: AppColors.borderSubtle),
                                     ),
                                     child: const Row(
                                       children: [
-                                        Icon(Icons.visibility_outlined, size: 14, color: Color(0xFF334155)),
+                                        Icon(Icons.visibility_outlined, size: 14, color: AppColors.textSlateLight),
                                         SizedBox(width: 4),
                                         Text(
                                           'Ver',
                                           style: TextStyle(
                                             fontSize: 11.5,
                                             fontWeight: FontWeight.w700,
-                                            color: Color(0xFF334155),
+                                            color: AppColors.textSlateLight,
                                           ),
                                         ),
                                       ],

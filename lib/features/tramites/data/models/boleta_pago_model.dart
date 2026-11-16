@@ -1,3 +1,5 @@
+import '../../../../core/config/app_env.dart';
+
 class BoletaPagoModel {
   final int id;
   final String numeroBoleta;
@@ -31,6 +33,11 @@ class BoletaPagoModel {
       estado.toLowerCase() == 'completado' ||
       estado.toLowerCase() == 'pagado' ||
       estado.toLowerCase() == 'aprobado';
+
+  String? get resolvedComprobanteUrl {
+    if (comprobanteUrl == null || comprobanteUrl!.trim().isEmpty) return null;
+    return AppEnv.resolveStorageUrl(comprobanteUrl);
+  }
 
   String get estadoLabel {
     switch (estado.toLowerCase()) {

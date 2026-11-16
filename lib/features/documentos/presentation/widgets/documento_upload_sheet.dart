@@ -1,6 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/theme/app_colors.dart';
 import '../providers/documentos_provider.dart';
 
 class DocumentoUploadSheet extends ConsumerStatefulWidget {
@@ -12,9 +14,7 @@ class DocumentoUploadSheet extends ConsumerStatefulWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: const DocumentoUploadSheet(),
       ),
     );
@@ -57,7 +57,8 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
         // Validar tamaño máximo (10 MB = 10 * 1024 * 1024 bytes)
         if (size > 10 * 1024 * 1024) {
           setState(() {
-            _errorMessage = 'El archivo supera el tamaño máximo permitido de 10 MB.';
+            _errorMessage =
+                'El archivo supera el tamaño máximo permitido de 10 MB.';
           });
           return;
         }
@@ -67,7 +68,10 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
           _fileSizeBytes = size;
           // Si el título está vacío, sugerir el nombre del archivo sin extensión
           if (_tituloController.text.trim().isEmpty) {
-            final rawName = file.name.replaceAll(RegExp(r'\.pdf$', caseSensitive: false), '');
+            final rawName = file.name.replaceAll(
+              RegExp(r'\.pdf$', caseSensitive: false),
+              '',
+            );
             _tituloController.text = rawName;
           }
         });
@@ -106,7 +110,9 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
     });
 
     try {
-      await ref.read(documentosListProvider.notifier).uploadDocumento(
+      await ref
+          .read(documentosListProvider.notifier)
+          .uploadDocumento(
             idTipoDocumento: _selectedTipoId!,
             filePath: _selectedFile!.path!,
             fileName: _selectedFile!.name,
@@ -121,7 +127,10 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString().replaceAll('Exception: ', '').replaceAll('AppException: ', '');
+          _errorMessage = e
+              .toString()
+              .replaceAll('Exception: ', '')
+              .replaceAll('AppException: ', '');
           _isUploading = false;
         });
       }
@@ -134,8 +143,13 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: SafeArea(
@@ -153,7 +167,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFCBD5E1),
+                      color: AppColors.borderSubtle,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -166,12 +180,13 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0F2FE),
-                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: const Icon(
                         Icons.cloud_upload_outlined,
-                        color: Color(0xFF0077D4),
+                        color: AppColors.accentVibrant,
                         size: 22,
                       ),
                     ),
@@ -185,42 +200,47 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             style: TextStyle(
                               fontSize: 16.5,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0F172A),
+                              color: AppColors.textWhite,
                             ),
                           ),
                           Text(
                             'Certificados, respaldos o carnets (PDF)',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ],
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Color(0xFF64748B)),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: AppColors.textSlateMuted,
+                      ),
                       onPressed: () => Navigator.of(context).pop(false),
                     ),
                   ],
                 ),
-                const Divider(height: 24, color: Color(0xFFE2E8F0)),
+                const Divider(height: 24, color: AppColors.borderSubtle),
 
                 if (_errorMessage != null) ...[
                   Container(
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.only(bottom: 14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFEF2F2),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFFECACA)),
+                      color: AppColors.accentVibrant.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: AppColors.accentVibrant.withValues(alpha: 0.4),
+                      ),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.error_outline_rounded,
-                          color: Color(0xFFDC2626),
+                          color: AppColors.accentVibrant,
                           size: 18,
                         ),
                         const SizedBox(width: 8),
@@ -229,7 +249,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             _errorMessage!,
                             style: const TextStyle(
                               fontSize: 12.5,
-                              color: Color(0xFF991B1B),
+                              color: AppColors.accentVibrant,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -245,7 +265,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -253,24 +273,37 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                   data: (tipos) => DropdownButtonFormField<int>(
                     isExpanded: true,
                     initialValue: _selectedTipoId,
+                    dropdownColor: AppColors.carbonSurface,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 12,
                       ),
+                      filled: true,
+                      fillColor: AppColors.carbonSurfaceMuted,
                       hintText: 'Selecciona una categoría...',
-                      hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+                      hintStyle: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textSlateMuted,
+                      ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: AppColors.borderSubtle,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: AppColors.borderSubtle,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFF003B70), width: 1.5),
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: AppColors.accentVibrant,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                     items: tipos.map((t) {
@@ -279,7 +312,10 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                         child: Text(
                           t.nombre,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 13.5, color: Color(0xFF0F172A)),
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            color: AppColors.textWhite,
+                          ),
                         ),
                       );
                     }).toList(),
@@ -292,11 +328,14 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                     },
                   ),
                   loading: () => const LinearProgressIndicator(
-                    color: Color(0xFF003B70),
+                    color: AppColors.accentVibrant,
                   ),
                   error: (err, stack) => const Text(
                     'No se pudieron cargar los tipos de documento.',
-                    style: TextStyle(color: Color(0xFFDC2626), fontSize: 12),
+                    style: TextStyle(
+                      color: AppColors.accentVibrant,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -307,30 +346,47 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _tituloController,
+                  style: const TextStyle(
+                    color: AppColors.textWhite,
+                    fontSize: 13,
+                  ),
                   decoration: InputDecoration(
-                    hintText: 'Ej. Carnet de Identidad 2026, Certificado Médico',
-                    hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+                    hintText:
+                        'Ej. Carnet de Identidad 2026, Certificado Médico',
+                    hintStyle: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSlateMuted,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.carbonSurfaceMuted,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 14,
                       vertical: 12,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(
+                        color: AppColors.borderSubtle,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(
+                        color: AppColors.borderSubtle,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFF003B70), width: 1.5),
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(
+                        color: AppColors.accentVibrant,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -342,7 +398,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -350,14 +406,17 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                 if (_selectedFile == null)
                   InkWell(
                     onTap: _pickFile,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(4),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 16,
+                      ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: const Color(0xFFCBD5E1),
+                          color: AppColors.borderSubtle,
                           style: BorderStyle.solid,
                         ),
                       ),
@@ -366,7 +425,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                           Icon(
                             Icons.upload_file_rounded,
                             size: 36,
-                            color: Color(0xFF003B70),
+                            color: AppColors.accentVibrant,
                           ),
                           SizedBox(height: 8),
                           Text(
@@ -374,7 +433,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF0F172A),
+                              color: AppColors.textWhite,
                             ),
                           ),
                           SizedBox(height: 4),
@@ -382,7 +441,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             'Solo formato .pdf (Hasta 10 MB)',
                             style: TextStyle(
                               fontSize: 11.5,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -393,9 +452,9 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FDF4),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFBBF7D0)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Row(
                       children: [
@@ -403,13 +462,15 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFEE2E2),
-                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.accentVibrant.withValues(
+                              alpha: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Center(
                             child: Icon(
                               Icons.picture_as_pdf_rounded,
-                              color: Color(0xFFDC2626),
+                              color: AppColors.accentVibrant,
                               size: 22,
                             ),
                           ),
@@ -426,7 +487,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF0F172A),
+                                  color: AppColors.textWhite,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -434,7 +495,7 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                                 '${_formatFileSize(_fileSizeBytes)} • Listo para subir',
                                 style: const TextStyle(
                                   fontSize: 11.5,
-                                  color: Color(0xFF15803D),
+                                  color: AppColors.successEmerald,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -444,9 +505,12 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                         TextButton(
                           onPressed: _pickFile,
                           style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFF003B70),
+                            foregroundColor: AppColors.accentVibrant,
                           ),
-                          child: const Text('Cambiar', style: TextStyle(fontSize: 12)),
+                          child: const Text(
+                            'Cambiar',
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                       ],
                     ),
@@ -464,15 +528,15 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             : () => Navigator.of(context).pop(false),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 13),
-                          side: const BorderSide(color: Color(0xFFCBD5E1)),
+                          side: const BorderSide(color: AppColors.borderSubtle),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
                         child: const Text(
                           'Cancelar',
                           style: TextStyle(
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateMuted,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -486,12 +550,12 @@ class _DocumentoUploadSheetState extends ConsumerState<DocumentoUploadSheet> {
                             ? null
                             : _submit,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF003B70),
+                          backgroundColor: AppColors.primaryCrimson,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 13),
-                          elevation: 2,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
                         child: _isUploading

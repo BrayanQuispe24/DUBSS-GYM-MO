@@ -55,33 +55,36 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
     final bool confirmar = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            backgroundColor: AppColors.carbonSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: AppColors.borderSubtle),
+            ),
             title: Text(
               isAprobar ? '¿Aprobar Solicitud?' : '¿Rechazar Solicitud?',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                color: isAprobar
-                    ? const Color(0xFF16A34A)
-                    : const Color(0xFFDC2626),
+                color: isAprobar ? AppColors.successEmerald : AppColors.accentVibrant,
               ),
             ),
             content: Text(
               isAprobar
                   ? 'Se marcará la solicitud ${sol.numeroFormulario} como APROBADA para proceder con el cobro y matrícula del socio.'
                   : '¿Está seguro de marcar la solicitud ${sol.numeroFormulario} como RECHAZADA?',
+              style: const TextStyle(color: AppColors.textSlateLight),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isAprobar
-                      ? const Color(0xFF16A34A)
-                      : const Color(0xFFDC2626),
+                      ? AppColors.successEmerald
+                      : AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: Text(isAprobar ? 'Aprobar' : 'Rechazar'),
@@ -104,7 +107,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
             content: Text(
               'Solicitud ${sol.numeroFormulario} marcada como $estadoTexto',
             ),
-            backgroundColor: isAprobar ? AppColors.success : AppColors.danger,
+            backgroundColor: isAprobar ? AppColors.carbonSurfaceMuted : AppColors.primaryCrimson,
           ),
         );
       }
@@ -113,7 +116,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error al actualizar estado: $e'),
-            backgroundColor: AppColors.danger,
+            backgroundColor: AppColors.primaryCrimson,
           ),
         );
       }
@@ -124,27 +127,32 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
     final bool confirmar = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            backgroundColor: AppColors.carbonSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: AppColors.borderSubtle),
+            ),
             title: const Text(
               'Emitir Inscripción & QR',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF003B70),
+                color: AppColors.solarGold,
               ),
             ),
             content: Text(
               '¿Desea generar la Boleta de Inscripción y Credencial QR para el socio a partir del pago #${pago.numeroBoleta} por Bs. ${pago.monto.toStringAsFixed(2)}?',
+              style: const TextStyle(color: AppColors.textSlateLight),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0077D4),
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: const Text('Generar Matrícula'),
@@ -167,7 +175,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('¡Boleta de Inscripción y QR generados con éxito!'),
-            backgroundColor: AppColors.success,
+            backgroundColor: AppColors.carbonSurfaceMuted,
           ),
         );
         _tabController.animateTo(2); // Ir al tab de inscripciones
@@ -177,7 +185,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error al emitir inscripción: $e'),
-            backgroundColor: AppColors.danger,
+            backgroundColor: AppColors.primaryCrimson,
           ),
         );
       }
@@ -195,27 +203,31 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
     final insCount = inscripcionesAsync.asData?.value.length ?? 0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Trámites & Pagos Recepción',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textWhite),
             tooltip: 'Actualizar',
             onPressed: _refrescarTodo,
           ),
           IconButton(
             icon: const Icon(Icons.add_circle_outline_rounded,
-                color: Colors.white),
+                color: AppColors.accentVibrant),
             tooltip: 'Nueva Solicitud',
             onPressed: () async {
               final ok = await FormularioDubssCreateModal.show(context);
@@ -227,10 +239,10 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: const Color(0xFFD97706),
+          indicatorColor: AppColors.primaryCrimson,
           indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: const Color(0xFF94A3B8),
+          labelColor: AppColors.textWhite,
+          unselectedLabelColor: AppColors.textSlateMuted,
           labelStyle:
               const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
           tabs: [
@@ -285,20 +297,27 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
       AsyncValue<List<FormularioSolicitudModel>> solicitudesAsync) {
     return solicitudesAsync.when(
       loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.navyBlue)),
+          child: CircularProgressIndicator(color: AppColors.primaryCrimson)),
       error: (e, _) => Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, color: Colors.red, size: 40),
+              const Icon(Icons.error_outline, color: AppColors.accentVibrant, size: 40),
               const SizedBox(height: 8),
               Text('Error al cargar solicitudes: $e',
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AppColors.textSlateLight)),
               const SizedBox(height: 12),
               ElevatedButton(
-                  onPressed: _refrescarTodo, child: const Text('Reintentar')),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryCrimson,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: _refrescarTodo,
+                child: const Text('Reintentar'),
+              ),
             ],
           ),
         ),
@@ -323,31 +342,36 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
 
         return RefreshIndicator(
           onRefresh: () async => _refrescarTodo(),
-          color: AppColors.navyBlue,
+          color: AppColors.primaryCrimson,
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
               // Barra de búsqueda y selector de filtros
               TextField(
                 controller: _searchController,
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: 'Buscar por socio, Nº formulario o disciplina...',
                   hintStyle:
-                      const TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
+                      const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                   prefixIcon: const Icon(Icons.search,
-                      size: 18, color: Color(0xFF64748B)),
+                      size: 18, color: AppColors.textSlateMuted),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.carbonSurface,
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
                   ),
                 ),
               ),
@@ -372,21 +396,21 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                   padding: const EdgeInsets.all(32),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
-                  child: Column(
+                  child: const Column(
                     children: [
                       Icon(Icons.assignment_late_outlined,
-                          size: 44, color: Colors.grey.shade400),
-                      const SizedBox(height: 10),
-                      const Text(
+                          size: 44, color: AppColors.textSlateMuted),
+                      SizedBox(height: 10),
+                      Text(
                         'No se encontraron solicitudes con los filtros aplicados',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateMuted,
                             fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -411,19 +435,19 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
         labelStyle: TextStyle(
           fontSize: 11.5,
           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-          color: isSelected ? Colors.white : const Color(0xFF334155),
+          color: isSelected ? Colors.white : AppColors.textSlateLight,
         ),
         selected: isSelected,
         onSelected: (_) => setState(() => _filtroEstado = value),
-        selectedColor: const Color(0xFF003B70),
-        backgroundColor: Colors.white,
+        selectedColor: AppColors.primaryCrimson,
+        backgroundColor: AppColors.carbonSurface,
         checkmarkColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(4),
           side: BorderSide(
             color: isSelected
-                ? const Color(0xFF003B70)
-                : const Color(0xFFCBD5E1),
+                ? AppColors.accentVibrant
+                : AppColors.borderSubtle,
           ),
         ),
       ),
@@ -434,30 +458,23 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
     final isPendiente = sol.isPendiente;
     final isAprobado = sol.isAprobado;
 
-    Color badgeBg = const Color(0xFFFEF3C7);
-    Color badgeText = const Color(0xFFB45309);
+    Color badgeBg = AppColors.solarAmber.withValues(alpha: 0.15);
+    Color badgeText = AppColors.solarGold;
     if (isAprobado) {
-      badgeBg = const Color(0xFFDCFCE7);
-      badgeText = const Color(0xFF15803D);
+      badgeBg = AppColors.successEmerald.withValues(alpha: 0.15);
+      badgeText = AppColors.successLight;
     } else if (sol.isRechazado) {
-      badgeBg = const Color(0xFFFEE2E2);
-      badgeText = const Color(0xFFB91C1C);
+      badgeBg = AppColors.primaryCrimson.withValues(alpha: 0.15);
+      badgeText = AppColors.accentVibrant;
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,7 +487,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0077D4),
+                  color: AppColors.solarGold,
                 ),
               ),
               Container(
@@ -478,7 +495,8 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: badgeBg,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: badgeText.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   sol.estadoLabel,
@@ -497,27 +515,27 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+              color: AppColors.textWhite,
             ),
           ),
           const SizedBox(height: 4),
           Row(
             children: [
               const Icon(Icons.fitness_center_rounded,
-                  size: 14, color: Color(0xFF64748B)),
+                  size: 14, color: AppColors.accentVibrant),
               const SizedBox(width: 4),
               Text(
                 '${sol.disciplinaNombre} • ${sol.planNombre}',
                 style: const TextStyle(
                   fontSize: 12,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSlateLight,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(height: 1, color: Color(0xFFF1F5F9)),
+          const Divider(height: 1, color: AppColors.borderSubtle),
           const SizedBox(height: 10),
 
           // Botones de acción: Aprobar, Rechazar, Ver PDF
@@ -538,12 +556,12 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                   style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700),
                 ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF003B70),
+                  foregroundColor: AppColors.textWhite,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  side: const BorderSide(color: Color(0xFF003B70)),
+                  side: const BorderSide(color: AppColors.borderSubtle),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)),
+                      borderRadius: BorderRadius.circular(4)),
                 ),
               ),
               const SizedBox(width: 6),
@@ -555,12 +573,12 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                   style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700),
                 ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF0284C7),
+                  foregroundColor: AppColors.solarGold,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  side: const BorderSide(color: Color(0xFF0284C7)),
+                  side: const BorderSide(color: AppColors.borderSubtle),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)),
+                      borderRadius: BorderRadius.circular(4)),
                 ),
               ),
               const Spacer(),
@@ -569,12 +587,12 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                   onPressed: () =>
                       _handleCambiarEstadoSolicitud(sol, 'rechazada'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFDC2626),
-                    side: const BorderSide(color: Color(0xFFDC2626)),
+                    foregroundColor: AppColors.accentVibrant,
+                    side: const BorderSide(color: AppColors.primaryCrimson),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 6),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
+                        borderRadius: BorderRadius.circular(4)),
                   ),
                   child: const Text('Rechazar',
                       style: TextStyle(
@@ -585,12 +603,12 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                   onPressed: () =>
                       _handleCambiarEstadoSolicitud(sol, 'aprobada'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF16A34A),
+                    backgroundColor: AppColors.successEmerald,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
+                        borderRadius: BorderRadius.circular(4)),
                   ),
                   child: const Text('Aprobar',
                       style: TextStyle(
@@ -610,18 +628,18 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
   Widget _buildPagosTab(AsyncValue<List<BoletaPagoModel>> boletasAsync) {
     return boletasAsync.when(
       loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.navyBlue)),
-      error: (e, _) => Center(child: Text('Error al cargar pagos: $e')),
+          child: CircularProgressIndicator(color: AppColors.primaryCrimson)),
+      error: (e, _) => Center(child: Text('Error al cargar pagos: $e', style: const TextStyle(color: AppColors.textSlateLight))),
       data: (pagos) {
         if (pagos.isEmpty) {
           return const Center(
-            child: Text('No hay boletas de pago registradas en el sistema.'),
+            child: Text('No hay boletas de pago registradas en el sistema.', style: TextStyle(color: AppColors.textSlateMuted)),
           );
         }
 
         return RefreshIndicator(
           onRefresh: () async => _refrescarTodo(),
-          color: AppColors.navyBlue,
+          color: AppColors.primaryCrimson,
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: pagos.length,
@@ -631,9 +649,9 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
               return Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  color: AppColors.carbonSurface,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -646,7 +664,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF003B70),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         Text(
@@ -654,7 +672,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                           style: const TextStyle(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF16A34A),
+                            color: AppColors.solarGold,
                           ),
                         ),
                       ],
@@ -664,7 +682,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                       p.concepto.isEmpty ? 'Pago de membresía gimnasio DUBSS' : p.concepto,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF475569),
+                        color: AppColors.textSlateLight,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -678,15 +696,16 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF1F5F9),
+                            color: AppColors.carbonSurfaceMuted,
                             borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.borderSubtle),
                           ),
                           child: Text(
                             p.metodoPago.toUpperCase(),
                             style: const TextStyle(
                               fontSize: 9.5,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateLight,
                             ),
                           ),
                         ),
@@ -709,8 +728,11 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                                     fontSize: 10.5, fontWeight: FontWeight.w700),
                               ),
                               style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.textWhite,
+                                side: const BorderSide(color: AppColors.borderSubtle),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 7, vertical: 3),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                 visualDensity: VisualDensity.compact,
                               ),
                             ),
@@ -724,10 +746,11 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                                     fontSize: 10.5, fontWeight: FontWeight.w800),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0077D4),
+                                backgroundColor: AppColors.primaryCrimson,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                 visualDensity: VisualDensity.compact,
                               ),
                             ),
@@ -752,18 +775,18 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
       AsyncValue<List<BoletaInscripcionModel>> inscripcionesAsync) {
     return inscripcionesAsync.when(
       loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.navyBlue)),
-      error: (e, _) => Center(child: Text('Error al cargar matrículas: $e')),
+          child: CircularProgressIndicator(color: AppColors.primaryCrimson)),
+      error: (e, _) => Center(child: Text('Error al cargar matrículas: $e', style: const TextStyle(color: AppColors.textSlateLight))),
       data: (inscripciones) {
         if (inscripciones.isEmpty) {
           return const Center(
-            child: Text('No hay matrículas de inscripción registradas.'),
+            child: Text('No hay matrículas de inscripción registradas.', style: TextStyle(color: AppColors.textSlateMuted)),
           );
         }
 
         return RefreshIndicator(
           onRefresh: () async => _refrescarTodo(),
-          color: AppColors.navyBlue,
+          color: AppColors.primaryCrimson,
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: inscripciones.length,
@@ -773,9 +796,9 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
               return Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  color: AppColors.carbonSurface,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -788,7 +811,7 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF003B70),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         Container(
@@ -796,9 +819,14 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                               horizontal: 7, vertical: 3),
                           decoration: BoxDecoration(
                             color: ins.isActiva
-                                ? const Color(0xFFDCFCE7)
-                                : const Color(0xFFFEE2E2),
+                                ? AppColors.successEmerald.withValues(alpha: 0.15)
+                                : AppColors.primaryCrimson.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: ins.isActiva
+                                  ? AppColors.successEmerald.withValues(alpha: 0.35)
+                                  : AppColors.primaryCrimson.withValues(alpha: 0.35),
+                            ),
                           ),
                           child: Text(
                             ins.isActiva ? 'VIGENTE' : 'VENCIDO',
@@ -806,8 +834,8 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
                               color: ins.isActiva
-                                  ? const Color(0xFF15803D)
-                                  : const Color(0xFFB91C1C),
+                                  ? AppColors.successLight
+                                  : AppColors.accentVibrant,
                             ),
                           ),
                         ),
@@ -819,14 +847,14 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     Text(
                       'Disciplina: ${ins.disciplina.isEmpty ? 'Gimnasio General' : ins.disciplina}',
                       style: const TextStyle(
                         fontSize: 11.5,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSlateLight,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -850,8 +878,9 @@ class _RecepcionTramitesScreenState extends ConsumerState<RecepcionTramitesScree
                                 fontSize: 11, fontWeight: FontWeight.w700),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF003B70),
+                            backgroundColor: AppColors.primaryCrimson,
                             foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                           ),

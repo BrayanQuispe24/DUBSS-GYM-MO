@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/providers/auth_notifier.dart';
+import '../../../auth/presentation/providers/auth_state.dart';
 import '../../../garita_accesos/presentation/screens/garita_screen.dart';
 import '../../../users_admin/presentation/screens/users_list_screen.dart';
 import 'recepcion_tramites_screen.dart';
@@ -57,21 +58,29 @@ class _ReceptionistShellScreenState
     final bool confirmar = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            title: const Text('¿Cerrar Sesión?'),
+            backgroundColor: AppColors.carbonSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: AppColors.borderSubtle),
+            ),
+            title: const Text(
+              '¿Cerrar Sesión?',
+              style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.w800),
+            ),
             content: const Text(
-              '¿Está seguro de cerrar la sesión de recepción del gimnasio?',
+              '¿Está seguro de cerrar la sesión del personal del gimnasio?',
+              style: TextStyle(color: AppColors.textSlateLight),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.danger,
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: const Text('Cerrar Sesión'),
@@ -91,6 +100,14 @@ class _ReceptionistShellScreenState
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.status == AuthStatus.unauthenticated) {
+        if (mounted) {
+          context.go('/login');
+        }
+      }
+    });
+
     final authState = ref.watch(authNotifierProvider);
     final user = authState.user;
 
@@ -102,8 +119,9 @@ class _ReceptionistShellScreenState
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       drawer: Drawer(
+        backgroundColor: AppColors.carbonSurface,
         child: Column(
           children: [
             // Header del Drawer
@@ -113,9 +131,12 @@ class _ReceptionistShellScreenState
                   top: 50, bottom: 20, left: 20, right: 20),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF003B70), Color(0xFF001C38)],
+                  colors: [AppColors.primaryCrimson, AppColors.primaryDark],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
+                ),
+                border: Border(
+                  bottom: BorderSide(color: AppColors.borderSubtle),
                 ),
               ),
               child: Column(
@@ -123,25 +144,25 @@ class _ReceptionistShellScreenState
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: const Color(0xFFD97706),
+                    backgroundColor: AppColors.carbonSurface,
                     child: Text(
                       user?.nombre?.isNotEmpty == true
                           ? user!.nombre![0].toUpperCase()
                           : (user?.name.isNotEmpty == true
                               ? user!.name[0].toUpperCase()
-                              : 'R'),
+                              : 'S'),
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: AppColors.solarGold,
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    user?.nombreCompleto ?? 'Personal de Recepción',
+                    user?.nombreCompleto ?? 'Personal DUBSS',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textWhite,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                     ),
@@ -149,7 +170,7 @@ class _ReceptionistShellScreenState
                   Text(
                     user?.email ?? '',
                     style: const TextStyle(
-                      color: Color(0xFF94A3B8),
+                      color: AppColors.textSlateLight,
                       fontSize: 12,
                     ),
                   ),
@@ -158,14 +179,14 @@ class _ReceptionistShellScreenState
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD97706).withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: const Color(0xFFD97706)),
+                      border: Border.all(color: AppColors.solarGold.withValues(alpha: 0.6)),
                     ),
-                    child: const Text(
-                      'RECEPCIÓN DUBSS UAGRM',
-                      style: TextStyle(
-                        color: Color(0xFFFDE68A),
+                    child: Text(
+                      '${user?.rol.toUpperCase() ?? 'STAFF'} DUBSS UAGRM',
+                      style: const TextStyle(
+                        color: AppColors.solarGold,
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.6,
@@ -176,14 +197,14 @@ class _ReceptionistShellScreenState
               ),
             ),
 
-            // Opciones de los 7 módulos
+            // Opciones de los módulos
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
                   _drawerItem(
                     icon: Icons.dashboard_outlined,
-                    title: 'Dashboard de Recepción',
+                    title: 'Dashboard de Gestión',
                     onTap: () {
                       Navigator.of(context).pop();
                       _onTabSelected(0);
@@ -213,7 +234,7 @@ class _ReceptionistShellScreenState
                       _onTabSelected(2);
                     },
                   ),
-                  const Divider(indent: 16, endIndent: 16),
+                  const Divider(indent: 16, endIndent: 16, color: AppColors.borderSubtle),
                   _drawerItem(
                     icon: Icons.card_membership_rounded,
                     title: 'Planes y Tarifas',
@@ -246,8 +267,8 @@ class _ReceptionistShellScreenState
                       context.push('/receptionist/equipos');
                     },
                   ),
-                  const Divider(indent: 16, endIndent: 16),
-                  if (user?.rol == 'administrador')
+                  const Divider(indent: 16, endIndent: 16, color: AppColors.borderSubtle),
+                  if (user?.rol == 'administrador' || user?.rol == 'instructor')
                     _drawerItem(
                       icon: Icons.switch_account_outlined,
                       title: 'Ver como Cliente Socio',
@@ -261,13 +282,13 @@ class _ReceptionistShellScreenState
             ),
 
             // Footer con Cerrar Sesión
-            const Divider(height: 1),
+            const Divider(height: 1, color: AppColors.borderSubtle),
             ListTile(
-              leading: const Icon(Icons.logout_rounded, color: AppColors.danger),
+              leading: const Icon(Icons.logout_rounded, color: AppColors.accentVibrant),
               title: const Text(
                 'Cerrar Sesión',
                 style: TextStyle(
-                  color: AppColors.danger,
+                  color: AppColors.accentVibrant,
                   fontWeight: FontWeight.w700,
                   fontSize: 13.5,
                 ),
@@ -286,17 +307,10 @@ class _ReceptionistShellScreenState
         children: pages,
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-          border: const Border(
-            top: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+        decoration: const BoxDecoration(
+          color: AppColors.carbonSurface,
+          border: Border(
+            top: BorderSide(color: AppColors.borderSubtle, width: 1),
           ),
         ),
         child: SafeArea(
@@ -360,11 +374,11 @@ class _ReceptionistShellScreenState
     required String label,
   }) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? const Color(0xFF003B70) : const Color(0xFF64748B);
+    final color = isSelected ? AppColors.accentVibrant : AppColors.textSlateMuted;
 
     return InkWell(
       onTap: () => setState(() => _currentIndex = index),
-      splashColor: const Color(0xFF003B70).withValues(alpha: 0.1),
+      splashColor: AppColors.primaryCrimson.withValues(alpha: 0.15),
       highlightColor: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -391,28 +405,22 @@ class _ReceptionistShellScreenState
   Widget _buildCenterMenuButton(BuildContext context) {
     return InkWell(
       onTap: () => _openFullScreenMenu(context),
-      splashColor: const Color(0xFF003B70).withValues(alpha: 0.15),
+      splashColor: AppColors.primaryCrimson.withValues(alpha: 0.2),
       highlightColor: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF003B70), Color(0xFF0077D4)],
+                colors: [AppColors.primaryCrimson, AppColors.accentVibrant],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF003B70).withValues(alpha: 0.35),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.5)),
             ),
             child: const Icon(
               Icons.grid_view_rounded,
@@ -426,7 +434,7 @@ class _ReceptionistShellScreenState
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF003B70),
+              color: AppColors.solarGold,
             ),
           ),
         ],
@@ -440,13 +448,13 @@ class _ReceptionistShellScreenState
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFF003B70), size: 22),
+      leading: Icon(icon, color: AppColors.accentVibrant, size: 22),
       title: Text(
         title,
         style: const TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
-          color: Color(0xFF0F172A),
+          color: AppColors.textWhite,
         ),
       ),
       dense: true,

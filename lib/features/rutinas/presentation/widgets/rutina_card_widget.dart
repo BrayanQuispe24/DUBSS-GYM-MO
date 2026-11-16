@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/rutina_model.dart';
 import 'rutina_detail_modal.dart';
 
@@ -13,13 +14,13 @@ class RutinaCardWidget extends StatelessWidget {
   Color _getNivelColor(String nivel) {
     switch (nivel.toLowerCase()) {
       case 'principiante':
-        return const Color(0xFF10B981);
+        return AppColors.successEmerald;
       case 'intermedio':
-        return const Color(0xFF0077D4);
+        return AppColors.solarGold;
       case 'avanzado':
-        return const Color(0xFFEA580C);
+        return AppColors.accentVibrant;
       default:
-        return const Color(0xFF64748B);
+        return AppColors.textSlateMuted;
     }
   }
 
@@ -30,24 +31,17 @@ class RutinaCardWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Top accent color line
-            Container(height: 3.5, color: nivelColor),
+            Container(height: 3.0, color: nivelColor),
 
             Padding(
               padding: const EdgeInsets.all(16),
@@ -64,7 +58,7 @@ class RutinaCardWidget extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                             height: 1.25,
                           ),
                         ),
@@ -73,9 +67,9 @@ class RutinaCardWidget extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                         decoration: BoxDecoration(
-                          color: nivelColor.withValues(alpha: 0.1),
+                          color: nivelColor.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: nivelColor.withValues(alpha: 0.25)),
+                          border: Border.all(color: nivelColor.withValues(alpha: 0.4), width: 0.8),
                         ),
                         child: Text(
                           rutina.nivel.toUpperCase(),
@@ -99,7 +93,7 @@ class RutinaCardWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12.5,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSlateLight,
                         height: 1.3,
                       ),
                     ),
@@ -113,14 +107,14 @@ class RutinaCardWidget extends StatelessWidget {
                       // Ejercicios count
                       Row(
                         children: [
-                          const Icon(Icons.fitness_center, size: 14, color: Color(0xFF0077D4)),
+                          const Icon(Icons.fitness_center, size: 14, color: AppColors.accentVibrant),
                           const SizedBox(width: 4),
                           Text(
                             '${rutina.totalEjercicios} ejercicios',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF475569),
+                              color: AppColors.textSlateLight,
                             ),
                           ),
                         ],
@@ -130,14 +124,14 @@ class RutinaCardWidget extends StatelessWidget {
                       // Duration
                       Row(
                         children: [
-                          const Icon(Icons.timer_outlined, size: 14, color: Color(0xFF64748B)),
+                          const Icon(Icons.timer_outlined, size: 14, color: AppColors.solarGold),
                           const SizedBox(width: 4),
                           Text(
                             '~${rutina.duracionEstimadaMinutos} min',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -148,20 +142,20 @@ class RutinaCardWidget extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFAF5FF),
+                            color: AppColors.primaryCrimson.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: const Color(0xFFE9D5FF)),
+                            border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.4)),
                           ),
                           child: const Row(
                             children: [
-                              Icon(Icons.auto_awesome, size: 10, color: Color(0xFF9333EA)),
+                              Icon(Icons.auto_awesome, size: 10, color: AppColors.accentVibrant),
                               SizedBox(width: 2),
                               Text(
                                 'IA',
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.w800,
-                                  color: Color(0xFF9333EA),
+                                  color: AppColors.accentVibrant,
                                 ),
                               ),
                             ],
@@ -172,28 +166,27 @@ class RutinaCardWidget extends StatelessWidget {
                       const Spacer(),
 
                       // Action Button
-                      FilledButton.tonal(
-                        onPressed: () {
-                          RutinaDetailModal.show(context, rutina);
-                        },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFFF0F9FF),
-                          foregroundColor: const Color(0xFF0077D4),
-                          visualDensity: VisualDensity.compact,
+                      InkWell(
+                        onTap: () => RutinaDetailModal.show(context, rutina),
+                        borderRadius: BorderRadius.circular(4),
+                        child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryCrimson,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                           ),
-                        ),
-                        child: const Row(
-                          children: [
-                            Text(
-                              'Ver Rutina',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios, size: 11),
-                          ],
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Ver Rutina',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                              ),
+                              SizedBox(width: 4),
+                              Icon(Icons.arrow_forward_ios, size: 10, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                     ],

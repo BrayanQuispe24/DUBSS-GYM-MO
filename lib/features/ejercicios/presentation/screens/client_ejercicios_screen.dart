@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../providers/ejercicios_providers.dart';
 import '../widgets/ejercicio_card_widget.dart';
 import '../widgets/ejercicio_filter_sheet.dart';
@@ -42,13 +43,16 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
     final filter = ref.watch(ejerciciosFilterProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
-        scrolledUnderElevation: 0.5,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => context.pop(),
         ),
         titleSpacing: 0,
@@ -60,12 +64,12 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0F172A),
+                color: AppColors.textWhite,
               ),
             ),
             Text(
               'Gimnasio UAGRM / Deporte & Entrenamiento',
-              style: TextStyle(fontSize: 10, color: Color(0xFF64748B)),
+              style: TextStyle(fontSize: 10, color: AppColors.textSlateMuted),
             ),
           ],
         ),
@@ -74,7 +78,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
             alignment: Alignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.tune, color: Color(0xFF0077D4)),
+                icon: const Icon(Icons.tune, color: AppColors.accentVibrant),
                 tooltip: 'Filtros avanzados',
                 onPressed: () => EjercicioFilterSheet.show(context),
               ),
@@ -86,7 +90,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                     width: 8,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: Color(0xFFDC2626),
+                      color: AppColors.accentVibrant,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -95,13 +99,10 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
           ),
           const SizedBox(width: 8),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: const Color(0xFFE2E8F0), height: 1),
-        ),
       ),
       body: RefreshIndicator(
-        color: const Color(0xFF0077D4),
+        color: AppColors.accentVibrant,
+        backgroundColor: AppColors.carbonSurface,
         onRefresh: () async {
           await ref.read(ejerciciosPaginatorProvider.notifier).refresh();
         },
@@ -123,10 +124,11 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF003B70),
-                            borderRadius: BorderRadius.circular(6),
+                            color: AppColors.carbonSurface,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.borderSubtle),
                           ),
-                          child: const Icon(Icons.fitness_center, color: Colors.white, size: 18),
+                          child: const Icon(Icons.fitness_center, color: AppColors.accentVibrant, size: 18),
                         ),
                         const SizedBox(width: 10),
                         const Expanded(
@@ -135,7 +137,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                             style: TextStyle(
                               fontSize: 14.5,
                               fontWeight: FontWeight.w900,
-                              color: Color(0xFF0B1727),
+                              color: AppColors.textWhite,
                             ),
                           ),
                         ),
@@ -144,23 +146,24 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                     const SizedBox(height: 4),
                     const Text(
                       'Explora los ejercicios disponibles, técnicas de ejecución y demostraciones visuales.',
-                      style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
+                      style: TextStyle(fontSize: 11.5, color: AppColors.textSlateMuted),
                     ),
                     const SizedBox(height: 14),
 
                     // Search Input
                     TextField(
                       controller: _searchController,
+                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                       onChanged: (val) {
                         ref.read(ejerciciosFilterProvider.notifier).setSearchDebounced(val);
                       },
                       decoration: InputDecoration(
                         hintText: 'Buscar por nombre o descripción...',
-                        hintStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF94A3B8)),
-                        prefixIcon: const Icon(Icons.search, size: 20, color: Color(0xFF0077D4)),
+                        hintStyle: const TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
+                        prefixIcon: const Icon(Icons.search, size: 20, color: AppColors.textSlateMuted),
                         suffixIcon: _searchController.text.isNotEmpty
                             ? IconButton(
-                                icon: const Icon(Icons.clear, size: 18, color: Color(0xFF64748B)),
+                                icon: const Icon(Icons.clear, size: 18, color: AppColors.textSlateMuted),
                                 onPressed: () {
                                   _searchController.clear();
                                   ref.read(ejerciciosFilterProvider.notifier).setSearchDebounced('');
@@ -168,19 +171,19 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                               )
                             : null,
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: AppColors.carbonSurfaceMuted,
                         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(color: AppColors.borderSubtle),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(color: AppColors.borderSubtle),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Color(0xFF0077D4), width: 1.5),
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
                         ),
                       ),
                     ),
@@ -196,12 +199,12 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF334155),
+                              color: AppColors.textSlateLight,
                             ),
                           ),
                           loading: () => const Text(
                             'Cargando catálogo...',
-                            style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                            style: TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                           ),
                           error: (err, stack) => const SizedBox(),
                         ),
@@ -216,7 +219,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFFDC2626),
+                                color: AppColors.accentVibrant,
                               ),
                             ),
                           ),
@@ -239,17 +242,17 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.search_off_rounded, size: 52, color: Color(0xFF94A3B8)),
+                            const Icon(Icons.search_off_rounded, size: 52, color: AppColors.textSlateMuted),
                             const SizedBox(height: 12),
                             const Text(
                               'No se encontraron ejercicios coincidentes',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                             ),
                             const SizedBox(height: 6),
                             const Text(
                               'Intente cambiar los términos de búsqueda o limpiar los filtros.',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                              style: TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                             ),
                             const SizedBox(height: 14),
                             ElevatedButton(
@@ -257,7 +260,10 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                                 _searchController.clear();
                                 ref.read(ejerciciosFilterProvider.notifier).reset();
                               },
-                              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0077D4)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryCrimson,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                              ),
                               child: const Text('Restablecer Filtros', style: TextStyle(color: Colors.white)),
                             ),
                           ],
@@ -279,7 +285,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                               child: Center(
                                 child: Text(
                                   'Has llegado al final del catálogo.',
-                                  style: TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
+                                  style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                                 ),
                               ),
                             );
@@ -290,7 +296,7 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                               child: SizedBox(
                                 width: 24,
                                 height: 24,
-                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Color(0xFF0077D4)),
+                                child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.accentVibrant),
                               ),
                             ),
                           );
@@ -309,11 +315,11 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(color: Color(0xFF0077D4)),
+                      CircularProgressIndicator(color: AppColors.accentVibrant),
                       SizedBox(height: 14),
                       Text(
                         'Cargando catálogo de ejercicios UAGRM...',
-                        style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                        style: TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                       ),
                     ],
                   ),
@@ -326,24 +332,28 @@ class _ClientEjerciciosScreenState extends ConsumerState<ClientEjerciciosScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.cloud_off, size: 48, color: Color(0xFFDC2626)),
+                        const Icon(Icons.cloud_off, size: 48, color: AppColors.accentVibrant),
                         const SizedBox(height: 12),
                         const Text(
                           'No se pudo conectar con el catálogo de ejercicios',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textWhite),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           err.toString(),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                          style: const TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           onPressed: () => ref.read(ejerciciosPaginatorProvider.notifier).refresh(),
                           icon: const Icon(Icons.refresh, size: 16),
                           label: const Text('Reintentar'),
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0077D4)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryCrimson,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          ),
                         ),
                       ],
                     ),

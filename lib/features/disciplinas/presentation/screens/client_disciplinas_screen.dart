@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../tramites/presentation/widgets/formulario_dubss_create_modal.dart';
 import '../../data/models/disciplina_model.dart';
 import '../providers/disciplinas_provider.dart';
@@ -31,12 +32,16 @@ class _ClientDisciplinasScreenState
     final filtroDisp = ref.watch(disciplinasDisponibilidadProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => FormularioDubssCreateModal.show(context),
-        backgroundColor: const Color(0xFF0077D4),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
-        icon: const Icon(Icons.add_task, size: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1),
+        ),
+        icon: const Icon(Icons.add_task, size: 18),
         label: const Text(
           'Inscribirme',
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
@@ -53,8 +58,9 @@ class _ClientDisciplinasScreenState
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: const Color(0xFFE2E8F0),
-                borderRadius: BorderRadius.circular(10),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Row(
                 children: [
@@ -86,18 +92,19 @@ class _ClientDisciplinasScreenState
               padding: const EdgeInsets.fromLTRB(16, 2, 16, 6),
               child: TextField(
                 controller: _searchController,
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                 onChanged: (val) {
                   ref.read(disciplinasSearchProvider.notifier).setSearch(val);
                 },
                 decoration: InputDecoration(
                   hintText: 'Buscar disciplina, arte marcial, horario...',
                   hintStyle:
-                      const TextStyle(fontSize: 12.5, color: Color(0xFF94A3B8)),
+                      const TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
                   prefixIcon:
-                      const Icon(Icons.search, size: 18, color: Color(0xFF64748B)),
+                      const Icon(Icons.search, size: 18, color: AppColors.textSlateMuted),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, size: 16),
+                          icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                           onPressed: () {
                             _searchController.clear();
                             ref
@@ -107,21 +114,21 @@ class _ClientDisciplinasScreenState
                         )
                       : null,
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.carbonSurfaceMuted,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(4),
                     borderSide:
-                        const BorderSide(color: Color(0xFF0077D4), width: 1.5),
+                        const BorderSide(color: AppColors.accentVibrant, width: 1.5),
                   ),
                 ),
               ),
@@ -140,23 +147,34 @@ class _ClientDisciplinasScreenState
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+      decoration: const BoxDecoration(
+        color: AppColors.obsidianBase,
+        border: Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: Row(
               children: [
-                IconButton.filledTonal(
-                  onPressed: () => Navigator.of(context).maybePop(),
-                  icon: const Icon(Icons.arrow_back, size: 18),
-                  style: IconButton.styleFrom(
-                    backgroundColor: const Color(0xFFF1F5F9),
-                    foregroundColor: const Color(0xFF003B70),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    icon: const Icon(Icons.arrow_back, size: 18, color: AppColors.textWhite),
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +187,7 @@ class _ClientDisciplinasScreenState
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w900,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                           letterSpacing: 0.3,
                         ),
                       ),
@@ -177,7 +195,7 @@ class _ClientDisciplinasScreenState
                         'Catálogo deportivo, cupos y turnos UAGRM',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                        style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
                       ),
                     ],
                   ),
@@ -186,17 +204,22 @@ class _ClientDisciplinasScreenState
             ),
           ),
           const SizedBox(width: 8),
-          IconButton.filledTonal(
-            onPressed: () {
-              ref.invalidate(disciplinasListProvider);
-              ref.invalidate(disciplinasHorariosListProvider);
-            },
-            icon: const Icon(Icons.refresh, size: 18),
-            style: IconButton.styleFrom(
-              backgroundColor: const Color(0xFFF0F9FF),
-              foregroundColor: const Color(0xFF0077D4),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
-            tooltip: 'Actualizar Catálogo',
+            child: IconButton(
+              onPressed: () {
+                ref.invalidate(disciplinasListProvider);
+                ref.invalidate(disciplinasHorariosListProvider);
+              },
+              icon: const Icon(Icons.refresh, size: 18, color: AppColors.accentVibrant),
+              padding: const EdgeInsets.all(8),
+              constraints: const BoxConstraints(),
+              tooltip: 'Actualizar Catálogo',
+            ),
           ),
         ],
       ),
@@ -215,17 +238,11 @@ class _ClientDisciplinasScreenState
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  ),
-                ]
-              : null,
+          color: isSelected ? AppColors.primaryCrimson : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+          border: isSelected
+              ? Border.all(color: AppColors.accentVibrant)
+              : Border.all(color: Colors.transparent),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +250,7 @@ class _ClientDisciplinasScreenState
             Icon(
               icon,
               size: 15,
-              color: isSelected ? const Color(0xFF0077D4) : const Color(0xFF64748B),
+              color: isSelected ? Colors.white : AppColors.textSlateMuted,
             ),
             const SizedBox(width: 6),
             Text(
@@ -241,8 +258,7 @@ class _ClientDisciplinasScreenState
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color:
-                    isSelected ? const Color(0xFF0077D4) : const Color(0xFF64748B),
+                color: isSelected ? Colors.white : AppColors.textSlateLight,
               ),
             ),
           ],
@@ -256,7 +272,8 @@ class _ClientDisciplinasScreenState
     String filtroDisp,
   ) {
     return RefreshIndicator(
-      color: const Color(0xFF0077D4),
+      color: AppColors.accentVibrant,
+      backgroundColor: AppColors.carbonSurface,
       onRefresh: () async {
         ref.invalidate(disciplinasListProvider);
       },
@@ -281,7 +298,7 @@ class _ClientDisciplinasScreenState
           Expanded(
             child: disciplinasAsync.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(color: Color(0xFF0077D4)),
+                child: CircularProgressIndicator(color: AppColors.accentVibrant),
               ),
               error: (err, _) => ListView(
                 padding: const EdgeInsets.all(24),
@@ -291,13 +308,13 @@ class _ClientDisciplinasScreenState
                     child: Column(
                       children: [
                         const Icon(Icons.error_outline,
-                            size: 48, color: Color(0xFF94A3B8)),
+                            size: 48, color: AppColors.accentVibrant),
                         const SizedBox(height: 12),
                         Text(
                           'Error al cargar disciplinas: $err',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 13, color: Color(0xFF64748B)),
+                              fontSize: 13, color: AppColors.textSlateMuted),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
@@ -305,8 +322,9 @@ class _ClientDisciplinasScreenState
                           icon: const Icon(Icons.refresh, size: 16),
                           label: const Text('Reintentar'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0077D4),
+                            backgroundColor: AppColors.primaryCrimson,
                             foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           ),
                         ),
                       ],
@@ -324,14 +342,14 @@ class _ClientDisciplinasScreenState
                         child: Column(
                           children: [
                             Icon(Icons.sports_gymnastics,
-                                size: 48, color: Color(0xFF94A3B8)),
+                                size: 48, color: AppColors.textSlateMuted),
                             SizedBox(height: 12),
                             Text(
                               'No se encontraron disciplinas',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF475569),
+                                color: AppColors.textWhite,
                               ),
                             ),
                             SizedBox(height: 6),
@@ -339,7 +357,7 @@ class _ClientDisciplinasScreenState
                               'Intenta modificando el filtro de búsqueda.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 12.5, color: Color(0xFF64748B)),
+                                  fontSize: 12.5, color: AppColors.textSlateMuted),
                             ),
                           ],
                         ),
@@ -371,17 +389,18 @@ class _ClientDisciplinasScreenState
         style: TextStyle(
           fontSize: 11.5,
           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-          color: isSelected ? Colors.white : const Color(0xFF475569),
+          color: isSelected ? Colors.white : AppColors.textSlateLight,
         ),
       ),
       selected: isSelected,
       onSelected: (_) {
         ref.read(disciplinasDisponibilidadProvider.notifier).setFilter(value);
       },
-      selectedColor: const Color(0xFF0077D4),
-      backgroundColor: Colors.white,
+      selectedColor: AppColors.primaryCrimson,
+      backgroundColor: AppColors.carbonSurface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       side: BorderSide(
-        color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+        color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
       ),
       visualDensity: VisualDensity.compact,
     );

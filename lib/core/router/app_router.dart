@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../features/auth/presentation/providers/auth_state.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/landing/presentation/screens/landing_screen.dart';
@@ -28,9 +31,44 @@ import '../../features/nutricion/presentation/screens/client_nutricion_screen.da
 import '../../features/nutricion/presentation/screens/generar_plan_nutricional_screen.dart';
 import '../../features/nutricion/presentation/screens/plan_nutricional_detail_screen.dart';
 
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+
+  RouterNotifier(this._ref) {
+    _ref.listen<AuthState>(
+      authNotifierProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+}
+
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final notifier = RouterNotifier(ref);
+
   return GoRouter(
     initialLocation: '/splash',
+    refreshListenable: notifier,
+    redirect: (context, state) {
+      final auth = ref.read(authNotifierProvider);
+      final isAuth =
+          auth.status == AuthStatus.authenticated && auth.user != null;
+      final path = state.matchedLocation;
+
+      // Rutas públicas que no requieren autenticación
+      if (path == '/splash' ||
+          path == '/' ||
+          path == '/login' ||
+          path == '/register') {
+        return null;
+      }
+
+      // Si intenta acceder a rutas privadas sin estar autenticado
+      if (!isAuth) {
+        return '/login';
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: '/splash',

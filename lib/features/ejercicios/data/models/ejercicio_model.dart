@@ -36,7 +36,8 @@ class EjercicioModel {
   /// Retorna la URL de la primera imagen de demostración
   String? get firstImageUrl {
     if (imagenes.isNotEmpty) {
-      return imagenes.first.resolvedUrl;
+      final url = imagenes.first.resolvedUrl.trim();
+      if (url.isNotEmpty) return url;
     }
     return null;
   }

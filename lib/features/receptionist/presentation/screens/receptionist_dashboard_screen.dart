@@ -28,13 +28,13 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
     final fechaHoyStr = '${now.day} de ${meses[now.month]} de ${now.year}';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(receptionistDashboardProvider);
           },
-          color: AppColors.navyBlue,
+          color: AppColors.primaryCrimson,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -47,18 +47,12 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF003B70), Color(0xFF002244)],
+                    colors: [AppColors.primaryCrimson, AppColors.primaryDark],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF003B70).withValues(alpha: 0.25),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,13 +63,14 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFD97706),
-                            borderRadius: BorderRadius.circular(6),
+                            color: AppColors.carbonSurface,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.solarGold.withValues(alpha: 0.6)),
                           ),
-                          child: const Text(
-                            'PANEL DE RECEPCIÓN DUBSS',
-                            style: TextStyle(
-                              color: Colors.white,
+                          child: Text(
+                            'PANEL ${user?.rol.toUpperCase() ?? 'STAFF'} DUBSS',
+                            style: const TextStyle(
+                              color: AppColors.solarGold,
                               fontSize: 10,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.8,
@@ -86,7 +81,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                         Text(
                           fechaHoyStr,
                           style: const TextStyle(
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textSlateLight,
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                           ),
@@ -95,9 +90,9 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Hola, ${user?.nombreCompleto ?? 'Recepcionista'}',
+                      'Hola, ${user?.nombreCompleto ?? 'Personal DUBSS'}',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textWhite,
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                       ),
@@ -106,7 +101,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     const Text(
                       'Control operativo y atención de atletas universitarios UAGRM',
                       style: TextStyle(
-                        color: Color(0xFFCBD5E1),
+                        color: AppColors.textSlateLight,
                         fontSize: 12,
                       ),
                     ),
@@ -120,28 +115,22 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFCBD5E1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: AppColors.carbonSurface,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFEF2F2),
-                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                       ),
                       child: const Icon(
                         Icons.qr_code_scanner_rounded,
-                        color: AppColors.primaryRed,
+                        color: AppColors.accentVibrant,
                         size: 26,
                       ),
                     ),
@@ -155,14 +144,14 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 13.5,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0F172A),
+                              color: AppColors.textWhite,
                             ),
                           ),
                           Text(
                             'Marcación rápida de entrada o salida',
                             style: TextStyle(
                               fontSize: 11.5,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                             ),
                           ),
                         ],
@@ -171,14 +160,14 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     ElevatedButton(
                       onPressed: () => EscanerQRScreen.open(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryRed,
+                        backgroundColor: AppColors.primaryCrimson,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 10),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        elevation: 2,
+                        elevation: 0,
                       ),
                       child: const Text(
                         'Escanear',
@@ -198,7 +187,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 10),
@@ -212,8 +201,8 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                         value: '${kpis.aforoActual}',
                         subtitle: 'Socios en sala',
                         icon: Icons.people_alt_rounded,
-                        color: const Color(0xFF16A34A),
-                        bgColor: const Color(0xFFDCFCE7),
+                        color: AppColors.successEmerald,
+                        bgColor: AppColors.successEmerald.withValues(alpha: 0.15),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -223,8 +212,8 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                         value: '${kpis.solicitudesPendientes}',
                         subtitle: 'Pendientes',
                         icon: Icons.pending_actions_rounded,
-                        color: const Color(0xFFD97706),
-                        bgColor: const Color(0xFFFEF3C7),
+                        color: AppColors.solarAmber,
+                        bgColor: AppColors.solarAmber.withValues(alpha: 0.15),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -234,8 +223,8 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                         value: 'Bs. ${kpis.totalRecaudadoHoy.toStringAsFixed(0)}',
                         subtitle: '${kpis.pagosHoy} boletas',
                         icon: Icons.payments_outlined,
-                        color: const Color(0xFF0077D4),
-                        bgColor: const Color(0xFFE0F2FE),
+                        color: AppColors.solarGold,
+                        bgColor: AppColors.solarGold.withValues(alpha: 0.15),
                       ),
                     ),
                   ],
@@ -243,7 +232,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                 loading: () => const Center(
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(color: AppColors.navyBlue),
+                    child: CircularProgressIndicator(color: AppColors.primaryCrimson),
                   ),
                 ),
                 error: (err, stack) => const SizedBox.shrink(),
@@ -251,13 +240,13 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
 
               const SizedBox(height: 22),
 
-              // SECCIÓN: LOS 7 MÓDULOS DE RECEPCIÓN
+              // SECCIÓN: LOS MÓDULOS DE ATENCIÓN
               const Text(
                 'Módulos de Atención',
                 style: TextStyle(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
+                  color: AppColors.textWhite,
                 ),
               ),
               const SizedBox(height: 10),
@@ -274,7 +263,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     title: 'Garita de Acceso',
                     description: 'Marcaciones en vivo y aforo',
                     icon: Icons.door_sliding_outlined,
-                    color: const Color(0xFF003B70),
+                    color: AppColors.accentVibrant,
                     onTap: () {
                       if (onSelectTab != null) {
                         onSelectTab!(1); // Tab Garita
@@ -287,14 +276,14 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     title: 'Gestión de Usuarios',
                     description: 'Atletas, docentes y expedientes',
                     icon: Icons.groups_rounded,
-                    color: const Color(0xFF0284C7),
+                    color: AppColors.solarAmber,
                     onTap: () => context.push('/receptionist/usuarios'),
                   ),
                   _buildModuleCard(
                     title: 'Trámites y Pagos',
                     description: 'Aprobaciones y boletas',
                     icon: Icons.receipt_long_rounded,
-                    color: const Color(0xFF16A34A),
+                    color: AppColors.successEmerald,
                     onTap: () {
                       if (onSelectTab != null) {
                         onSelectTab!(2); // Tab Trámites
@@ -307,28 +296,28 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                     title: 'Planes y Tarifas',
                     description: 'Membresías y aranceles Bs.',
                     icon: Icons.card_membership_rounded,
-                    color: const Color(0xFFD97706),
+                    color: AppColors.solarGold,
                     onTap: () => context.push('/receptionist/planes'),
                   ),
                   _buildModuleCard(
                     title: 'Disciplinas y Horas',
                     description: 'Aforos, turnos y cupos',
                     icon: Icons.sports_gymnastics_rounded,
-                    color: const Color(0xFF7C3AED),
+                    color: AppColors.accentVibrant,
                     onTap: () => context.push('/receptionist/disciplinas'),
                   ),
                   _buildModuleCard(
                     title: 'Ambientes y Salas',
                     description: 'Pesas, Cardio, Boxeo',
                     icon: Icons.meeting_room_outlined,
-                    color: const Color(0xFF0D9488),
+                    color: AppColors.solarAmber,
                     onTap: () => context.push('/receptionist/ambientes'),
                   ),
                   _buildModuleCard(
                     title: 'Inventario Equipos',
                     description: 'Maquinaria y marcas',
                     icon: Icons.fitness_center_rounded,
-                    color: const Color(0xFF990000),
+                    color: AppColors.primaryCrimson,
                     onTap: () => context.push('/receptionist/equipos'),
                   ),
                 ],
@@ -353,16 +342,9 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +353,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
             ),
             child: Icon(icon, color: color, size: 18),
           ),
@@ -389,14 +371,14 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+              color: AppColors.textWhite,
             ),
           ),
           Text(
             subtitle,
             style: const TextStyle(
               fontSize: 10,
-              color: Color(0xFF94A3B8),
+              color: AppColors.textSlateMuted,
             ),
           ),
         ],
@@ -413,20 +395,13 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(4),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          color: AppColors.carbonSurface,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: AppColors.borderSubtle),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,8 +410,9 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
               ),
               child: Icon(icon, color: color, size: 20),
             ),
@@ -448,7 +424,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF0F172A),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 Text(
@@ -457,7 +433,7 @@ class ReceptionistDashboardScreen extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 10.5,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSlateMuted,
                   ),
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/documento_model.dart';
 import '../screens/documento_preview_screen.dart';
 
@@ -19,22 +20,15 @@ class DocumentoCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(4),
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(4),
           onTap: () => DocumentoPreviewScreen.open(context, documento),
           child: Padding(
             padding: const EdgeInsets.all(14),
@@ -43,21 +37,22 @@ class DocumentoCard extends StatelessWidget {
               children: [
                 // Icon Box
                 Container(
-                  width: 46,
-                  height: 46,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
                     color: isPdf
-                        ? const Color(0xFFFEE2E2)
-                        : const Color(0xFFE0F2FE),
-                    borderRadius: BorderRadius.circular(12),
+                        ? AppColors.accentVibrant.withValues(alpha: 0.15)
+                        : AppColors.carbonSurfaceMuted,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: isPdf ? AppColors.accentVibrant : AppColors.borderSubtle,
+                    ),
                   ),
                   child: Center(
                     child: Icon(
                       isPdf ? Icons.picture_as_pdf_rounded : Icons.image_rounded,
-                      color: isPdf
-                          ? const Color(0xFFDC2626)
-                          : const Color(0xFF0284C7),
-                      size: 24,
+                      color: isPdf ? AppColors.accentVibrant : AppColors.solarAmber,
+                      size: 22,
                     ),
                   ),
                 ),
@@ -75,7 +70,7 @@ class DocumentoCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14.5,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                           height: 1.25,
                         ),
                       ),
@@ -91,10 +86,10 @@ class DocumentoCard extends StatelessWidget {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(6),
+                              color: AppColors.carbonSurfaceMuted,
+                              borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: const Color(0xFFCBD5E1),
+                                color: AppColors.borderSubtle,
                               ),
                             ),
                             child: Text(
@@ -102,7 +97,7 @@ class DocumentoCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF334155),
+                                color: AppColors.textSlateLight,
                               ),
                             ),
                           ),
@@ -112,14 +107,14 @@ class DocumentoCard extends StatelessWidget {
                               const Icon(
                                 Icons.calendar_today_outlined,
                                 size: 11.5,
-                                color: Color(0xFF94A3B8),
+                                color: AppColors.textSlateMuted,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 documento.formattedDate,
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: Color(0xFF64748B),
+                                  color: AppColors.textSlateMuted,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -133,13 +128,15 @@ class DocumentoCard extends StatelessWidget {
 
                 // Trailing Action Menu
                 PopupMenuButton<String>(
+                  color: AppColors.carbonSurface,
                   icon: const Icon(
                     Icons.more_vert_rounded,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSlateMuted,
                     size: 20,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(4),
+                    side: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   onSelected: (value) {
                     if (value == 'view') {
@@ -153,9 +150,9 @@ class DocumentoCard extends StatelessWidget {
                       value: 'view',
                       child: Row(
                         children: [
-                          Icon(Icons.visibility_outlined, size: 18, color: Color(0xFF003B70)),
+                          Icon(Icons.visibility_outlined, size: 18, color: AppColors.accentVibrant),
                           SizedBox(width: 8),
-                          Text('Ver Documento', style: TextStyle(fontSize: 13)),
+                          Text('Ver Documento', style: TextStyle(fontSize: 13, color: AppColors.textWhite)),
                         ],
                       ),
                     ),
@@ -163,9 +160,9 @@ class DocumentoCard extends StatelessWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFDC2626)),
+                          Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.accentVibrant),
                           SizedBox(width: 8),
-                          Text('Eliminar', style: TextStyle(fontSize: 13, color: Color(0xFFDC2626))),
+                          Text('Eliminar', style: TextStyle(fontSize: 13, color: AppColors.accentVibrant)),
                         ],
                       ),
                     ),
@@ -183,25 +180,29 @@ class DocumentoCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        backgroundColor: AppColors.carbonSurface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.borderSubtle),
+        ),
         title: const Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Color(0xFFDC2626)),
+            Icon(Icons.warning_amber_rounded, color: AppColors.accentVibrant),
             SizedBox(width: 8),
             Text(
               'Eliminar Documento',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textWhite),
             ),
           ],
         ),
         content: Text(
           '¿Estás seguro de que deseas eliminar "${documento.displayTitle}"? Esta acción no se puede deshacer.',
-          style: const TextStyle(fontSize: 13.5, color: Color(0xFF475569)),
+          style: const TextStyle(fontSize: 13.5, color: AppColors.textSlateLight),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar', style: TextStyle(color: Color(0xFF64748B))),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -209,9 +210,9 @@ class DocumentoCard extends StatelessWidget {
               onDelete();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFDC2626),
+              backgroundColor: AppColors.accentVibrant,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
             child: const Text('Eliminar'),
           ),

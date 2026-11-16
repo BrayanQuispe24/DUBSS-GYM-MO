@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/validacion_acceso_model.dart';
 
 class ResultadoAccesoDialog extends StatelessWidget {
@@ -29,12 +30,17 @@ class ResultadoAccesoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ok = validacion.permitido;
-    final color = ok ? const Color(0xFF10B981) : const Color(0xFFEF4444);
-    final bgColor = ok ? const Color(0xFFECFDF5) : const Color(0xFFFEF2F2);
+    final color = ok ? AppColors.successEmerald : AppColors.accentVibrant;
+    final bgColor = ok
+        ? AppColors.successEmerald.withValues(alpha: 0.15)
+        : AppColors.primaryCrimson.withValues(alpha: 0.15);
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      backgroundColor: AppColors.carbonSurface,
       elevation: 8,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
@@ -48,7 +54,7 @@ class ResultadoAccesoDialog extends StatelessWidget {
               decoration: BoxDecoration(
                 color: bgColor,
                 shape: BoxShape.circle,
-                border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
+                border: Border.all(color: color.withValues(alpha: 0.35), width: 2),
               ),
               child: Icon(
                 ok ? Icons.check_circle : Icons.cancel,
@@ -76,7 +82,7 @@ class ResultadoAccesoDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,
-                color: Color(0xFF475569),
+                color: AppColors.textSlateLight,
                 height: 1.35,
               ),
             ),
@@ -88,9 +94,9 @@ class ResultadoAccesoDialog extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  color: AppColors.carbonSurfaceMuted,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,14 +106,14 @@ class ResultadoAccesoDialog extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
+                        color: AppColors.textWhite,
                       ),
                     ),
                     const SizedBox(height: 4),
                     if (validacion.usuarioRu != null)
                       Text(
                         'R.U.: ${validacion.usuarioRu}',
-                        style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                        style: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                       ),
                     if (validacion.disciplina != null)
                       Text(
@@ -115,7 +121,7 @@ class ResultadoAccesoDialog extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF0077D4),
+                          color: AppColors.solarGold,
                         ),
                       ),
                     Text(
@@ -123,7 +129,7 @@ class ResultadoAccesoDialog extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF10B981),
+                        color: AppColors.successLight,
                       ),
                     ),
                   ],
@@ -134,17 +140,18 @@ class ResultadoAccesoDialog extends StatelessWidget {
 
             if (!ok && validacion.motivo != null) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFEE2E2),
-                  borderRadius: BorderRadius.circular(6),
+                  color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.35)),
                 ),
                 child: Text(
                   'Causa: ${validacion.motivo}',
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF991B1B),
+                    color: AppColors.accentVibrant,
                   ),
                 ),
               ),
@@ -160,10 +167,10 @@ class ResultadoAccesoDialog extends StatelessWidget {
                   onDismiss();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: color,
+                  backgroundColor: ok ? AppColors.successEmerald : AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 child: const Text(
                   'Continuar Escaneando',

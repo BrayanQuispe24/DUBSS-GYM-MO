@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../providers/auth_notifier.dart';
-import '../widgets/auth_banner_widget.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -49,7 +49,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Debe aceptar los Términos y Condiciones para continuar'),
-          backgroundColor: AppColors.danger,
+          backgroundColor: AppColors.accentVibrant,
         ),
       );
       return;
@@ -72,7 +72,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('¡Cuenta creada exitosamente! Bienvenido a DUBS.'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppColors.successEmerald,
         ),
       );
       context.go('/client');
@@ -84,63 +84,86 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authNotifierProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => context.go('/login'),
         ),
         title: const Text(
           'Registro de Cliente UAGRM',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.textWhite, fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const AuthBannerWidget(compact: true),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Cabecera Limpia & Sobria (sin ruido visual)
+                Row(
                   children: [
-                    const Text(
-                      'Crear Cuenta de Cliente',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryCrimson,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: AppColors.accentVibrant, width: 0.8),
+                      ),
+                      child: const Icon(Icons.person_add_rounded, color: Colors.white, size: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Crear Cuenta de Cliente',
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textWhite,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Vincula tus datos oficiales con el gimnasio D.U.B.S.',
+                            style: TextStyle(fontSize: 11.5, color: AppColors.textSlateMuted),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Complete sus datos oficiales para vincular su carnet con el gimnasio.',
-                      style: TextStyle(fontSize: 12, color: AppColors.textMuted),
-                    ),
-                    const SizedBox(height: 18),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
                     if (authState.errorMessage != null)
                       Container(
                         padding: const EdgeInsets.all(12),
                         margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
-                          color: AppColors.dangerBg,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xFFFCA5A5)),
+                          color: AppColors.accentVibrant.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.4)),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.error_outline, color: AppColors.dangerText, size: 18),
+                            const Icon(Icons.error_outline, color: AppColors.accentVibrant, size: 18),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 authState.errorMessage!,
                                 style: const TextStyle(
-                                  color: AppColors.dangerText,
+                                  color: AppColors.accentVibrant,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -203,25 +226,39 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     // Tipo de Usuario UAGRM
                     const Text(
                       'Tipo de Usuario UAGRM *',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                     ),
                     const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.border),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _tipoUsuario,
                           isExpanded: true,
+                          dropdownColor: AppColors.carbonSurface,
+                          iconEnabledColor: AppColors.textSlateMuted,
                           items: const [
-                            DropdownMenuItem(value: 'estudiante', child: Text('Estudiante Universitario', style: TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'docente', child: Text('Docente UAGRM', style: TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'administrativo', child: Text('Administrativo UAGRM', style: TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'particular', child: Text('Comunidad Particular', style: TextStyle(fontSize: 13))),
+                            DropdownMenuItem(
+                              value: 'estudiante',
+                              child: Text('Estudiante Universitario', style: TextStyle(fontSize: 13, color: AppColors.textWhite)),
+                            ),
+                            DropdownMenuItem(
+                              value: 'docente',
+                              child: Text('Docente UAGRM', style: TextStyle(fontSize: 13, color: AppColors.textWhite)),
+                            ),
+                            DropdownMenuItem(
+                              value: 'administrativo',
+                              child: Text('Administrativo UAGRM', style: TextStyle(fontSize: 13, color: AppColors.textWhite)),
+                            ),
+                            DropdownMenuItem(
+                              value: 'particular',
+                              child: Text('Comunidad Particular', style: TextStyle(fontSize: 13, color: AppColors.textWhite)),
+                            ),
                           ],
                           onChanged: (val) {
                             if (val != null) setState(() => _tipoUsuario = val);
@@ -260,7 +297,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       hint: '••••••••',
                       obscureText: _obscurePassword,
                       suffixIcon: IconButton(
-                        icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, size: 18),
+                        icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, size: 18, color: AppColors.textSlateMuted),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
                       validator: (v) {
@@ -277,7 +314,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       hint: '••••••••',
                       obscureText: _obscureConfirmPassword,
                       suffixIcon: IconButton(
-                        icon: Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility, size: 18),
+                        icon: Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility, size: 18, color: AppColors.textSlateMuted),
                         onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                       ),
                       validator: (v) {
@@ -289,63 +326,49 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                     // Checkbox Términos y Condiciones
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.border),
+                        color: AppColors.carbonSurface,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: 24,
-                            height: 24,
+                            width: 20,
+                            height: 20,
                             child: Checkbox(
                               value: _aceptaTerminos,
-                              activeColor: AppColors.navyBlue,
+                              activeColor: AppColors.primaryCrimson,
+                              checkColor: Colors.white,
+                              side: const BorderSide(color: AppColors.borderSubtle, width: 1.5),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                               onChanged: (val) => setState(() => _aceptaTerminos = val ?? false),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           const Expanded(
                             child: Text(
                               'He leído y acepto los Términos y Condiciones de uso del sistema del Gimnasio D.U.B.S. UAGRM.',
-                              style: TextStyle(fontSize: 11, color: AppColors.textSecondary, height: 1.3),
+                              style: TextStyle(fontSize: 11, color: AppColors.textSlateLight, height: 1.35),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 22),
 
                     // Botón de Registro
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
+                      child: CrimsonButton(
                         onPressed: authState.isLoading ? null : _handleRegister,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryRed,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: authState.isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                              )
-                            : const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.badge_outlined, size: 18),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Completar Registro Cliente',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                        isLoading: authState.isLoading,
+                        icon: const Icon(Icons.badge_outlined, size: 18, color: Colors.white),
+                        label: 'Completar Registro Cliente',
+                        style: CrimsonButtonStyle.gradient,
+                        height: 46,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -356,7 +379,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: () => context.go('/login'),
                         child: const Text(
                           '¿Ya tienes cuenta registrada? Iniciar Sesión',
-                          style: TextStyle(color: AppColors.navyBlue, fontWeight: FontWeight.bold, fontSize: 12),
+                          style: TextStyle(color: AppColors.accentVibrant, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
                     ),
@@ -364,11 +387,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
+          ),
+        );
+      }
 
   Widget _buildTextField({
     required String label,
@@ -384,31 +405,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textWhite),
         ),
         const SizedBox(height: 4),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+          style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+            hintStyle: const TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: AppColors.background,
+            fillColor: AppColors.carbonSurfaceMuted,
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(color: AppColors.borderSubtle, width: 1.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.border),
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(color: AppColors.borderSubtle, width: 1.0),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppColors.navyBlue, width: 1.5),
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
             ),
           ),
           validator: validator,

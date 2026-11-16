@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../../tramites/presentation/widgets/formulario_dubss_create_modal.dart';
 import '../../data/models/disciplina_model.dart';
 
@@ -46,8 +48,13 @@ class DisciplinaDetailModal extends StatelessWidget {
         maxHeight: MediaQuery.of(context).size.height * 0.88,
       ),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -59,7 +66,7 @@ class DisciplinaDetailModal extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFCBD5E1),
+                color: AppColors.borderSubtle,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -73,13 +80,13 @@ class DisciplinaDetailModal extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE0F2FE),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFBAE6FD)),
+                      color: AppColors.carbonSurfaceMuted,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Icon(
                       _getIconForDisciplina(disciplina.nombre),
-                      color: const Color(0xFF003B70),
+                      color: AppColors.accentVibrant,
                       size: 24,
                     ),
                   ),
@@ -95,7 +102,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -103,7 +110,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                           'Expediente Deportivo UAGRM • ID #${disciplina.id}',
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateMuted,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -113,10 +120,13 @@ class DisciplinaDetailModal extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: isActive ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
-                      borderRadius: BorderRadius.circular(6),
+                      color: isActive
+                          ? AppColors.successEmerald.withValues(alpha: 0.15)
+                          : AppColors.accentVibrant.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(4),
                       border: Border.all(
-                        color: isActive ? const Color(0xFF86EFAC) : const Color(0xFFFECACA),
+                        color: isActive ? AppColors.successEmerald : AppColors.accentVibrant,
+                        width: 1,
                       ),
                     ),
                     child: Text(
@@ -124,18 +134,18 @@ class DisciplinaDetailModal extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
-                        color: isActive ? const Color(0xFF15803D) : const Color(0xFFB91C1C),
+                        color: isActive ? AppColors.successLight : AppColors.accentVibrant,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Color(0xFF64748B)),
+                    icon: const Icon(Icons.close, color: AppColors.textSlateMuted),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
               ),
             ),
-            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+            const Divider(height: 1, color: AppColors.borderSubtle),
 
             // Content Scroll
             Expanded(
@@ -150,8 +160,8 @@ class DisciplinaDetailModal extends StatelessWidget {
                           label: 'Capacidad Máx.',
                           value: '$totalMax Cupos',
                           icon: Icons.groups_outlined,
-                          color: const Color(0xFF003B70),
-                          bg: const Color(0xFFF8FAFC),
+                          color: AppColors.textWhite,
+                          bg: AppColors.carbonSurfaceMuted,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -160,8 +170,8 @@ class DisciplinaDetailModal extends StatelessWidget {
                           label: 'Ocupados',
                           value: '$totalOcupados Alumnos',
                           icon: Icons.person_outline,
-                          color: const Color(0xFFD97706),
-                          bg: const Color(0xFFFFFBEB),
+                          color: AppColors.solarAmber,
+                          bg: AppColors.carbonSurfaceMuted,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -170,8 +180,8 @@ class DisciplinaDetailModal extends StatelessWidget {
                           label: 'Disponibles',
                           value: '$totalDisp Libres',
                           icon: Icons.check_circle_outline,
-                          color: const Color(0xFF10B981),
-                          bg: const Color(0xFFECFDF5),
+                          color: AppColors.successLight,
+                          bg: AppColors.carbonSurfaceMuted,
                         ),
                       ),
                     ],
@@ -186,7 +196,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF003B70),
+                        color: AppColors.accentVibrant,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -194,7 +204,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                       disciplina.descripcion!,
                       style: const TextStyle(
                         fontSize: 12.5,
-                        color: Color(0xFF475569),
+                        color: AppColors.textSlateLight,
                         height: 1.4,
                       ),
                     ),
@@ -206,7 +216,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF003B70),
+                      color: AppColors.accentVibrant,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -215,14 +225,14 @@ class DisciplinaDetailModal extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        color: AppColors.carbonSurfaceMuted,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: const Center(
                         child: Text(
                           'No hay horarios específicos asignados para esta disciplina.',
-                          style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                          style: TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                         ),
                       ),
                     ),
@@ -237,9 +247,9 @@ class DisciplinaDetailModal extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 10),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          color: AppColors.carbonSurfaceMuted,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.borderSubtle),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,7 +261,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                                   Row(
                                     children: [
                                       const Icon(Icons.calendar_today,
-                                          size: 13, color: Color(0xFF0077D4)),
+                                          size: 13, color: AppColors.accentVibrant),
                                       const SizedBox(width: 5),
                                       Expanded(
                                         child: Text(
@@ -261,7 +271,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                                           style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w700,
-                                            color: Color(0xFF0F172A),
+                                            color: AppColors.textWhite,
                                           ),
                                         ),
                                       ),
@@ -271,14 +281,14 @@ class DisciplinaDetailModal extends StatelessWidget {
                                   Row(
                                     children: [
                                       const Icon(Icons.schedule,
-                                          size: 13, color: Color(0xFF64748B)),
+                                          size: 13, color: AppColors.textSlateMuted),
                                       const SizedBox(width: 5),
                                       Text(
                                         horas,
                                         style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
-                                          color: Color(0xFF475569),
+                                          color: AppColors.textSlateLight,
                                         ),
                                       ),
                                     ],
@@ -295,13 +305,13 @@ class DisciplinaDetailModal extends StatelessWidget {
                                       horizontal: 8, vertical: 3),
                                   decoration: BoxDecoration(
                                     color: tieneCupos
-                                        ? const Color(0xFFECFDF5)
-                                        : const Color(0xFFFEE2E2),
+                                        ? AppColors.successEmerald.withValues(alpha: 0.15)
+                                        : AppColors.accentVibrant.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(4),
                                     border: Border.all(
                                       color: tieneCupos
-                                          ? const Color(0xFFA7F3D0)
-                                          : const Color(0xFFFECACA),
+                                          ? AppColors.successEmerald
+                                          : AppColors.accentVibrant,
                                     ),
                                   ),
                                   child: Text(
@@ -310,8 +320,8 @@ class DisciplinaDetailModal extends StatelessWidget {
                                       fontSize: 10,
                                       fontWeight: FontWeight.w800,
                                       color: tieneCupos
-                                          ? const Color(0xFF059669)
-                                          : const Color(0xFFDC2626),
+                                          ? AppColors.successLight
+                                          : AppColors.accentVibrant,
                                     ),
                                   ),
                                 ),
@@ -321,7 +331,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF64748B),
+                                    color: AppColors.textSlateMuted,
                                   ),
                                 ),
                               ],
@@ -340,29 +350,20 @@ class DisciplinaDetailModal extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+                color: AppColors.carbonSurface,
+                border: Border(top: BorderSide(color: AppColors.borderSubtle)),
               ),
               child: SizedBox(
                 width: double.infinity,
-                height: 48,
-                child: FilledButton.icon(
+                child: CrimsonButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     FormularioDubssCreateModal.show(context);
                   },
-                  icon: const Icon(Icons.assignment_turned_in_outlined, size: 18),
-                  label: const Text(
-                    '+ Iniciar Solicitud (DUBSS-FR-03)',
-                    style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800),
-                  ),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF0077D4),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                  icon: const Icon(Icons.assignment_turned_in_outlined, size: 18, color: Colors.white),
+                  label: '+ Iniciar Solicitud (DUBSS-FR-03)',
+                  style: CrimsonButtonStyle.gradient,
+                  height: 46,
                 ),
               ),
             ),
@@ -383,8 +384,8 @@ class DisciplinaDetailModal extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,7 +402,7 @@ class DisciplinaDetailModal extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSlateMuted,
                   ),
                 ),
               ),

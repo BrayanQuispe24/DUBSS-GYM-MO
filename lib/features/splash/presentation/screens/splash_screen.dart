@@ -52,8 +52,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       final authState = ref.read(authNotifierProvider);
 
       if (authState.status == AuthStatus.authenticated) {
-        final rol = authState.user?.rol.toLowerCase() ?? '';
-        if (rol == 'recepcionista' || rol == 'administrador') {
+        if (authState.user?.isStaff ?? false) {
           context.go('/receptionist');
         } else {
           context.go('/client');

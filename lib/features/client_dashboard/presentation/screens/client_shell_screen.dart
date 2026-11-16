@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../auth/presentation/providers/auth_notifier.dart';
+import '../../../auth/presentation/providers/auth_state.dart';
 import '../../../planes/presentation/screens/client_planes_screen.dart';
 import '../../../rutinas/presentation/screens/client_rutinas_screen.dart';
 import '../../../tramites/presentation/screens/client_tramites_screen.dart';
@@ -52,6 +56,14 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      if (next.status == AuthStatus.unauthenticated) {
+        if (mounted) {
+          context.go('/login');
+        }
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: IndexedStack(
@@ -60,17 +72,10 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-          border: const Border(
-            top: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+        decoration: const BoxDecoration(
+          color: AppColors.carbonSurfaceMuted,
+          border: Border(
+            top: BorderSide(color: AppColors.borderSubtle, width: 1),
           ),
         ),
         child: SafeArea(
@@ -134,11 +139,11 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
     required String label,
   }) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? const Color(0xFF0077D4) : const Color(0xFF64748B);
+    final color = isSelected ? AppColors.accentVibrant : AppColors.textSlateMuted;
 
     return InkWell(
       onTap: () => setState(() => _currentIndex = index),
-      splashColor: const Color(0xFF0077D4).withValues(alpha: 0.1),
+      splashColor: AppColors.accentVibrant.withValues(alpha: 0.1),
       highlightColor: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +170,7 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
   Widget _buildCenterMenuButton(BuildContext context) {
     return InkWell(
       onTap: () => _openFullScreenMenu(context),
-      splashColor: const Color(0xFF0077D4).withValues(alpha: 0.15),
+      splashColor: AppColors.accentVibrant.withValues(alpha: 0.15),
       highlightColor: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,16 +179,13 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0077D4), Color(0xFF0284C7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.crimsonGradient,
               shape: BoxShape.circle,
+              border: Border.all(color: AppColors.accentVibrant, width: 1.0),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0077D4).withValues(alpha: 0.35),
-                  blurRadius: 6,
+                  color: AppColors.accentVibrant.withValues(alpha: 0.35),
+                  blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -200,7 +202,7 @@ class _ClientShellScreenState extends ConsumerState<ClientShellScreen> {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF0077D4),
+              color: AppColors.accentVibrant,
             ),
           ),
         ],

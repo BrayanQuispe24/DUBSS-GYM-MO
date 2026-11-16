@@ -28,21 +28,29 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
     final bool confirmar = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            title: const Text('¿Cerrar Sesión?'),
+            backgroundColor: AppColors.carbonSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: AppColors.borderSubtle),
+            ),
+            title: const Text(
+              '¿Cerrar Sesión?',
+              style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.w800),
+            ),
             content: const Text(
-              '¿Está seguro de cerrar la sesión de recepción del gimnasio?',
+              '¿Está seguro de cerrar la sesión del personal del gimnasio?',
+              style: TextStyle(color: AppColors.textSlateLight),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.danger,
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: const Text('Cerrar Sesión'),
@@ -52,13 +60,13 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
         ) ??
         false;
 
-    if (!confirmar) return;
+    if (!confirmar || !context.mounted) return;
 
-    if (context.mounted) {
-      Navigator.of(context).pop(); // Cierra el menú full screen
-    }
+    final router = GoRouter.of(context);
+    Navigator.of(context).pop(); // Cierra el menú full screen
 
     await ref.read(authNotifierProvider.notifier).logout();
+    router.go('/login');
   }
 
   @override
@@ -67,15 +75,13 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
     final user = authState.user;
 
     final displayName = user?.nombreCompleto ??
-        (user?.name.isNotEmpty == true ? user!.name : 'Personal de Recepción');
+        (user?.name.isNotEmpty == true ? user!.name : 'Personal DUBSS');
     final initials = _getInitials(displayName);
     final isAdmin = user?.rol.toLowerCase() == 'administrador';
-    final roleName = isAdmin
-        ? 'ADMINISTRADOR DEL SISTEMA'
-        : 'RECEPCIÓN DUBSS UAGRM';
+    final roleName = '${user?.rol.toUpperCase() ?? 'STAFF'} DUBSS UAGRM';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: AppColors.obsidianBase,
       body: SafeArea(
         child: Column(
           children: [
@@ -97,7 +103,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       initials: initials,
                       displayName: displayName,
                       roleName: roleName,
-                      email: user?.email ?? 'recepcion@uagrm.edu.bo',
+                      email: user?.email ?? 'personal@uagrm.edu.bo',
                       isAdmin: isAdmin,
                     ),
 
@@ -119,7 +125,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       title: 'Planes y Tarifas',
                       subtitle:
                           'Configuración de membresías, precios y periodos',
-                      color: const Color(0xFF0284C7),
+                      color: AppColors.solarGold,
                       onTap: () {
                         Navigator.of(context).pop();
                         context.push('/receptionist/planes');
@@ -131,7 +137,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       title: 'Disciplinas y Horarios',
                       subtitle:
                           'Programación de clases, salas e instructores',
-                      color: const Color(0xFF10B981),
+                      color: AppColors.accentVibrant,
                       onTap: () {
                         Navigator.of(context).pop();
                         context.push('/receptionist/disciplinas');
@@ -143,7 +149,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       title: 'Ambientes y Espacios',
                       subtitle:
                           'Capacidad, estado y disponibilidad de áreas',
-                      color: const Color(0xFFF59E0B),
+                      color: AppColors.solarAmber,
                       onTap: () {
                         Navigator.of(context).pop();
                         context.push('/receptionist/ambientes');
@@ -155,14 +161,14 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       title: 'Inventario de Equipos',
                       subtitle:
                           'Control de máquinas, estado y mantenimiento',
-                      color: const Color(0xFF8B5CF6),
+                      color: AppColors.primaryCrimson,
                       onTap: () {
                         Navigator.of(context).pop();
                         context.push('/receptionist/equipos');
                       },
                     ),
 
-                    if (isAdmin) ...[
+                    if (isAdmin || user?.rol == 'instructor') ...[
                       const SizedBox(height: 24),
                       _buildSectionTitle('CAMBIO DE PERSPECTIVA'),
                       const SizedBox(height: 10),
@@ -172,7 +178,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                         title: 'Vista Cliente Socio',
                         subtitle:
                             'Navegar la app como estudiante o socio regular',
-                        color: const Color(0xFF38BDF8),
+                        color: AppColors.accentVibrant,
                         onTap: () {
                           Navigator.of(context).pop();
                           context.go('/client');
@@ -192,7 +198,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       child: Text(
                         'D.U.B.S.S. GIMNASIO UAGRM • PANEL STAFF v1.0.0',
                         style: TextStyle(
-                          color: const Color(0xFF64748B).withValues(alpha: 0.8),
+                          color: AppColors.textSlateMuted.withValues(alpha: 0.8),
                           fontSize: 10.5,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.8,
@@ -215,9 +221,9 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: const BoxDecoration(
-        color: Color(0xFF0F172A),
+        color: AppColors.carbonSurface,
         border: Border(
-          bottom: BorderSide(color: Color(0xFF1E293B), width: 1),
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1),
         ),
       ),
       child: Row(
@@ -227,18 +233,12 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
             height: 38,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF003B70), Color(0xFF0077D4)],
+                colors: [AppColors.primaryCrimson, AppColors.accentVibrant],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF003B70).withValues(alpha: 0.4),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.4)),
             ),
             child: const Icon(
               Icons.admin_panel_settings_rounded,
@@ -255,16 +255,16 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                 Text(
                   'PANEL DE CONTROL',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textWhite,
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.5,
                   ),
                 ),
                 Text(
-                  'D.U.B.S.S. • RECEPCIÓN & ADMIN',
+                  'D.U.B.S.S. • STAFF & ENTRENAMIENTO',
                   style: TextStyle(
-                    color: Color(0xFF38BDF8),
+                    color: AppColors.solarGold,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.8,
@@ -276,17 +276,17 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
           // Botón cerrar
           InkWell(
             onTap: () => Navigator.of(context).pop(),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(4),
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF334155), width: 1),
+                color: AppColors.carbonSurfaceMuted,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1),
               ),
               child: const Icon(
                 Icons.close,
-                color: Colors.white,
+                color: AppColors.textWhite,
                 size: 20,
               ),
             ),
@@ -307,20 +307,9 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E293B), Color(0xFF0B132B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF334155), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Row(
         children: [
@@ -330,26 +319,18 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isAdmin
-                    ? [const Color(0xFFD97706), const Color(0xFFF59E0B)]
-                    : [const Color(0xFF003B70), const Color(0xFF0077D4)],
+                    ? [AppColors.solarGold, AppColors.solarAmber]
+                    : [AppColors.primaryCrimson, AppColors.accentVibrant],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: (isAdmin ? const Color(0xFFD97706) : const Color(0xFF003B70))
-                      .withValues(alpha: 0.4),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
             child: Text(
               initials,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isAdmin ? Colors.black : Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.5,
@@ -369,7 +350,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textWhite,
                           fontSize: 14.5,
                           fontWeight: FontWeight.w800,
                         ),
@@ -380,15 +361,15 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF16A34A).withValues(alpha: 0.2),
+                        color: AppColors.successEmerald.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                            color: const Color(0xFF16A34A), width: 0.8),
+                            color: AppColors.successEmerald.withValues(alpha: 0.4), width: 0.8),
                       ),
                       child: const Text(
                         'En Turno',
                         style: TextStyle(
-                          color: Color(0xFF4ADE80),
+                          color: AppColors.successLight,
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
                         ),
@@ -401,10 +382,8 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                   roleName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: isAdmin
-                        ? const Color(0xFFFDE68A)
-                        : const Color(0xFF38BDF8),
+                  style: const TextStyle(
+                    color: AppColors.solarGold,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.4,
@@ -416,7 +395,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: AppColors.textSlateLight,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -435,7 +414,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
       child: Text(
         title,
         style: const TextStyle(
-          color: Color(0xFF94A3B8),
+          color: AppColors.textSlateMuted,
           fontSize: 11,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.9,
@@ -450,25 +429,25 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
         index: 0,
         title: 'Inicio Dashboard',
         icon: Icons.dashboard_rounded,
-        color: const Color(0xFF0284C7),
+        color: AppColors.accentVibrant,
       ),
       _StaffQuickItem(
         index: 1,
         title: 'Garita de Acceso',
         icon: Icons.qr_code_scanner_rounded,
-        color: const Color(0xFF10B981),
+        color: AppColors.successEmerald,
       ),
       _StaffQuickItem(
         index: 2,
         title: 'Trámites y Pagos',
         icon: Icons.receipt_long_rounded,
-        color: const Color(0xFFF59E0B),
+        color: AppColors.solarAmber,
       ),
       _StaffQuickItem(
         index: 3,
         title: 'Gestión Usuarios',
         icon: Icons.groups_rounded,
-        color: const Color(0xFF8B5CF6),
+        color: AppColors.solarGold,
       ),
     ];
 
@@ -491,18 +470,18 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
             Navigator.of(context).pop();
             onSelectTab(item.index);
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(4),
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isSelected
-                  ? const Color(0xFF003B70).withValues(alpha: 0.3)
-                  : const Color(0xFF1E293B),
-              borderRadius: BorderRadius.circular(12),
+                  ? AppColors.primaryCrimson.withValues(alpha: 0.25)
+                  : AppColors.carbonSurface,
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
                 color: isSelected
-                    ? const Color(0xFF38BDF8)
-                    : const Color(0xFF334155),
+                    ? AppColors.accentVibrant
+                    : AppColors.borderSubtle,
                 width: isSelected ? 1.5 : 1,
               ),
             ),
@@ -513,7 +492,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                   height: 38,
                   decoration: BoxDecoration(
                     color: item.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                     border:
                         Border.all(color: item.color.withValues(alpha: 0.3)),
                   ),
@@ -535,8 +514,8 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: isSelected
-                              ? Colors.white
-                              : const Color(0xFFE2E8F0),
+                              ? AppColors.textWhite
+                              : AppColors.textSlateLight,
                           fontSize: 12,
                           fontWeight:
                               isSelected ? FontWeight.w800 : FontWeight.w600,
@@ -547,7 +526,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
                         const Text(
                           'En pantalla',
                           style: TextStyle(
-                            color: Color(0xFF38BDF8),
+                            color: AppColors.solarGold,
                             fontSize: 9.5,
                             fontWeight: FontWeight.w700,
                           ),
@@ -575,13 +554,13 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF334155), width: 1),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(4),
         child: ListTile(
           onTap: onTap,
           dense: true,
@@ -592,7 +571,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
             height: 34,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
             child: Icon(icon, color: color, size: 18),
@@ -600,7 +579,7 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
           title: Text(
             title,
             style: const TextStyle(
-              color: Color(0xFFF1F5F9),
+              color: AppColors.textWhite,
               fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
@@ -608,13 +587,13 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
           subtitle: Text(
             subtitle,
             style: const TextStyle(
-              color: Color(0xFF94A3B8),
+              color: AppColors.textSlateMuted,
               fontSize: 11,
             ),
           ),
           trailing: const Icon(
             Icons.chevron_right,
-            color: Color(0xFF64748B),
+            color: AppColors.textSlateMuted,
             size: 20,
           ),
         ),
@@ -627,21 +606,21 @@ class ReceptionistFullMenuScreen extends ConsumerWidget {
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: () => _handleLogout(context, ref),
-        icon: const Icon(Icons.logout_rounded, color: Color(0xFFEF4444), size: 18),
+        icon: const Icon(Icons.logout_rounded, color: AppColors.accentVibrant, size: 18),
         label: const Text(
-          'Cerrar Sesión de Recepción',
+          'Cerrar Sesión de Personal',
           style: TextStyle(
-            color: Color(0xFFEF4444),
+            color: AppColors.accentVibrant,
             fontSize: 13,
             fontWeight: FontWeight.w700,
           ),
         ),
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(0xFFEF4444), width: 1.2),
-          backgroundColor: const Color(0xFFEF4444).withValues(alpha: 0.08),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.2),
+          backgroundColor: AppColors.primaryCrimson.withValues(alpha: 0.12),
           padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
       ),

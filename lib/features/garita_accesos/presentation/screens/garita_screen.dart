@@ -33,7 +33,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Ingrese el C.I. o ID del socio para registrar marcación.'),
-          backgroundColor: AppColors.danger,
+          backgroundColor: AppColors.accentVibrant,
         ),
       );
       return;
@@ -61,7 +61,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Marcación de $tipo registrada con éxito'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppColors.successEmerald,
         ),
       );
     }
@@ -83,19 +83,23 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
         .length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Row(
           children: [
-            Icon(Icons.qr_code_scanner_rounded, color: Colors.white, size: 22),
-            SizedBox(width: 8),
+            Icon(Icons.qr_code_scanner_rounded, color: AppColors.accentVibrant, size: 22),
+            SizedBox(width: 10),
             Text(
               'Garita & Control de Acceso',
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.5,
+                color: AppColors.textWhite,
+                fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -103,7 +107,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             tooltip: 'Actualizar marcaciones',
             onPressed: () =>
                 ref.read(accesosNotifierProvider.notifier).cargarRegistros(),
@@ -113,7 +117,8 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(accesosNotifierProvider.notifier).cargarRegistros(),
-        color: AppColors.navyBlue,
+        color: AppColors.accentVibrant,
+        backgroundColor: AppColors.carbonSurface,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -128,23 +133,17 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                       ref.read(accesosNotifierProvider.notifier).clearLastScan(),
                 ),
 
-              // KPI CARDS DE AFORO EN VIVO
+              // KPI CARDS DE AFORO EN VIVO (Crimson Boxed-Sharpness)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF003B70), Color(0xFF001C38)],
+                    colors: [AppColors.primaryCrimson, AppColors.primaryDark],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF003B70).withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                 ),
                 child: Column(
                   children: [
@@ -157,9 +156,9 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                             Text(
                               'AFORO EN TIEMPO REAL',
                               style: TextStyle(
-                                color: Color(0xFF93C5FD),
+                                color: AppColors.solarGold,
                                 fontSize: 11,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.w900,
                                 letterSpacing: 0.8,
                               ),
                             ),
@@ -168,19 +167,19 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                               'Socios en el Gimnasio',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ],
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 6),
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF16A34A).withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFF22C55E)),
+                            color: AppColors.carbonSurface,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.successEmerald, width: 1.0),
                           ),
                           child: Row(
                             children: [
@@ -188,7 +187,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                 width: 8,
                                 height: 8,
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFF22C55E),
+                                  color: AppColors.successEmerald,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -196,9 +195,9 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                               Text(
                                 '$aforo Activos',
                                 style: const TextStyle(
-                                  color: Color(0xFFDCFCE7),
+                                  color: AppColors.successEmerald,
                                   fontSize: 12.5,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
                             ],
@@ -206,7 +205,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
                     Row(
                       children: [
                         Expanded(
@@ -214,13 +213,14 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 12),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.carbonSurface,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.borderSubtle),
                             ),
                             child: Row(
                               children: [
                                 const Icon(Icons.login_rounded,
-                                    color: Color(0xFF4ADE80), size: 22),
+                                    color: AppColors.successEmerald, size: 20),
                                 const SizedBox(width: 8),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,15 +228,16 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                     const Text(
                                       'Entradas Hoy',
                                       style: TextStyle(
-                                          color: Color(0xFF94A3B8),
-                                          fontSize: 10.5),
+                                          color: AppColors.textSlateMuted,
+                                          fontSize: 10.5,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     Text(
                                       '$totalEntradasHoy',
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.textWhite,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w900,
                                       ),
                                     ),
                                   ],
@@ -251,13 +252,14 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 12),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.carbonSurface,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.borderSubtle),
                             ),
                             child: Row(
                               children: [
                                 const Icon(Icons.logout_rounded,
-                                    color: Color(0xFFF87171), size: 22),
+                                    color: AppColors.accentVibrant, size: 20),
                                 const SizedBox(width: 8),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,15 +267,16 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                     const Text(
                                       'Salidas Hoy',
                                       style: TextStyle(
-                                          color: Color(0xFF94A3B8),
-                                          fontSize: 10.5),
+                                          color: AppColors.textSlateMuted,
+                                          fontSize: 10.5,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     Text(
                                       '$totalSalidasHoy',
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.textWhite,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w900,
                                       ),
                                     ),
                                   ],
@@ -299,23 +302,24 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                       onPressed: () {
                         EscanerQRScreen.open(context);
                       },
-                      icon: const Icon(Icons.camera_alt_outlined, size: 20),
+                      icon: const Icon(Icons.camera_alt_outlined, size: 18),
                       label: const Text(
                         'Escanear Pase QR',
                         style: TextStyle(
-                          fontSize: 13.5,
+                          fontSize: 13,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.3,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryRed,
+                        backgroundColor: AppColors.primaryCrimson,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(4),
+                          side: const BorderSide(color: AppColors.accentVibrant),
                         ),
-                        elevation: 3,
+                        elevation: 0,
                       ),
                     ),
                   ),
@@ -330,25 +334,25 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                       },
                       icon: Icon(
                         _mostrarRegistroManual
-                            ? Icons.close_rounded
-                            : Icons.how_to_reg_rounded,
+                            ? Icons.close
+                            : Icons.how_to_reg_outlined,
                         size: 18,
-                        color: AppColors.navyBlue,
+                        color: AppColors.solarGold,
                       ),
                       label: Text(
                         _mostrarRegistroManual ? 'Cerrar' : 'Manual',
                         style: const TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.navyBlue,
+                          color: AppColors.solarGold,
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         side: const BorderSide(
-                            color: AppColors.navyBlue, width: 1.5),
+                            color: AppColors.solarGold, width: 1.0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
@@ -362,69 +366,86 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFCBD5E1)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.edit_note_rounded,
-                              color: AppColors.navyBlue, size: 20),
+                          Icon(Icons.edit_note,
+                              color: AppColors.accentVibrant, size: 20),
                           SizedBox(width: 6),
                           Text(
                             'Marcación Directa por Recepción',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0F172A),
+                              color: AppColors.textWhite,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _ciController,
                         keyboardType: TextInputType.number,
+                        style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'C.I. o ID de Usuario *',
                           labelStyle: const TextStyle(
-                              fontSize: 12, color: Color(0xFF64748B)),
+                              fontSize: 12, color: AppColors.textSlateMuted),
                           prefixIcon: const Icon(Icons.badge_outlined,
-                              size: 18, color: AppColors.navyBlue),
+                              size: 18, color: AppColors.textSlateMuted),
+                          filled: true,
+                          fillColor: AppColors.carbonSurfaceMuted,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 10),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.borderSubtle),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.borderSubtle),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.accentVibrant),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       TextField(
                         controller: _nombreManualController,
+                        style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                         decoration: InputDecoration(
                           labelText: 'Nombre del Atleta (opcional)',
                           labelStyle: const TextStyle(
-                              fontSize: 12, color: Color(0xFF64748B)),
+                              fontSize: 12, color: AppColors.textSlateMuted),
                           prefixIcon: const Icon(Icons.person_outline,
-                              size: 18, color: AppColors.navyBlue),
+                              size: 18, color: AppColors.textSlateMuted),
+                          filled: true,
+                          fillColor: AppColors.carbonSurfaceMuted,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 10),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.borderSubtle),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.borderSubtle),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: const BorderSide(color: AppColors.accentVibrant),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 14),
                       Row(
                         children: [
                           Expanded(
@@ -439,13 +460,14 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                     fontSize: 12, fontWeight: FontWeight.w700),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF16A34A),
+                                backgroundColor: AppColors.successEmerald,
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 11),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
+                                elevation: 0,
                               ),
                             ),
                           ),
@@ -462,13 +484,14 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                     fontSize: 12, fontWeight: FontWeight.w700),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFDC2626),
+                                backgroundColor: AppColors.accentVibrant,
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 11),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
+                                elevation: 0,
                               ),
                             ),
                           ),
@@ -488,21 +511,21 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                   Row(
                     children: [
                       const Icon(Icons.history_toggle_off_rounded,
-                          color: AppColors.navyBlue, size: 20),
+                          color: AppColors.accentVibrant, size: 20),
                       const SizedBox(width: 6),
                       Text(
                         'Marcaciones en Vivo (${state.filteredRegistros.length})',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
 
               // BARRA DE BÚSQUEDA
               TextField(
@@ -510,15 +533,16 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                 onChanged: (val) => ref
                     .read(accesosNotifierProvider.notifier)
                     .setSearchQuery(val),
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'Filtrar por nombre, C.I. o código...',
                   hintStyle:
-                      const TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
+                      const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
                   prefixIcon: const Icon(Icons.search,
-                      size: 18, color: Color(0xFF64748B)),
+                      size: 18, color: AppColors.textSlateMuted),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, size: 16),
+                          icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                           onPressed: () {
                             _searchController.clear();
                             ref
@@ -528,16 +552,20 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                         )
                       : null,
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: AppColors.carbonSurface,
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.borderSubtle),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: const BorderSide(color: AppColors.accentVibrant),
                   ),
                 ),
               ),
@@ -549,7 +577,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(32),
-                    child: CircularProgressIndicator(color: AppColors.navyBlue),
+                    child: CircularProgressIndicator(color: AppColors.accentVibrant),
                   ),
                 ),
               ] else if (state.filteredRegistros.isEmpty) ...[
@@ -557,21 +585,21 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(28),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    color: AppColors.carbonSurface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
-                  child: Column(
+                  child: const Column(
                     children: [
                       Icon(Icons.person_search_outlined,
-                          size: 40, color: Colors.grey.shade400),
-                      const SizedBox(height: 10),
-                      const Text(
+                          size: 40, color: AppColors.textSlateMuted),
+                      SizedBox(height: 10),
+                      Text(
                         'No hay marcaciones registradas para el filtro seleccionado',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF64748B),
+                            color: AppColors.textSlateLight,
                             fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -587,11 +615,11 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                     final reg = state.filteredRegistros[index];
                     final isEntrada = reg.isEntrada;
                     final Color badgeBg = isEntrada
-                        ? const Color(0xFFDCFCE7)
-                        : const Color(0xFFFEE2E2);
+                        ? AppColors.successEmerald.withValues(alpha: 0.15)
+                        : AppColors.accentVibrant.withValues(alpha: 0.15);
                     final Color badgeText = isEntrada
-                        ? const Color(0xFF15803D)
-                        : const Color(0xFFB91C1C);
+                        ? AppColors.successEmerald
+                        : AppColors.accentVibrant;
 
                     DateTime? parsedDate;
                     try {
@@ -606,16 +634,9 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.02),
-                            blurRadius: 4,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+                        color: AppColors.carbonSurface,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Row(
                         children: [
@@ -623,7 +644,8 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: badgeBg,
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: badgeText.withValues(alpha: 0.3)),
                             ),
                             child: Icon(
                               isEntrada
@@ -643,7 +665,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                   style: const TextStyle(
                                     fontSize: 13.5,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFF0F172A),
+                                    color: AppColors.textWhite,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -655,13 +677,13 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                         'CI: ${reg.usuarioCi}',
                                         style: const TextStyle(
                                           fontSize: 11.5,
-                                          color: Color(0xFF64748B),
+                                          color: AppColors.textSlateMuted,
                                         ),
                                       ),
                                       const Text(' • ',
                                           style: TextStyle(
                                               fontSize: 11.5,
-                                              color: Color(0xFFCBD5E1))),
+                                              color: AppColors.borderSubtle)),
                                     ],
                                     Text(
                                       horaFormato,
@@ -669,7 +691,7 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                         fontFamily: 'monospace',
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xFF0077D4),
+                                        color: AppColors.solarGold,
                                       ),
                                     ),
                                   ],
@@ -682,7 +704,8 @@ class _GaritaScreenState extends ConsumerState<GaritaScreen> {
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: badgeBg,
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: badgeText.withValues(alpha: 0.4)),
                             ),
                             child: Text(
                               reg.tipo.toUpperCase(),

@@ -27,8 +27,8 @@ class IaNutricionRemoteDataSource {
       );
 
       final dynamic raw = response.data;
-      if (raw is Map<String, dynamic>) {
-        return RecomendacionNutricionalResponse.fromJson(raw);
+      if (raw is Map) {
+        return RecomendacionNutricionalResponse.fromJson(Map<String, dynamic>.from(raw));
       } else {
         throw AppException('Formato de respuesta inválido del servicio de IA');
       }
@@ -40,9 +40,27 @@ class IaNutricionRemoteDataSource {
         );
       }
 
-      final errorDetail = e.response?.data?['detail']?.toString() ??
-          e.response?.data?['message']?.toString() ??
-          e.message;
+      String? errorDetail;
+      final dynamic data = e.response?.data;
+      if (data is Map) {
+        final detail = data['detail'];
+        if (detail is List && detail.isNotEmpty) {
+          errorDetail = detail
+              .map((d) => d is Map ? (d['msg'] ?? d.toString()) : d.toString())
+              .join(', ');
+        } else if (detail != null) {
+          errorDetail = detail.toString();
+        } else if (data['message'] != null) {
+          errorDetail = data['message'].toString();
+        }
+      } else if (data is String && data.trim().isNotEmpty) {
+        if (data.contains('<html') || data.contains('<head')) {
+          errorDetail = 'Error del servidor o ruta inaccesible (HTTP ${e.response?.statusCode ?? 500})';
+        } else {
+          errorDetail = data;
+        }
+      }
+      errorDetail ??= e.message;
 
       throw AppException(
         'Error en el servicio de IA: $errorDetail',

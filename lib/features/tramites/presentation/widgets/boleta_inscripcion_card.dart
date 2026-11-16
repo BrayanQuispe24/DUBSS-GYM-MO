@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/boleta_inscripcion_model.dart';
 import '../screens/visor_pdf_screen.dart';
 import 'pdf_boleta_inscripcion_builder.dart';
@@ -15,9 +16,11 @@ class BoletaInscripcionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActiva = boleta.isActiva;
-    final statusColor = isActiva ? const Color(0xFF10B981) : const Color(0xFFEF4444);
-    final statusBg = isActiva ? const Color(0xFFECFDF5) : const Color(0xFFFEF2F2);
-    final statusBorder = isActiva ? const Color(0xFFA7F3D0) : const Color(0xFFFECACA);
+    final statusColor = isActiva ? AppColors.successEmerald : AppColors.accentVibrant;
+    final statusBg = isActiva
+        ? AppColors.successEmerald.withValues(alpha: 0.15)
+        : AppColors.accentVibrant.withValues(alpha: 0.15);
+    final statusBorder = isActiva ? AppColors.successEmerald : AppColors.accentVibrant;
 
     final fInicioStr = boleta.fechaInicio != null
         ? '${boleta.fechaInicio!.day.toString().padLeft(2, '0')}/${boleta.fechaInicio!.month.toString().padLeft(2, '0')}/${boleta.fechaInicio!.year}'
@@ -30,23 +33,16 @@ class BoletaInscripcionCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(height: 3, color: statusColor),
+            Container(height: 3.0, color: statusColor),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -62,7 +58,7 @@ class BoletaInscripcionCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                       ),
@@ -71,7 +67,7 @@ class BoletaInscripcionCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: statusBg,
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: statusBorder),
+                          border: Border.all(color: statusBorder, width: 0.8),
                         ),
                         child: Text(
                           isActiva ? 'HABILITADO' : 'EXPIRADO',
@@ -91,8 +87,8 @@ class BoletaInscripcionCard extends StatelessWidget {
                     'Inscripción: ${boleta.numeroBoleta}',
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0077D4),
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.solarGold,
                     ),
                   ),
 
@@ -107,22 +103,22 @@ class BoletaInscripcionCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.calendar_today, size: 12, color: Color(0xFF64748B)),
+                              const Icon(Icons.calendar_today, size: 12, color: AppColors.textSlateMuted),
                               const SizedBox(width: 4),
                               Text(
                                 'Vigencia: $fInicioStr al $fFinStr',
-                                style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
+                                style: const TextStyle(fontSize: 11.5, color: AppColors.textSlateLight),
                               ),
                             ],
                           ),
                           const SizedBox(height: 3),
                           Row(
                             children: [
-                              const Icon(Icons.schedule, size: 12, color: Color(0xFF64748B)),
+                              const Icon(Icons.schedule, size: 12, color: AppColors.textSlateMuted),
                               const SizedBox(width: 4),
                               Text(
                                 'Turno: ${boleta.horarioFormateado}',
-                                style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
+                                style: const TextStyle(fontSize: 11.5, color: AppColors.textSlateLight),
                               ),
                             ],
                           ),
@@ -132,22 +128,23 @@ class BoletaInscripcionCard extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEFF6FF),
-                            borderRadius: BorderRadius.circular(6),
+                            color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.3)),
                           ),
                           child: Text(
                             '${boleta.diasRestantes} días rest.',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFF0077D4),
+                              color: AppColors.accentVibrant,
                             ),
                           ),
                         ),
                     ],
                   ),
 
-                  const Divider(height: 20),
+                  const Divider(color: AppColors.borderSubtle, height: 20),
 
                   // Action Buttons: Pase QR & Ver Boleta PDF
                   Row(
@@ -162,14 +159,14 @@ class BoletaInscripcionCard extends StatelessWidget {
                             documentBuilder: () => PdfBoletaInscripcionBuilder.buildPdf(boleta),
                           );
                         },
-                        icon: const Icon(Icons.picture_as_pdf_outlined, size: 15),
+                        icon: const Icon(Icons.picture_as_pdf_outlined, size: 15, color: AppColors.textSlateLight),
                         label: const Text('Boleta PDF'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF475569),
-                          side: const BorderSide(color: Color(0xFFCBD5E1)),
+                          foregroundColor: AppColors.textSlateLight,
+                          side: const BorderSide(color: AppColors.borderSubtle),
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           visualDensity: VisualDensity.compact,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -179,14 +176,14 @@ class BoletaInscripcionCard extends StatelessWidget {
                         onPressed: () {
                           QRPaseModal.show(context, boleta);
                         },
-                        icon: const Icon(Icons.qr_code, size: 16),
+                        icon: const Icon(Icons.qr_code, size: 16, color: Colors.white),
                         label: const Text('Pase QR'),
                         style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFF0077D4),
+                          backgroundColor: AppColors.primaryCrimson,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           visualDensity: VisualDensity.compact,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                         ),
                       ),
                     ],

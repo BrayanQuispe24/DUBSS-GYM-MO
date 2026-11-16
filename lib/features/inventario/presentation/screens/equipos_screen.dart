@@ -45,8 +45,9 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
               maxHeight: MediaQuery.of(ctx).size.height * 0.90,
             ),
             decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              color: AppColors.carbonSurface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+              border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1.0)),
             ),
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
@@ -60,10 +61,10 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
               children: [
                 Center(
                   child: Container(
-                    width: 40,
+                    width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: AppColors.borderSubtle,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -74,7 +75,7 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF003B70),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -88,11 +89,8 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                               flex: 2,
                               child: TextField(
                                 controller: codigoCtrl,
-                                decoration: const InputDecoration(
-                                  labelText: 'Código Activo *',
-                                  hintText: 'EQ-101',
-                                  border: OutlineInputBorder(),
-                                ),
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                                decoration: _inputDeco('Código Activo *', hint: 'EQ-101'),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -100,11 +98,8 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                               flex: 3,
                               child: TextField(
                                 controller: nombreCtrl,
-                                decoration: const InputDecoration(
-                                  labelText: 'Nombre Equipo *',
-                                  hintText: 'Caminadora Pro',
-                                  border: OutlineInputBorder(),
-                                ),
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                                decoration: _inputDeco('Nombre Equipo *', hint: 'Caminadora Pro'),
                               ),
                             ),
                           ],
@@ -115,10 +110,8 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                             Expanded(
                               child: TextField(
                                 controller: modeloCtrl,
-                                decoration: const InputDecoration(
-                                  labelText: 'Modelo',
-                                  border: OutlineInputBorder(),
-                                ),
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                                decoration: _inputDeco('Modelo'),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -126,10 +119,8 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                               child: TextField(
                                 controller: cantidadCtrl,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Cantidad *',
-                                  border: OutlineInputBorder(),
-                                ),
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                                decoration: _inputDeco('Cantidad *'),
                               ),
                             ),
                           ],
@@ -138,20 +129,17 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                         TextField(
                           controller: precioCtrl,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Precio de Compra (Bs.)',
-                            border: OutlineInputBorder(),
-                          ),
+                          style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
+                          decoration: _inputDeco('Precio de Compra (Bs.)'),
                         ),
                         const SizedBox(height: 10),
                         DropdownButtonFormField<int>(
                           initialValue: selectedAmbienteId,
+                          dropdownColor: AppColors.carbonSurface,
+                          style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                           isExpanded: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Ambiente / Sala',
-                            border: OutlineInputBorder(),
-                          ),
-                          hint: const Text('Seleccionar sala...'),
+                          decoration: _inputDeco('Ambiente / Sala'),
+                          hint: const Text('Seleccionar sala...', style: TextStyle(color: AppColors.textSlateMuted)),
                           items: inv.ambientes
                               .map((a) => DropdownMenuItem(
                                     value: a.id,
@@ -164,12 +152,11 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                         const SizedBox(height: 10),
                         DropdownButtonFormField<int>(
                           initialValue: selectedMarcaId,
+                          dropdownColor: AppColors.carbonSurface,
+                          style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                           isExpanded: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Marca',
-                            border: OutlineInputBorder(),
-                          ),
-                          hint: const Text('Seleccionar marca...'),
+                          decoration: _inputDeco('Marca'),
+                          hint: const Text('Seleccionar marca...', style: TextStyle(color: AppColors.textSlateMuted)),
                           items: inv.marcas
                               .map((m) => DropdownMenuItem<int>(
                                     value: m['id'] as int?,
@@ -182,11 +169,10 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           initialValue: estado,
+                          dropdownColor: AppColors.carbonSurface,
+                          style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                           isExpanded: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Estado Operativo',
-                            border: OutlineInputBorder(),
-                          ),
+                          decoration: _inputDeco('Estado Operativo'),
                           items: const [
                             DropdownMenuItem(value: 'operativo', child: Text('Operativo (En uso)')),
                             DropdownMenuItem(value: 'mantenimiento', child: Text('En Reparación / Mantenimiento')),
@@ -230,17 +216,25 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                       messenger.showSnackBar(
                         SnackBar(
                           content: Text(eq != null ? 'Equipo actualizado' : 'Equipo registrado'),
-                          backgroundColor: AppColors.success,
+                          backgroundColor: AppColors.successEmerald,
                         ),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF003B70),
+                    backgroundColor: AppColors.primaryCrimson,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      side: const BorderSide(color: AppColors.accentVibrant),
+                    ),
+                    elevation: 0,
                   ),
-                  child: Text(eq != null ? 'Actualizar' : 'Guardar Equipo'),
+                  child: Text(
+                    eq != null ? 'Actualizar Equipo' : 'Guardar Equipo',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
               ],
             ),
@@ -269,21 +263,25 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Inventario de Equipos & Maquinaria',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             onPressed: () =>
                 ref.read(inventarioNotifierProvider.notifier).cargarTodo(),
           ),
@@ -291,12 +289,16 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _abrirModalEquipo(),
-        backgroundColor: const Color(0xFF003B70),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
         icon: const Icon(Icons.add, size: 20),
         label: const Text(
           'Nuevo Equipo',
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
         ),
       ),
       body: Column(
@@ -304,21 +306,25 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
           // FILTROS Y BÚSQUEDA
           Container(
             padding: const EdgeInsets.all(12),
-            color: Colors.white,
+            decoration: const BoxDecoration(
+              color: AppColors.carbonSurface,
+              border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
+            ),
             child: Column(
               children: [
                 TextField(
                   controller: _searchCtrl,
                   onChanged: (_) => setState(() {}),
+                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                   decoration: InputDecoration(
                     hintText: 'Buscar por código, nombre o modelo...',
                     hintStyle:
-                        const TextStyle(fontSize: 12.5, color: Color(0xFF94A3B8)),
+                        const TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
                     prefixIcon: const Icon(Icons.search,
-                        size: 18, color: Color(0xFF64748B)),
+                        size: 18, color: AppColors.textSlateMuted),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear, size: 16),
+                            icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                             onPressed: () {
                               _searchCtrl.clear();
                               setState(() {});
@@ -326,12 +332,20 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                           )
                         : null,
                     filled: true,
-                    fillColor: const Color(0xFFF1F5F9),
+                    fillColor: AppColors.carbonSurfaceMuted,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 10),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(color: AppColors.borderSubtle),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(color: AppColors.borderSubtle),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(color: AppColors.accentVibrant),
                     ),
                   ),
                 ),
@@ -348,11 +362,21 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                             selected: _filterAmbienteId == null,
                             onSelected: (_) =>
                                 setState(() => _filterAmbienteId = null),
-                            selectedColor: const Color(0xFF003B70),
+                            selectedColor: AppColors.primaryCrimson,
+                            backgroundColor: AppColors.carbonSurfaceMuted,
+                            checkmarkColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              side: BorderSide(
+                                color: _filterAmbienteId == null
+                                    ? AppColors.accentVibrant
+                                    : AppColors.borderSubtle,
+                              ),
+                            ),
                             labelStyle: TextStyle(
                               color: _filterAmbienteId == null
                                   ? Colors.white
-                                  : const Color(0xFF334155),
+                                  : AppColors.textSlateLight,
                               fontSize: 11,
                               fontWeight: _filterAmbienteId == null
                                   ? FontWeight.w800
@@ -368,11 +392,21 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                               selected: _filterAmbienteId == a.id,
                               onSelected: (_) =>
                                   setState(() => _filterAmbienteId = a.id),
-                              selectedColor: const Color(0xFF003B70),
+                              selectedColor: AppColors.primaryCrimson,
+                              backgroundColor: AppColors.carbonSurfaceMuted,
+                              checkmarkColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                                side: BorderSide(
+                                  color: _filterAmbienteId == a.id
+                                      ? AppColors.accentVibrant
+                                      : AppColors.borderSubtle,
+                                ),
+                              ),
                               labelStyle: TextStyle(
                                 color: _filterAmbienteId == a.id
                                     ? Colors.white
-                                    : const Color(0xFF334155),
+                                    : AppColors.textSlateLight,
                                 fontSize: 11,
                                 fontWeight: _filterAmbienteId == a.id
                                     ? FontWeight.w800
@@ -388,21 +422,20 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE2E8F0)),
 
           // LISTA DE EQUIPOS
           Expanded(
             child: state.isLoading
                 ? const Center(
                     child:
-                        CircularProgressIndicator(color: AppColors.navyBlue),
+                        CircularProgressIndicator(color: AppColors.accentVibrant),
                   )
                 : filtered.isEmpty
                     ? const Center(
                         child: Text(
                           'No se encontraron equipos',
                           style: TextStyle(
-                              fontSize: 13, color: Color(0xFF64748B)),
+                              fontSize: 13, color: AppColors.textSlateMuted),
                         ),
                       )
                     : ListView.separated(
@@ -415,24 +448,32 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                           final isOperativo =
                               eq.estado.toLowerCase() == 'operativo';
 
+                          final badgeBg = isOperativo
+                              ? AppColors.successEmerald.withValues(alpha: 0.15)
+                              : AppColors.accentVibrant.withValues(alpha: 0.15);
+                          final badgeColor = isOperativo
+                              ? AppColors.successEmerald
+                              : AppColors.accentVibrant;
+
                           return Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFE2E8F0)),
+                              color: AppColors.carbonSurface,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.borderSubtle),
                             ),
                             child: Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF1F5F9),
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: AppColors.accentVibrant.withValues(alpha: 0.3)),
                                   ),
                                   child: const Icon(
                                     Icons.fitness_center_rounded,
-                                    color: Color(0xFF003B70),
+                                    color: AppColors.solarGold,
                                     size: 24,
                                   ),
                                 ),
@@ -448,16 +489,16 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 6, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFFE0F2FE),
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
+                                              color: AppColors.carbonSurfaceMuted,
+                                              borderRadius: BorderRadius.circular(4),
+                                              border: Border.all(color: AppColors.borderSubtle),
                                             ),
                                             child: Text(
                                               eq.codigo,
                                               style: const TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w900,
-                                                color: Color(0xFF0369A1),
+                                                color: AppColors.solarGold,
                                               ),
                                             ),
                                           ),
@@ -470,7 +511,7 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                                               style: const TextStyle(
                                                 fontSize: 13.5,
                                                 fontWeight: FontWeight.w800,
-                                                color: Color(0xFF0F172A),
+                                                color: AppColors.textWhite,
                                               ),
                                             ),
                                           ),
@@ -481,7 +522,7 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                                         '${eq.nombreAmbiente ?? 'Sin sala'} • Cant: ${eq.cantidad}',
                                         style: const TextStyle(
                                           fontSize: 11.5,
-                                          color: Color(0xFF64748B),
+                                          color: AppColors.textSlateLight,
                                         ),
                                       ),
                                       if (eq.nombreMarca != null) ...[
@@ -489,7 +530,7 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                                           'Marca: ${eq.nombreMarca}',
                                           style: const TextStyle(
                                             fontSize: 11,
-                                            color: Color(0xFF94A3B8),
+                                            color: AppColors.textSlateMuted,
                                           ),
                                         ),
                                       ],
@@ -500,25 +541,22 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 6, vertical: 3),
                                   decoration: BoxDecoration(
-                                    color: isOperativo
-                                        ? const Color(0xFFDCFCE7)
-                                        : const Color(0xFFFEE2E2),
+                                    color: badgeBg,
                                     borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: badgeColor.withValues(alpha: 0.4)),
                                   ),
                                   child: Text(
                                     isOperativo ? 'OK' : 'FALLA',
                                     style: TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.w900,
-                                      color: isOperativo
-                                          ? const Color(0xFF15803D)
-                                          : const Color(0xFFB91C1C),
+                                      color: badgeColor,
                                     ),
                                   ),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.edit_outlined,
-                                      size: 18, color: Color(0xFF003B70)),
+                                      size: 18, color: AppColors.solarGold),
                                   onPressed: () => _abrirModalEquipo(eq),
                                 ),
                               ],
@@ -528,6 +566,30 @@ class _EquiposScreenState extends ConsumerState<EquiposScreen> {
                       ),
           ),
         ],
+      ),
+    );
+  }
+
+  InputDecoration _inputDeco(String label, {String? hint}) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      hintStyle: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+      filled: true,
+      fillColor: AppColors.carbonSurfaceMuted,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
       ),
     );
   }

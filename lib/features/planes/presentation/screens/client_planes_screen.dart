@@ -14,9 +14,10 @@ class ClientPlanesScreen extends ConsumerWidget {
     final activeFilter = ref.watch(planFilterProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       body: RefreshIndicator(
-        color: const Color(0xFF0077D4),
+        color: AppColors.accentVibrant,
+        backgroundColor: AppColors.carbonSurface,
         onRefresh: () async {
           ref.invalidate(planesListProvider);
         },
@@ -38,8 +39,9 @@ class ClientPlanesScreen extends ConsumerWidget {
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0077D4),
-                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.primaryCrimson,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.accentVibrant, width: 1.0),
                           ),
                           child: const Icon(
                             Icons.diamond_outlined,
@@ -54,7 +56,7 @@ class ClientPlanesScreen extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w900,
-                              color: Color(0xFF0F172A),
+                              color: AppColors.textWhite,
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -68,7 +70,7 @@ class ClientPlanesScreen extends ConsumerWidget {
                       'Catálogo institucional de planes de suscripción, periodos de vigencia y aranceles universitarios.',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textSlateMuted,
                         height: 1.35,
                       ),
                     ),
@@ -106,49 +108,113 @@ class ClientPlanesScreen extends ConsumerWidget {
                             current: activeFilter,
                             onTap: () => ref.read(planFilterProvider.notifier).setFilter('docentes'),
                           ),
+                          const SizedBox(width: 8),
+                          _buildFilterChip(
+                            label: 'Particulares',
+                            value: 'particulares',
+                            current: activeFilter,
+                            onTap: () => ref.read(planFilterProvider.notifier).setFilter('particulares'),
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
+
+                    // Info banner institucional
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.carbonSurface,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.info_outline, size: 16, color: AppColors.solarGold),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Precios con subvención oficial D.U.B.S. para la comunidad UAGRM.',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSlateLight,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
 
-            // Planes Content
+            // Content Section
             filteredPlanesAsync.when(
+              loading: () => const SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(color: AppColors.accentVibrant),
+                ),
+              ),
+              error: (err, stack) => SliverFillRemaining(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline, size: 40, color: AppColors.accentVibrant),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Error al cargar planes de membresía',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textWhite),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          err.toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, color: AppColors.textSlateMuted),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          onPressed: () => ref.invalidate(planesListProvider),
+                          icon: const Icon(Icons.refresh, size: 16),
+                          label: const Text('Reintentar'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryCrimson,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               data: (planes) {
                 if (planes.isEmpty) {
                   return SliverFillRemaining(
-                    hasScrollBody: false,
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
-                              Icons.search_off_outlined,
-                              size: 48,
-                              color: Color(0xFF94A3B8),
-                            ),
+                            const Icon(Icons.inbox_outlined, size: 48, color: AppColors.textSlateMuted),
                             const SizedBox(height: 12),
                             const Text(
-                              'No se encontraron planes para esta categoría',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF334155),
-                              ),
+                              'No se encontraron planes',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textWhite),
                             ),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: () =>
-                                  ref.read(planFilterProvider.notifier).setFilter('todos'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0077D4),
-                              ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'No hay planes disponibles para la categoría seleccionada.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 11, color: AppColors.textSlateMuted),
+                            ),
+                            const SizedBox(height: 16),
+                            OutlinedButton(
+                              onPressed: () => ref.read(planFilterProvider.notifier).setFilter('todos'),
                               child: const Text('Ver todos los planes'),
                             ),
                           ],
@@ -159,94 +225,29 @@ class ClientPlanesScreen extends ConsumerWidget {
                 }
 
                 return SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final plan = planes[index];
-                        return PlanCardWidget(plan: plan);
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: PlanCardWidget(
+                            plan: plan,
+                            onInscribirse: () {
+                              final precio = plan.tarifa?.precio ?? '0.00';
+                              context.push(
+                                '/client/tramites/solicitud?planId=${plan.id}&planNombre=${Uri.encodeComponent(plan.nombre)}&planPrecio=$precio',
+                              );
+                            },
+                          ),
+                        );
                       },
                       childCount: planes.length,
                     ),
                   ),
                 );
               },
-              loading: () => const SliverFillRemaining(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: Color(0xFF0077D4)),
-                      SizedBox(height: 14),
-                      Text(
-                        'Cargando catálogo institucional...',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF64748B),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              error: (err, stack) => SliverFillRemaining(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.cloud_off_outlined,
-                          size: 48,
-                          color: AppColors.primaryRed,
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'No se pudo conectar con el catálogo',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0F172A),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          err.toString(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
-                        ),
-                        const SizedBox(height: 16),
-                        if (err.toString().contains('Sesión') ||
-                            err.toString().contains('autoriz') ||
-                            err.toString().contains('401'))
-                          ElevatedButton.icon(
-                            onPressed: () => context.go('/login'),
-                            icon: const Icon(Icons.login, size: 16),
-                            label: const Text('Iniciar Sesión'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0077D4),
-                            ),
-                          )
-                        else
-                          ElevatedButton.icon(
-                            onPressed: () => ref.invalidate(planesListProvider),
-                            icon: const Icon(Icons.refresh, size: 16),
-                            label: const Text('Reintentar'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0077D4),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 32),
             ),
           ],
         ),
@@ -264,32 +265,24 @@ class ClientPlanesScreen extends ConsumerWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(4),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0077D4) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? AppColors.primaryCrimson : AppColors.carbonSurface,
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(
-            color: isSelected ? const Color(0xFF0077D4) : const Color(0xFFCBD5E1),
+            color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
+            width: 1.0,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF0077D4).withValues(alpha: 0.25),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF475569),
+            color: isSelected ? Colors.white : AppColors.textSlateLight,
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class MacrosSummaryWidget extends StatelessWidget {
   final int calorias;
@@ -21,16 +22,9 @@ class MacrosSummaryWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +36,7 @@ class MacrosSummaryWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.bolt, color: Color(0xFFEAB308), size: 16),
+                    Icon(Icons.bolt, color: AppColors.solarGold, size: 16),
                     SizedBox(width: 5),
                     Flexible(
                       child: Text(
@@ -51,7 +45,7 @@ class MacrosSummaryWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 10.5,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF475569),
+                          color: AppColors.textSlateLight,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -64,21 +58,21 @@ class MacrosSummaryWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE0F2FE),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: const Color(0xFFBAE6FD)),
+                    color: AppColors.carbonSurfaceMuted,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.water_drop, size: 11, color: Color(0xFF0284C7)),
+                      const Icon(Icons.water_drop, size: 11, color: AppColors.solarAmber),
                       const SizedBox(width: 3),
                       Text(
                         '${hidratacionLitros!.toStringAsFixed(1)} L/día',
                         style: const TextStyle(
                           fontSize: 10.5,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF0284C7),
+                          color: AppColors.solarAmber,
                         ),
                       ),
                     ],
@@ -97,8 +91,8 @@ class MacrosSummaryWidget extends StatelessWidget {
                   label: 'Calorías',
                   value: '$calorias',
                   unit: 'kcal',
-                  color: const Color(0xFFEF4444),
-                  bgColor: const Color(0xFFFEF2F2),
+                  color: AppColors.accentVibrant,
+                  bgColor: AppColors.carbonSurfaceMuted,
                   icon: Icons.local_fire_department,
                 ),
               ),
@@ -110,8 +104,8 @@ class MacrosSummaryWidget extends StatelessWidget {
                   label: 'Proteína',
                   value: proteinasG.toStringAsFixed(0),
                   unit: 'g',
-                  color: const Color(0xFF0077D4),
-                  bgColor: const Color(0xFFEFF6FF),
+                  color: AppColors.primaryCrimson,
+                  bgColor: AppColors.carbonSurfaceMuted,
                   icon: Icons.fitness_center,
                 ),
               ),
@@ -123,8 +117,8 @@ class MacrosSummaryWidget extends StatelessWidget {
                   label: 'Carbos',
                   value: carbohidratosG.toStringAsFixed(0),
                   unit: 'g',
-                  color: const Color(0xFFF59E0B),
-                  bgColor: const Color(0xFFFFFBEB),
+                  color: AppColors.solarGold,
+                  bgColor: AppColors.carbonSurfaceMuted,
                   icon: Icons.grain,
                 ),
               ),
@@ -136,8 +130,8 @@ class MacrosSummaryWidget extends StatelessWidget {
                   label: 'Grasas',
                   value: grasasG.toStringAsFixed(0),
                   unit: 'g',
-                  color: const Color(0xFF10B981),
-                  bgColor: const Color(0xFFECFDF5),
+                  color: AppColors.successLight,
+                  bgColor: AppColors.carbonSurfaceMuted,
                   icon: Icons.opacity,
                 ),
               ),
@@ -160,8 +154,8 @@ class MacrosSummaryWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +194,7 @@ class MacrosSummaryWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF0F172A),
+                    color: AppColors.textWhite,
                   ),
                 ),
                 const SizedBox(width: 2),
@@ -209,7 +203,7 @@ class MacrosSummaryWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 9.5,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF64748B),
+                    color: AppColors.textSlateMuted,
                   ),
                 ),
               ],

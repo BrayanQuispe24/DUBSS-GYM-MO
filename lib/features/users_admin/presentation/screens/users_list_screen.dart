@@ -35,7 +35,7 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                 ? 'Usuario ${user.nombreCompleto} SUSPENDIDO'
                 : 'Usuario ${user.nombreCompleto} ACTIVADO',
           ),
-          backgroundColor: user.isActivo ? AppColors.danger : AppColors.success,
+          backgroundColor: user.isActivo ? AppColors.accentVibrant : AppColors.successEmerald,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -46,21 +46,30 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
     final bool confirmar = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            title: const Text('¿Eliminar Usuario?'),
+            backgroundColor: AppColors.carbonSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: const BorderSide(color: AppColors.borderSubtle),
+            ),
+            title: const Text(
+              '¿Eliminar Usuario?',
+              style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+            ),
             content: Text(
               '¿Está seguro de eliminar definitivamente a ${user.nombreCompleto}? Esta acción no se puede deshacer.',
+              style: const TextStyle(color: AppColors.textSlateLight, fontSize: 13),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.danger,
+                  backgroundColor: AppColors.accentVibrant,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  elevation: 0,
                 ),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: const Text('Eliminar'),
@@ -80,7 +89,7 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Usuario eliminado'),
-          backgroundColor: AppColors.danger,
+          backgroundColor: AppColors.accentVibrant,
         ),
       );
     }
@@ -92,21 +101,25 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
     final usuarios = state.filteredUsuarios;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
-        backgroundColor: AppColors.navyBlueDark,
+        backgroundColor: AppColors.obsidianBase,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         title: const Text(
           'Gestión de Usuarios & Socios',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textWhite,
             fontSize: 16.5,
             fontWeight: FontWeight.w800,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textSlateLight),
             onPressed: () =>
                 ref.read(usersAdminNotifierProvider.notifier).cargarUsuarios(),
           ),
@@ -114,8 +127,12 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => UserFormModal.show(context),
-        backgroundColor: const Color(0xFF003B70),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
         icon: const Icon(Icons.person_add_alt_1_rounded, size: 20),
         label: const Text(
           'Nuevo Usuario',
@@ -125,13 +142,17 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(usersAdminNotifierProvider.notifier).cargarUsuarios(),
-        color: AppColors.navyBlue,
+        color: AppColors.accentVibrant,
+        backgroundColor: AppColors.carbonSurface,
         child: Column(
           children: [
             // BARRA DE BÚSQUEDA Y FILTROS
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: Colors.white,
+              decoration: const BoxDecoration(
+                color: AppColors.carbonSurface,
+                border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
+              ),
               child: Column(
                 children: [
                   TextField(
@@ -139,15 +160,16 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                     onChanged: (val) => ref
                         .read(usersAdminNotifierProvider.notifier)
                         .setSearchQuery(val),
+                    style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                     decoration: InputDecoration(
                       hintText: 'Buscar por nombre, CI, RU o correo...',
                       hintStyle: const TextStyle(
-                          fontSize: 12.5, color: Color(0xFF94A3B8)),
+                          fontSize: 12.5, color: AppColors.textSlateMuted),
                       prefixIcon: const Icon(Icons.search,
-                          size: 18, color: Color(0xFF64748B)),
+                          size: 18, color: AppColors.textSlateMuted),
                       suffixIcon: _searchCtrl.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear, size: 16),
+                              icon: const Icon(Icons.clear, size: 16, color: AppColors.textSlateMuted),
                               onPressed: () {
                                 _searchCtrl.clear();
                                 ref
@@ -157,12 +179,20 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                             )
                           : null,
                       filled: true,
-                      fillColor: const Color(0xFFF1F5F9),
+                      fillColor: AppColors.carbonSurfaceMuted,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 10),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.borderSubtle),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.borderSubtle),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: AppColors.accentVibrant),
                       ),
                     ),
                   ),
@@ -186,14 +216,13 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                 ],
               ),
             ),
-            const Divider(height: 1, color: Color(0xFFE2E8F0)),
 
             // LISTA DE USUARIOS
             Expanded(
               child: state.isLoading
                   ? const Center(
                       child:
-                          CircularProgressIndicator(color: AppColors.navyBlue),
+                          CircularProgressIndicator(color: AppColors.accentVibrant),
                     )
                   : usuarios.isEmpty
                       ? const Center(
@@ -201,7 +230,7 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                             'No se encontraron usuarios',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF64748B),
+                              color: AppColors.textSlateMuted,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -232,18 +261,20 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
         labelStyle: TextStyle(
           fontSize: 11,
           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-          color: isSelected ? Colors.white : const Color(0xFF334155),
+          color: isSelected ? Colors.white : AppColors.textSlateLight,
         ),
         selected: isSelected,
         onSelected: (_) => ref
             .read(usersAdminNotifierProvider.notifier)
             .setRolFilter(value),
-        selectedColor: const Color(0xFF003B70),
-        backgroundColor: const Color(0xFFF1F5F9),
+        selectedColor: AppColors.primaryCrimson,
+        backgroundColor: AppColors.carbonSurfaceMuted,
         checkmarkColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide.none,
+          borderRadius: BorderRadius.circular(4),
+          side: BorderSide(
+            color: isSelected ? AppColors.accentVibrant : AppColors.borderSubtle,
+          ),
         ),
       ),
     );
@@ -255,34 +286,36 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: isActivo ? const Color(0xFFE2E8F0) : const Color(0xFFFCA5A5),
+          color: isActivo ? AppColors.borderSubtle : AppColors.accentVibrant.withValues(alpha: 0.6),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Avatar con iniciales
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: isActivo
-                ? const Color(0xFF003B70).withValues(alpha: 0.1)
-                : const Color(0xFFFEE2E2),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: isActivo
+                  ? AppColors.primaryCrimson.withValues(alpha: 0.2)
+                  : AppColors.accentVibrant.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: isActivo ? AppColors.accentVibrant : AppColors.accentVibrant,
+                width: 1.0,
+              ),
+            ),
+            alignment: Alignment.center,
             child: Text(
               u.nombre.isNotEmpty ? u.nombre[0].toUpperCase() : 'U',
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: isActivo ? const Color(0xFF003B70) : Colors.red,
+                fontWeight: FontWeight.w900,
+                color: isActivo ? AppColors.solarGold : AppColors.accentVibrant,
               ),
             ),
           ),
@@ -311,7 +344,7 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                           style: const TextStyle(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
+                            color: AppColors.textWhite,
                           ),
                         ),
                       ),
@@ -320,15 +353,16 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF1F5F9),
+                          color: AppColors.carbonSurfaceMuted,
                           borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.borderSubtle),
                         ),
                         child: Text(
                           u.rolLabel,
                           style: const TextStyle(
                             fontSize: 9.5,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.solarGold,
                           ),
                         ),
                       ),
@@ -341,7 +375,7 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 11.5,
-                      color: Color(0xFF64748B),
+                      color: AppColors.textSlateLight,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -352,18 +386,18 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                           'CI: ${u.ci}',
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textSlateMuted,
                           ),
                         ),
                       if (u.codigo != null && u.codigo!.isNotEmpty) ...[
                         const Text(' • ',
                             style: TextStyle(
-                                fontSize: 11, color: Color(0xFFCBD5E1))),
+                                fontSize: 11, color: AppColors.borderSubtle)),
                         Text(
                           'RU: ${u.codigo}',
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Color(0xFF94A3B8),
+                            color: AppColors.textSlateMuted,
                           ),
                         ),
                       ],
@@ -381,7 +415,9 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                 scale: 0.75,
                 child: Switch(
                   value: isActivo,
-                  activeTrackColor: const Color(0xFF16A34A),
+                  activeTrackColor: AppColors.successEmerald,
+                  inactiveTrackColor: AppColors.carbonSurfaceMuted,
+                  activeColor: Colors.white,
                   onChanged: (_) => _handleToggleStatus(u),
                 ),
               ),
@@ -391,61 +427,71 @@ class _UsersListScreenState extends ConsumerState<UsersListScreen> {
                   fontSize: 8.5,
                   fontWeight: FontWeight.w900,
                   color: isActivo
-                      ? const Color(0xFF16A34A)
-                      : const Color(0xFFDC2626),
+                      ? AppColors.successEmerald
+                      : AppColors.accentVibrant,
                 ),
               ),
             ],
           ),
 
           // Menú de opciones
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, size: 20, color: Colors.grey),
-            onSelected: (val) {
-              if (val == 'detail') {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => UserDetailScreen(userId: u.id),
+          Theme(
+            data: Theme.of(context).copyWith(
+              cardColor: AppColors.carbonSurface,
+            ),
+            child: PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, size: 20, color: AppColors.textSlateMuted),
+              color: AppColors.carbonSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+                side: const BorderSide(color: AppColors.borderSubtle),
+              ),
+              onSelected: (val) {
+                if (val == 'detail') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => UserDetailScreen(userId: u.id),
+                    ),
+                  );
+                } else if (val == 'edit') {
+                  UserFormModal.show(context, userToEdit: u);
+                } else if (val == 'delete') {
+                  _handleDelete(u);
+                }
+              },
+              itemBuilder: (ctx) => [
+                const PopupMenuItem(
+                  value: 'detail',
+                  child: Row(
+                    children: [
+                      Icon(Icons.badge_outlined, size: 18, color: AppColors.textSlateLight),
+                      SizedBox(width: 8),
+                      Text('Ver Expediente', style: TextStyle(color: AppColors.textWhite, fontSize: 12.5)),
+                    ],
                   ),
-                );
-              } else if (val == 'edit') {
-                UserFormModal.show(context, userToEdit: u);
-              } else if (val == 'delete') {
-                _handleDelete(u);
-              }
-            },
-            itemBuilder: (ctx) => [
-              const PopupMenuItem(
-                value: 'detail',
-                child: Row(
-                  children: [
-                    Icon(Icons.badge_outlined, size: 18),
-                    SizedBox(width: 8),
-                    Text('Ver Expediente'),
-                  ],
                 ),
-              ),
-              const PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    Icon(Icons.edit_outlined, size: 18),
-                    SizedBox(width: 8),
-                    Text('Editar Datos'),
-                  ],
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit_outlined, size: 18, color: AppColors.solarGold),
+                      SizedBox(width: 8),
+                      Text('Editar Datos', style: TextStyle(color: AppColors.textWhite, fontSize: 12.5)),
+                    ],
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete_outline, size: 18, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text('Eliminar', style: TextStyle(color: Colors.red)),
-                  ],
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_outline, size: 18, color: AppColors.accentVibrant),
+                      SizedBox(width: 8),
+                      Text('Eliminar', style: TextStyle(color: AppColors.accentVibrant, fontSize: 12.5)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

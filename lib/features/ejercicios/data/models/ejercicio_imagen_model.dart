@@ -17,22 +17,9 @@ class EjercicioImagenModel {
     this.orden = 0,
   });
 
-  /// Resuelve la URL de la imagen reemplazando localhost/127.0.0.1 por la IP real
-  /// configurada en el archivo .env para que cargue perfectamente en celulares físicos.
-  String get resolvedUrl {
-    if (pathImagen.isEmpty) return '';
-
-    try {
-      final baseUri = Uri.parse(AppEnv.apiBaseUrl);
-      final imgUri = Uri.parse(pathImagen);
-
-      if (imgUri.host == 'localhost' || imgUri.host == '127.0.0.1') {
-        return imgUri.replace(host: baseUri.host, port: baseUri.port).toString();
-      }
-    } catch (_) {}
-
-    return pathImagen;
-  }
+  /// Resuelve la URL pública completa de la imagen adaptándose automáticamente
+  /// a entornos locales (con IP) o a producción HTTPS (gym.bratox.me).
+  String get resolvedUrl => AppEnv.resolveStorageUrl(pathImagen);
 
   factory EjercicioImagenModel.fromJson(Map<String, dynamic> json) {
     return EjercicioImagenModel(

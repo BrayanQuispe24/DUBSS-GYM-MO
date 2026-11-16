@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/crimson_button.dart';
 import '../../../auth/presentation/providers/auth_notifier.dart';
 import '../../../documentos/data/models/documento_model.dart';
 import '../../../documentos/presentation/screens/documento_preview_screen.dart';
@@ -27,10 +29,12 @@ class FormularioDubssCreateModal extends ConsumerStatefulWidget {
 class _FormularioDubssCreateModalState
     extends ConsumerState<FormularioDubssCreateModal> {
   final _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
 
   late final String _numeroFormulario;
   bool _isLoadingData = true;
   bool _isSubmitting = false;
+  String? _errorMessage;
 
   List<Map<String, dynamic>> _disciplinas = [];
   List<Map<String, dynamic>> _horariosPivot = [];
@@ -101,6 +105,7 @@ class _FormularioDubssCreateModalState
     _detCirugiaController.dispose();
     _detFracturasController.dispose();
     _detSintomasController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -190,23 +195,42 @@ class _FormularioDubssCreateModalState
     }
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   Future<void> _submitFormulario() async {
-    if (!_formKey.currentState!.validate()) return;
+    setState(() => _errorMessage = null);
+
+    if (!_formKey.currentState!.validate()) {
+      setState(() {
+        _errorMessage = 'Por favor complete todos los campos obligatorios del formulario.';
+      });
+      _scrollToBottom();
+      return;
+    }
 
     if (_selectedDisciplinaId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor seleccione una disciplina.')),
-      );
+      setState(() {
+        _errorMessage = 'Por favor seleccione una disciplina deportiva.';
+      });
+      _scrollToBottom();
       return;
     }
 
     if (!_aceptaDeclaracion) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Debe aceptar el Reglamento Interno y la Declaración Jurada.'),
-          backgroundColor: Color(0xFFDC2626),
-        ),
-      );
+      setState(() {
+        _errorMessage = 'Debe aceptar el Reglamento Interno y la Declaración Jurada para enviar la solicitud.';
+      });
+      _scrollToBottom();
       return;
     }
 
@@ -282,14 +306,12 @@ class _FormularioDubssCreateModalState
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString().replaceAll('Exception: ', '')),
-            backgroundColor: const Color(0xFFDC2626),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        final cleanMsg = e.toString().replaceAll('Exception: ', '').replaceAll('AppException: ', '');
+        setState(() {
+          _isSubmitting = false;
+          _errorMessage = cleanMsg;
+        });
+        _scrollToBottom();
       }
     }
   }
@@ -305,8 +327,13 @@ class _FormularioDubssCreateModalState
       ),
       margin: EdgeInsets.only(bottom: bottomInset),
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -318,7 +345,7 @@ class _FormularioDubssCreateModalState
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFCBD5E1),
+                color: AppColors.borderSubtle,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -331,12 +358,13 @@ class _FormularioDubssCreateModalState
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFEF3C7),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                     ),
                     child: const Icon(
                       Icons.description_outlined,
-                      color: Color(0xFFD97706),
+                      color: AppColors.accentVibrant,
                       size: 22,
                     ),
                   ),
@@ -350,7 +378,7 @@ class _FormularioDubssCreateModalState
                           style: TextStyle(
                             fontSize: 16.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF003B70),
+                            color: AppColors.textWhite,
                           ),
                         ),
                         Text(
@@ -358,30 +386,67 @@ class _FormularioDubssCreateModalState
                           style: const TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF0077D4),
+                            color: AppColors.solarGold,
                           ),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Color(0xFF64748B)),
+                    icon: const Icon(Icons.close_rounded, color: AppColors.textSlateMuted),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
               ),
             ),
-            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+            const Divider(height: 1, color: AppColors.borderSubtle),
+
+            // Banner fijo superior de error (garantiza visibilidad inmediata ante cualquier fallo)
+            if (_errorMessage != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryCrimson,
+                  border: Border(
+                    bottom: BorderSide(color: AppColors.accentVibrant, width: 1.5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => setState(() => _errorMessage = null),
+                      child: const Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Icon(Icons.close, color: Colors.white, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
             // Form Body
             Expanded(
               child: _isLoadingData
                   ? const Center(
-                      child: CircularProgressIndicator(color: Color(0xFF003B70)),
+                      child: CircularProgressIndicator(color: AppColors.primaryCrimson),
                     )
                   : Form(
                       key: _formKey,
                       child: ListView(
+                        controller: _scrollController,
                         padding: const EdgeInsets.all(18),
                         children: [
                           // ──────────────────────────────────────────
@@ -390,12 +455,13 @@ class _FormularioDubssCreateModalState
                           _buildSectionCard(
                             title: '1. Datos de Solicitud y Membresía',
                             icon: Icons.assignment_turned_in_outlined,
-                            iconColor: const Color(0xFF003B70),
+                            iconColor: AppColors.accentVibrant,
                             children: [
                               // Socio
                               TextFormField(
                                 initialValue: user?.name ?? '${user?.nombre ?? ''} ${user?.apellido ?? ''}'.trim(),
                                 readOnly: true,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Socio / Universitario', Icons.person_outline),
                               ),
                               const SizedBox(height: 12),
@@ -404,6 +470,8 @@ class _FormularioDubssCreateModalState
                               DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 initialValue: _selectedDisciplinaId,
+                                dropdownColor: AppColors.carbonSurfaceMuted,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Disciplina Deportiva', Icons.fitness_center),
                                 items: _disciplinas.map((d) {
                                   return DropdownMenuItem<int>(
@@ -411,7 +479,7 @@ class _FormularioDubssCreateModalState
                                     child: Text(
                                       d['nombre']?.toString() ?? 'Sin nombre',
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 13),
+                                      style: const TextStyle(fontSize: 13, color: AppColors.textWhite),
                                     ),
                                   );
                                 }).toList(),
@@ -430,6 +498,8 @@ class _FormularioDubssCreateModalState
                               DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 initialValue: _selectedPlanId,
+                                dropdownColor: AppColors.carbonSurfaceMuted,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Plan de Membresía / Tarifa', Icons.card_membership),
                                 items: _planes.map((p) {
                                   final tarifa = p['tarifa'];
@@ -439,7 +509,7 @@ class _FormularioDubssCreateModalState
                                     child: Text(
                                       '${p['nombre'] ?? 'Plan'}$precio',
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 13),
+                                      style: const TextStyle(fontSize: 13, color: AppColors.textWhite),
                                     ),
                                   );
                                 }).toList(),
@@ -451,13 +521,15 @@ class _FormularioDubssCreateModalState
                               DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 initialValue: _selectedDisciplinaHorarioId,
+                                dropdownColor: AppColors.carbonSurfaceMuted,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 12.5),
                                 decoration: _inputDecoration('Horario y Turno de Asistencia', Icons.schedule),
                                 hint: Text(
                                   _availableHorarios.isEmpty
                                       ? 'Horario estándar / Por confirmar'
                                       : 'Seleccione turno con cupo',
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 12.5),
+                                  style: const TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
                                 ),
                                 items: _availableHorarios.map((dh) {
                                   final hor = dh['horario'] ?? {};
@@ -472,7 +544,7 @@ class _FormularioDubssCreateModalState
                                     child: Text(
                                       '$label • Cupos: $cuposDisp/$cupoMax',
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 12),
+                                      style: const TextStyle(fontSize: 12, color: AppColors.textWhite),
                                     ),
                                   );
                                 }).toList(),
@@ -499,16 +571,18 @@ class _FormularioDubssCreateModalState
                           _buildSectionCard(
                             title: '2. Datos Personales & Físicos',
                             icon: Icons.person_pin_outlined,
-                            iconColor: const Color(0xFF0284C7),
+                            iconColor: AppColors.solarAmber,
                             children: [
                               TextFormField(
                                 controller: _facultadController,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Facultad / Carrera / Unidad', Icons.school_outlined),
                               ),
                               const SizedBox(height: 12),
 
                               TextFormField(
                                 controller: _domicilioController,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Domicilio Actual', Icons.home_outlined),
                               ),
                               const SizedBox(height: 12),
@@ -516,6 +590,7 @@ class _FormularioDubssCreateModalState
                               TextFormField(
                                 controller: _celularController,
                                 keyboardType: TextInputType.phone,
+                                style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                 decoration: _inputDecoration('Celular / Teléfono', Icons.phone_android),
                                 validator: (val) => val == null || val.trim().isEmpty ? 'Ingrese un celular' : null,
                               ),
@@ -524,16 +599,17 @@ class _FormularioDubssCreateModalState
                               // Fecha de Nacimiento
                               InkWell(
                                 onTap: _selectFechaNacimiento,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(4),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: const Color(0xFFCBD5E1)),
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.carbonSurfaceMuted,
+                                    border: Border.all(color: AppColors.borderSubtle),
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.cake_outlined, color: Color(0xFF003B70), size: 20),
+                                      const Icon(Icons.cake_outlined, color: AppColors.accentVibrant, size: 20),
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
@@ -542,7 +618,7 @@ class _FormularioDubssCreateModalState
                                               : 'Seleccionar Fecha de Nacimiento',
                                           style: TextStyle(
                                             fontSize: 13.5,
-                                            color: _fechaNacimiento != null ? const Color(0xFF0F172A) : const Color(0xFF94A3B8),
+                                            color: _fechaNacimiento != null ? AppColors.textWhite : AppColors.textSlateMuted,
                                           ),
                                         ),
                                       ),
@@ -560,6 +636,8 @@ class _FormularioDubssCreateModalState
                                     child: DropdownButtonFormField<String>(
                                       isExpanded: true,
                                       initialValue: _sexo,
+                                      dropdownColor: AppColors.carbonSurfaceMuted,
+                                      style: const TextStyle(color: AppColors.textWhite, fontSize: 12.5),
                                       decoration: _inputDecoration('Sexo', Icons.transgender),
                                       items: const [
                                         DropdownMenuItem(
@@ -567,7 +645,7 @@ class _FormularioDubssCreateModalState
                                           child: Text(
                                             'Masculino (M)',
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12.5),
+                                            style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                                           ),
                                         ),
                                         DropdownMenuItem(
@@ -575,7 +653,7 @@ class _FormularioDubssCreateModalState
                                           child: Text(
                                             'Femenino (F)',
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12.5),
+                                            style: TextStyle(fontSize: 12.5, color: AppColors.textWhite),
                                           ),
                                         ),
                                       ],
@@ -588,39 +666,41 @@ class _FormularioDubssCreateModalState
                                     child: DropdownButtonFormField<String>(
                                       isExpanded: true,
                                       initialValue: _grupoSanguineo,
+                                      dropdownColor: AppColors.carbonSurfaceMuted,
+                                      style: const TextStyle(color: AppColors.textWhite, fontSize: 12.5),
                                       decoration: _inputDecoration('G. Sang.', Icons.bloodtype_outlined),
                                       items: const [
                                         DropdownMenuItem(
                                           value: 'O+',
-                                          child: Text('O+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('O+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'O-',
-                                          child: Text('O-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('O-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'A+',
-                                          child: Text('A+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('A+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'A-',
-                                          child: Text('A-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('A-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'B+',
-                                          child: Text('B+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('B+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'B-',
-                                          child: Text('B-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('B-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'AB+',
-                                          child: Text('AB+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('AB+', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                         DropdownMenuItem(
                                           value: 'AB-',
-                                          child: Text('AB-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5)),
+                                          child: Text('AB-', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.5, color: AppColors.textWhite)),
                                         ),
                                       ],
                                       onChanged: (val) => setState(() => _grupoSanguineo = val ?? 'O+'),
@@ -637,6 +717,7 @@ class _FormularioDubssCreateModalState
                                     child: TextFormField(
                                       controller: _pesoController,
                                       keyboardType: TextInputType.number,
+                                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                       onChanged: (_) => setState(() {}),
                                       decoration: _inputDecoration('Peso (kg)', Icons.monitor_weight_outlined),
                                     ),
@@ -646,6 +727,7 @@ class _FormularioDubssCreateModalState
                                     child: TextFormField(
                                       controller: _alturaController,
                                       keyboardType: TextInputType.number,
+                                      style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                       onChanged: (_) => setState(() {}),
                                       decoration: _inputDecoration('Altura (cm)', Icons.height),
                                     ),
@@ -655,14 +737,21 @@ class _FormularioDubssCreateModalState
                               if (_imcCalculado != '-') ...[
                                 const SizedBox(height: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF1F5F9),
-                                    borderRadius: BorderRadius.circular(6),
+                                    color: AppColors.carbonSurface,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: AppColors.borderSubtle),
                                   ),
-                                  child: Text(
-                                    'Índice de Masa Corporal (IMC): $_imcCalculado kg/m²',
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF003B70)),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.analytics_outlined, color: AppColors.solarGold, size: 16),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Índice de Masa Corporal (IMC): $_imcCalculado kg/m²',
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.solarGold),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -676,11 +765,11 @@ class _FormularioDubssCreateModalState
                           _buildSectionCard(
                             title: '3. Cuestionario Médico Oficial',
                             icon: Icons.health_and_safety_outlined,
-                            iconColor: const Color(0xFFDC2626),
+                            iconColor: AppColors.primaryCrimson,
                             children: [
                               const Text(
                                 'Por favor responda con sinceridad las siguientes preguntas sobre su salud:',
-                                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Color(0xFF64748B)),
+                                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: AppColors.textSlateMuted),
                               ),
                               const SizedBox(height: 10),
 
@@ -722,6 +811,7 @@ class _FormularioDubssCreateModalState
                                 const SizedBox(height: 8),
                                 TextFormField(
                                   controller: _detCondicionesController,
+                                  style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
                                   decoration: _inputDecoration('Detalle de condición médica marcada', Icons.notes),
                                 ),
                               ],
@@ -760,7 +850,7 @@ class _FormularioDubssCreateModalState
                           _buildSectionCard(
                             title: '3.5. Documentación Digital Adjunta',
                             icon: Icons.folder_shared_outlined,
-                            iconColor: const Color(0xFFD97706),
+                            iconColor: AppColors.solarGold,
                             children: [
                               if (_userDocumentos.isNotEmpty)
                                 Column(
@@ -769,7 +859,7 @@ class _FormularioDubssCreateModalState
                                     return Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(4),
                                         onTap: () {
                                           try {
                                             final docModel = DocumentoModel.fromJson(doc);
@@ -782,20 +872,20 @@ class _FormularioDubssCreateModalState
                                           margin: const EdgeInsets.only(bottom: 6),
                                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFF8FAFC),
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                                            color: AppColors.carbonSurface,
+                                            borderRadius: BorderRadius.circular(4),
+                                            border: Border.all(color: AppColors.borderSubtle),
                                           ),
                                           child: Row(
                                             children: [
-                                              const Icon(Icons.picture_as_pdf_outlined, color: Color(0xFFDC2626), size: 18),
+                                              const Icon(Icons.picture_as_pdf_outlined, color: AppColors.accentVibrant, size: 18),
                                               const SizedBox(width: 8),
                                               Expanded(
-                                                child: Text(tipo, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+                                                child: Text(tipo, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppColors.textWhite)),
                                               ),
-                                              const Icon(Icons.visibility_outlined, size: 16, color: Color(0xFF0284C7)),
+                                              const Icon(Icons.visibility_outlined, size: 16, color: AppColors.textSlateLight),
                                               const SizedBox(width: 6),
-                                              const Icon(Icons.check_circle_rounded, color: Color(0xFF16A34A), size: 16),
+                                              const Icon(Icons.check_circle_rounded, color: AppColors.successEmerald, size: 16),
                                             ],
                                           ),
                                         ),
@@ -807,18 +897,18 @@ class _FormularioDubssCreateModalState
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFEF3C7),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: const Color(0xFFFCD34D)),
+                                    color: AppColors.primaryCrimson.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.3)),
                                   ),
                                   child: const Row(
                                     children: [
-                                      Icon(Icons.info_outline, color: Color(0xFF92400E), size: 18),
+                                      Icon(Icons.info_outline, color: AppColors.solarGold, size: 18),
                                       SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           'No tienes documentos digitales cargados aún. Podrás adjuntarlos en la sección "Documentación Digital" o presentar fotocopias físicas.',
-                                          style: TextStyle(fontSize: 11.5, color: Color(0xFF92400E)),
+                                          style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight),
                                         ),
                                       ),
                                     ],
@@ -834,27 +924,27 @@ class _FormularioDubssCreateModalState
                           _buildSectionCard(
                             title: '4. Reglamento Interno & Declaración Jurada',
                             icon: Icons.gavel_outlined,
-                            iconColor: const Color(0xFF003B70),
+                            iconColor: AppColors.accentVibrant,
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF8FAFC),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                                  color: AppColors.carbonSurface,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.borderSubtle),
                                 ),
                                 child: const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       'Reglas Principales del Gimnasio Universitario:',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF0F172A)),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textWhite),
                                     ),
                                     SizedBox(height: 4),
-                                    Text('• Reserva personal: Asistir en el horario registrado.', style: TextStyle(fontSize: 11.5)),
-                                    Text('• Certificado médico: Plazo de 15 días si declaró condiciones.', style: TextStyle(fontSize: 11.5)),
-                                    Text('• Indumentaria obligatoria: Ropa deportiva, zapatillas limpias y toallita.', style: TextStyle(fontSize: 11.5)),
-                                    Text('• Deslinde legal por omisión o negligencia en el uso de máquinas.', style: TextStyle(fontSize: 11.5)),
+                                    Text('• Reserva personal: Asistir en el horario registrado.', style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight)),
+                                    Text('• Certificado médico: Plazo de 15 días si declaró condiciones.', style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight)),
+                                    Text('• Indumentaria obligatoria: Ropa deportiva, zapatillas limpias y toallita.', style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight)),
+                                    Text('• Deslinde legal por omisión o negligencia en el uso de máquinas.', style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight)),
                                   ],
                                 ),
                               ),
@@ -863,21 +953,21 @@ class _FormularioDubssCreateModalState
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFEF3C7),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: const Color(0xFFFCD34D)),
+                                  color: AppColors.primaryCrimson.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.primaryCrimson.withValues(alpha: 0.35)),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'DECLARACIÓN JURADA DUBSS-FR-03',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF78350F)),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.solarGold),
                                     ),
                                     const SizedBox(height: 4),
                                     const Text(
                                       'Declaro bajo juramento que los datos contenidos en esta ficha son exactos y verdaderos. Deslindo de responsabilidad al Gimnasio Universitario UAGRM por causas de salud preexistentes y me comprometo a cumplir el reglamento disciplinar.',
-                                      style: TextStyle(fontSize: 11.5, color: Color(0xFF78350F), height: 1.3),
+                                      style: TextStyle(fontSize: 11.5, color: AppColors.textSlateLight, height: 1.3),
                                     ),
                                     const SizedBox(height: 8),
                                     CheckboxListTile(
@@ -885,10 +975,11 @@ class _FormularioDubssCreateModalState
                                       dense: true,
                                       title: const Text(
                                         'He leído, acepto el Reglamento Interno y firmo digitalmente la Declaración Jurada (DUBSS-FR-03)',
-                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF78350F)),
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textWhite),
                                       ),
                                       value: _aceptaDeclaracion,
-                                      activeColor: const Color(0xFFD97706),
+                                      activeColor: AppColors.primaryCrimson,
+                                      checkColor: AppColors.textWhite,
                                       onChanged: (val) => setState(() => _aceptaDeclaracion = val ?? false),
                                     ),
                                   ],
@@ -898,6 +989,50 @@ class _FormularioDubssCreateModalState
                           ),
                           const SizedBox(height: 24),
 
+                          // Banner de error junto a los botones de acción
+                          if (_errorMessage != null) ...[
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryCrimson.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.accentVibrant, width: 1.2),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline_rounded,
+                                    color: AppColors.accentVibrant,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: const TextStyle(
+                                        fontSize: 12.5,
+                                        color: AppColors.textWhite,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.35,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  InkWell(
+                                    onTap: () => setState(() => _errorMessage = null),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: AppColors.textSlateMuted,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+
                           // BOTONES DE ACCIÓN
                           Row(
                             children: [
@@ -906,34 +1041,22 @@ class _FormularioDubssCreateModalState
                                   onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
                                   style: OutlinedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(vertical: 14),
-                                    side: const BorderSide(color: Color(0xFFCBD5E1)),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    side: const BorderSide(color: AppColors.borderSubtle),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                   ),
-                                  child: const Text('Cancelar', style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w700)),
+                                  child: const Text('Cancelar', style: TextStyle(color: AppColors.textSlateMuted, fontWeight: FontWeight.w700)),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 flex: 2,
-                                child: ElevatedButton(
+                                child: CrimsonButton(
+                                  label: 'Enviar Solicitud DUBSS-FR-03',
+                                  icon: const Icon(Icons.send_rounded, size: 16, color: Colors.white),
+                                  isLoading: _isSubmitting,
+                                  style: CrimsonButtonStyle.gradient,
+                                  height: 48,
                                   onPressed: _isSubmitting ? null : _submitFormulario,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF003B70),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                  child: _isSubmitting
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                                        )
-                                      : const Text(
-                                          'Enviar Solicitud DUBSS-FR-03',
-                                          style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800),
-                                        ),
                                 ),
                               ),
                             ],
@@ -962,16 +1085,9 @@ class _FormularioDubssCreateModalState
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.carbonSurfaceMuted,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -982,11 +1098,11 @@ class _FormularioDubssCreateModalState
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFF0F172A)),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textWhite),
               ),
             ],
           ),
-          const Divider(height: 18, color: Color(0xFFF1F5F9)),
+          const Divider(height: 18, color: AppColors.borderSubtle),
           ...children,
         ],
       ),
@@ -998,7 +1114,7 @@ class _FormularioDubssCreateModalState
       padding: const EdgeInsets.only(top: 8, bottom: 4),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
+        style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: AppColors.textWhite),
       ),
     );
   }
@@ -1014,9 +1130,9 @@ class _FormularioDubssCreateModalState
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        color: AppColors.carbonSurface,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1026,7 +1142,8 @@ class _FormularioDubssCreateModalState
             children: [
               Checkbox(
                 value: value,
-                activeColor: const Color(0xFF003B70),
+                activeColor: AppColors.primaryCrimson,
+                checkColor: AppColors.textWhite,
                 onChanged: (v) => onChanged(v ?? false),
               ),
               Expanded(
@@ -1034,7 +1151,7 @@ class _FormularioDubssCreateModalState
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     label,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSlateLight),
                   ),
                 ),
               ),
@@ -1045,11 +1162,16 @@ class _FormularioDubssCreateModalState
               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 6),
               child: TextFormField(
                 controller: detailController,
+                style: const TextStyle(color: AppColors.textWhite, fontSize: 12.5),
                 decoration: InputDecoration(
                   hintText: detailHint,
-                  hintStyle: const TextStyle(fontSize: 11.5, color: Color(0xFF94A3B8)),
+                  hintStyle: const TextStyle(fontSize: 11.5, color: AppColors.textSlateMuted),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                  filled: true,
+                  fillColor: AppColors.carbonSurfaceMuted,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: const BorderSide(color: AppColors.borderSubtle)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4), borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5)),
                 ),
               ),
             ),
@@ -1060,33 +1182,38 @@ class _FormularioDubssCreateModalState
 
   Widget _buildConditionChip(String label, bool isChecked, ValueChanged<bool> onChanged) {
     return FilterChip(
-      label: Text(label, style: TextStyle(fontSize: 11, fontWeight: isChecked ? FontWeight.w700 : FontWeight.w500)),
+      label: Text(label, style: TextStyle(fontSize: 11, fontWeight: isChecked ? FontWeight.w700 : FontWeight.w500, color: isChecked ? AppColors.textWhite : AppColors.textSlateLight)),
       selected: isChecked,
       onSelected: onChanged,
-      selectedColor: const Color(0xFFE0F2FE),
-      checkmarkColor: const Color(0xFF0077D4),
-      backgroundColor: const Color(0xFFF1F5F9),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      selectedColor: AppColors.primaryCrimson.withValues(alpha: 0.25),
+      checkmarkColor: AppColors.accentVibrant,
+      backgroundColor: AppColors.carbonSurface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: BorderSide(color: isChecked ? AppColors.accentVibrant : AppColors.borderSubtle),
+      ),
     );
   }
 
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(fontSize: 12.5, color: Color(0xFF64748B)),
-      prefixIcon: Icon(icon, color: const Color(0xFF003B70), size: 18),
+      labelStyle: const TextStyle(fontSize: 12.5, color: AppColors.textSlateMuted),
+      prefixIcon: Icon(icon, color: AppColors.accentVibrant, size: 18),
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      filled: true,
+      fillColor: AppColors.carbonSurface,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.borderSubtle),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFF003B70), width: 1.5),
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.accentVibrant, width: 1.5),
       ),
     );
   }

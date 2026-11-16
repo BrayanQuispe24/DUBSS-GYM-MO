@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/theme/app_colors.dart';
 import '../providers/documentos_provider.dart';
 import '../widgets/documento_card.dart';
 import '../widgets/documento_upload_sheet.dart';
@@ -35,7 +37,7 @@ class _ClientDocumentosScreenState
               Text('Documento subido exitosamente'),
             ],
           ),
-          backgroundColor: Color(0xFF16A34A),
+          backgroundColor: AppColors.successEmerald,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -50,7 +52,7 @@ class _ClientDocumentosScreenState
     final searchQuery = ref.watch(documentosSearchProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.obsidianBase,
       appBar: AppBar(
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,30 +62,38 @@ class _ClientDocumentosScreenState
               style: TextStyle(
                 fontSize: 16.5,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0F172A),
+                color: AppColors.textWhite,
               ),
             ),
             Text(
               'Repositorio institucional de respaldos',
               style: TextStyle(
                 fontSize: 11,
-                color: Color(0xFF64748B),
+                color: AppColors.textSlateMuted,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: AppColors.obsidianBase,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.borderSubtle, width: 1.0),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF0F172A)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textWhite),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Color(0xFF003B70)),
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color: AppColors.accentVibrant,
+            ),
             tooltip: 'Refrescar',
-            onPressed: () => ref.read(documentosListProvider.notifier).refresh(),
+            onPressed: () =>
+                ref.read(documentosListProvider.notifier).refresh(),
           ),
         ],
       ),
@@ -91,40 +101,60 @@ class _ClientDocumentosScreenState
         children: [
           // Barra de Búsqueda
           Container(
-            color: Colors.white,
+            color: AppColors.obsidianBase,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: TextField(
               controller: _searchController,
+              style: const TextStyle(color: AppColors.textWhite, fontSize: 13),
               onChanged: (val) {
                 ref.read(documentosSearchProvider.notifier).setSearch(val);
               },
               decoration: InputDecoration(
                 hintText: 'Buscar por título o categoría...',
-                hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+                hintStyle: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSlateMuted,
+                ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textSlateMuted,
                   size: 20,
                 ),
                 suffixIcon: searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const Icon(
                           Icons.clear_rounded,
-                          color: Color(0xFF94A3B8),
+                          color: AppColors.textSlateMuted,
                           size: 18,
                         ),
                         onPressed: () {
                           _searchController.clear();
-                          ref.read(documentosSearchProvider.notifier).setSearch('');
+                          ref
+                              .read(documentosSearchProvider.notifier)
+                              .setSearch('');
                         },
                       )
                     : null,
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 14,
+                ),
                 filled: true,
-                fillColor: const Color(0xFFF1F5F9),
+                fillColor: AppColors.carbonSurfaceMuted,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: const BorderSide(color: AppColors.borderSubtle),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: const BorderSide(color: AppColors.borderSubtle),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: const BorderSide(
+                    color: AppColors.accentVibrant,
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -132,7 +162,7 @@ class _ClientDocumentosScreenState
 
           // Chips de categorías / tipos de documentos
           Container(
-            color: Colors.white,
+            color: AppColors.obsidianBase,
             padding: const EdgeInsets.only(bottom: 10),
             child: tiposAsync.when(
               data: (tipos) => SingleChildScrollView(
@@ -169,13 +199,15 @@ class _ClientDocumentosScreenState
             ),
           ),
 
-          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          const Divider(height: 1, color: AppColors.borderSubtle),
 
           // Lista de documentos
           Expanded(
             child: filteredAsync.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(color: Color(0xFF003B70)),
+                child: CircularProgressIndicator(
+                  color: AppColors.accentVibrant,
+                ),
               ),
               error: (err, _) => Center(
                 child: Padding(
@@ -185,35 +217,42 @@ class _ClientDocumentosScreenState
                     children: [
                       const Icon(
                         Icons.cloud_off_rounded,
-                        color: Color(0xFFDC2626),
+                        color: AppColors.accentVibrant,
                         size: 48,
                       ),
                       const SizedBox(height: 12),
-                      Text(
+                      const Text(
                         'Error al cargar documentos',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF0F172A),
+                          color: AppColors.textWhite,
                         ),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        err.toString().replaceAll('Exception: ', '').replaceAll('AppException: ', ''),
+                        err
+                            .toString()
+                            .replaceAll('Exception: ', '')
+                            .replaceAll('AppException: ', ''),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 12.5,
-                          color: Color(0xFF64748B),
+                          color: AppColors.textSlateMuted,
                         ),
                       ),
                       const SizedBox(height: 18),
                       ElevatedButton.icon(
-                        onPressed: () => ref.read(documentosListProvider.notifier).refresh(),
+                        onPressed: () =>
+                            ref.read(documentosListProvider.notifier).refresh(),
                         icon: const Icon(Icons.refresh_rounded, size: 16),
                         label: const Text('Reintentar'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF003B70),
+                          backgroundColor: AppColors.primaryCrimson,
                           foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
                     ],
@@ -222,21 +261,26 @@ class _ClientDocumentosScreenState
               ),
               data: (documentos) {
                 if (documentos.isEmpty) {
-                  final isFiltered = searchQuery.isNotEmpty || selectedTipoId != null;
+                  final isFiltered =
+                      searchQuery.isNotEmpty || selectedTipoId != null;
                   return DocumentosEmptyView(
                     isFiltered: isFiltered,
                     onClearFilter: () {
                       _searchController.clear();
                       ref.read(documentosSearchProvider.notifier).setSearch('');
-                      ref.read(documentosTipoFiltroProvider.notifier).setTipo(null);
+                      ref
+                          .read(documentosTipoFiltroProvider.notifier)
+                          .setTipo(null);
                     },
                     onUploadPressed: _openUploadSheet,
                   );
                 }
 
                 return RefreshIndicator(
-                  color: const Color(0xFF003B70),
-                  onRefresh: () => ref.read(documentosListProvider.notifier).refresh(),
+                  color: AppColors.accentVibrant,
+                  backgroundColor: AppColors.carbonSurface,
+                  onRefresh: () =>
+                      ref.read(documentosListProvider.notifier).refresh(),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: documentos.length,
@@ -253,7 +297,7 @@ class _ClientDocumentosScreenState
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Documento eliminado'),
-                                  backgroundColor: Color(0xFF475569),
+                                  backgroundColor: AppColors.carbonSurfaceMuted,
                                   behavior: SnackBarBehavior.floating,
                                 ),
                               );
@@ -263,7 +307,7 @@ class _ClientDocumentosScreenState
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Error al eliminar: $e'),
-                                  backgroundColor: const Color(0xFFDC2626),
+                                  backgroundColor: AppColors.accentVibrant,
                                   behavior: SnackBarBehavior.floating,
                                 ),
                               );
@@ -281,9 +325,13 @@ class _ClientDocumentosScreenState
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openUploadSheet,
-        backgroundColor: const Color(0xFF003B70),
+        backgroundColor: AppColors.primaryCrimson,
         foregroundColor: Colors.white,
-        elevation: 3,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: AppColors.accentVibrant, width: 1.0),
+        ),
         icon: const Icon(Icons.cloud_upload_outlined, size: 20),
         label: const Text(
           'Subir PDF',
@@ -302,14 +350,18 @@ class _ClientDocumentosScreenState
       padding: const EdgeInsets.only(right: 8),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(4),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF003B70) : const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(20),
+            color: isSelected
+                ? AppColors.primaryCrimson
+                : AppColors.carbonSurface,
+            borderRadius: BorderRadius.circular(4),
             border: Border.all(
-              color: isSelected ? const Color(0xFF003B70) : const Color(0xFFE2E8F0),
+              color: isSelected
+                  ? AppColors.accentVibrant
+                  : AppColors.borderSubtle,
             ),
           ),
           child: Text(
@@ -317,7 +369,7 @@ class _ClientDocumentosScreenState
             style: TextStyle(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              color: isSelected ? Colors.white : const Color(0xFF475569),
+              color: isSelected ? Colors.white : AppColors.textSlateLight,
             ),
           ),
         ),

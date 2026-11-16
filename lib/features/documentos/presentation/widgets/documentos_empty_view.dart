@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class DocumentosEmptyView extends StatelessWidget {
   final bool isFiltered;
@@ -21,19 +22,19 @@ class DocumentosEmptyView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 76,
+              height: 76,
               decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
+                color: AppColors.carbonSurface,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.borderSubtle, width: 1.0),
               ),
               child: Icon(
                 isFiltered
                     ? Icons.search_off_rounded
                     : Icons.folder_open_outlined,
-                size: 38,
-                color: const Color(0xFF64748B),
+                size: 36,
+                color: AppColors.accentVibrant,
               ),
             ),
             const SizedBox(height: 20),
@@ -45,7 +46,7 @@ class DocumentosEmptyView extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0F172A),
+                color: AppColors.textWhite,
               ),
             ),
             const SizedBox(height: 8),
@@ -56,7 +57,7 @@ class DocumentosEmptyView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,
-                color: Color(0xFF64748B),
+                color: AppColors.textSlateMuted,
                 height: 1.4,
               ),
             ),
@@ -67,11 +68,12 @@ class DocumentosEmptyView extends StatelessWidget {
                 icon: const Icon(Icons.clear_rounded, size: 16),
                 label: const Text('Limpiar Filtros'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF003B70),
-                  side: const BorderSide(color: Color(0xFFCBD5E1)),
+                  foregroundColor: AppColors.accentVibrant,
+                  side: const BorderSide(color: AppColors.accentVibrant),
+                  backgroundColor: AppColors.carbonSurface,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
               )
@@ -81,12 +83,11 @@ class DocumentosEmptyView extends StatelessWidget {
                 icon: const Icon(Icons.cloud_upload_outlined, size: 18),
                 label: const Text('Subir Primer Documento'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF003B70),
+                  backgroundColor: AppColors.primaryCrimson,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
-                  elevation: 2,
+                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
               ),

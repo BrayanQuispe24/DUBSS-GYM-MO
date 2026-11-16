@@ -28,6 +28,11 @@ class UserModel {
   });
 
   String get nombreCompleto => name;
+  bool get canScanQr => rol == 'recepcionista' || rol == 'administrador' || rol == 'instructor';
+  bool get isStaff => rol == 'recepcionista' || rol == 'administrador' || rol == 'instructor';
+  bool get isInstructor => rol == 'instructor';
+  bool get isRecepcionista => rol == 'recepcionista';
+  bool get isAdmin => rol == 'administrador';
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final rawName = json['name'] as String? ?? '';
