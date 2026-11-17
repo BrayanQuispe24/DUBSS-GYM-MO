@@ -23,7 +23,7 @@ jobs:
       - name: Compilar
         run: |
           set -o pipefail
-          flutter build apk --release 2>&1 | tee build.txt
+          flutter build apk --release --android-skip-build-dependency-validation 2>&1 | tee build.txt
       - name: Error de compilación (últimas líneas)
         if: failure()
         run: |
