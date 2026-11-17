@@ -58,6 +58,45 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Script de medición
+        run: |
+          cat > medir.sh <<'SH'
+          #!/bin/bash
+          API=$1
+          PKG=com.example.dubss_app
+          adb install -r app-release.apk > instalacion.txt 2>&1
+          echo "::notice title=API $API instalación::$(tail -1 instalacion.txt)"
+          adb logcat -c
+          adb shell dumpsys batterystats --reset > /dev/null
+          adb shell am start -W -n $PKG/.MainActivity > arranque.txt 2>&1
+          sleep 25
+          adb shell input swipe 500 1500 500 500 300; sleep 2
+          adb shell input swipe 500 1500 500 500 300; sleep 5
+          adb shell dumpsys meminfo $PKG > meminfo.txt
+          adb shell dumpsys gfxinfo $PKG > gfxinfo.txt
+          adb shell dumpsys batterystats $PKG > bateria.txt
+          python3 - "$API" <<'PY'
+          import re, sys
+          api = sys.argv[1]
+          def n(t, v): print(f"::notice title=API {api} {t}::{v}")
+          a = open("arranque.txt").read(); m = re.search(r"TotalTime: (\d+)", a)
+          n("arranque", m.group(1) + " ms" if m else "sin dato: " + a.strip().replace("
+", " | ")[:200])
+          t = open("meminfo.txt").read(); m = re.search(r"TOTAL(?: PSS)?:?\s+(\d+)", t)
+          n("memoria PSS", f"{int(m.group(1))/1024:.1f} MB" if m else "sin dato")
+          g = open("gfxinfo.txt").read(); a = re.search(r"Total frames rendered: (\d+)", g); b = re.search(r"Janky frames: (\d+) \(([\d.]+)%\)", g)
+          n("fotogramas", f"{a.group(1)} renderizados, {b.group(1)} con retraso ({b.group(2)} %)" if a and b else "sin dato")
+          bt = open("bateria.txt").read(); m = re.search(r"Uid \S+:\s*([\d.]+)", bt[bt.find("Estimated power use"):]) if "Estimated power use" in bt else None
+          n("batería", m.group(1) + " mAh estimados" if m else "sin dato")
+          PY
+          if adb shell pidof $PKG > /dev/null; then
+            echo "::notice title=API $API estado::la app sigue en ejecución (sin cierres)"
+          else
+            echo "::error title=API $API estado::la app se cerró%0A$(adb logcat -d | grep -E 'FATAL|AndroidRuntime|flutter' | tail -15 | sed 's/%/%25/g' | tr '
+' '~' | sed 's/~/%0A/g')"
+          fi
+          SH
+          chmod +x medir.sh
       - name: Medir en el emulador
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -66,18 +105,4 @@ jobs:
           target: ${{ matrix.api == 34 && 'google_apis' || 'default' }}
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -memory 3072
-          script: |
-            adb install -r app-release.apk
-            PKG=com.example.dubss_app
-            adb shell dumpsys batterystats --reset > /dev/null
-            adb shell am start -W -n $PKG/.MainActivity | tee arranque.txt
-            sleep 25
-            adb shell input swipe 500 1500 500 500 300; sleep 2; adb shell input swipe 500 1500 500 500 300; sleep 5
-            adb shell dumpsys meminfo $PKG > meminfo.txt
-            adb shell dumpsys gfxinfo $PKG > gfxinfo.txt
-            adb shell dumpsys batterystats $PKG > bateria.txt
-            python3 -c "import re,sys;a=open('arranque.txt').read();m=re.search(r'TotalTime: (\d+)',a);print('::notice title=API ${{ matrix.api }} arranque::'+(m.group(1)+' ms' if m else 'sin dato'))"
-            python3 -c "import re;t=open('meminfo.txt').read();m=re.search(r'TOTAL(?: PSS)?:?\s+(\d+)',t);print('::notice title=API ${{ matrix.api }} memoria PSS::'+(f'{int(m.group(1))/1024:.1f} MB' if m else 'sin dato'))"
-            python3 -c "import re;t=open('gfxinfo.txt').read();a=re.search(r'Total frames rendered: (\d+)',t);b=re.search(r'Janky frames: (\d+) \(([\d.]+)%\)',t);print('::notice title=API ${{ matrix.api }} fotogramas::'+(f'{a.group(1)} renderizados, {b.group(1)} con retraso ({b.group(2)} %)' if a and b else 'sin dato'))"
-            python3 -c "import re;t=open('bateria.txt').read();m=re.search(r'Uid \S+:\s*([\d.]+)',t[t.find('Estimated power use'):]) if 'Estimated power use' in t else None;print('::notice title=API ${{ matrix.api }} bateria::'+(m.group(1)+' mAh estimados' if m else 'sin dato'))"
-            adb shell pidof $PKG && echo "::notice title=API ${{ matrix.api }} estado::la app sigue en ejecución (sin cierres)" || echo "::error title=API ${{ matrix.api }} estado::la app se cerró"
+          script: ./medir.sh ${{ matrix.api }}
