@@ -46,6 +46,8 @@ jobs:
                   tests[e["test"]["id"]] = e["test"]
               elif e.get("type") == "error":
                   errores.setdefault(e["testID"], e.get("error", "")[:400])
+              elif e.get("type") == "print" and "EXCEPTION" in e.get("message", ""):
+                  errores[e["testID"]] = e["message"][:1500]
               elif e.get("type") == "testDone" and not e.get("hidden"):
                   t = tests.get(e["testID"], {})
                   if t.get("name", "").startswith("loading "):
