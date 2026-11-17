@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dubss_app/app.dart';
 
 class _TestHttpOverrides extends HttpOverrides {
@@ -15,6 +16,8 @@ class _TestHttpOverrides extends HttpOverrides {
 void main() {
   setUpAll(() {
     HttpOverrides.global = _TestHttpOverrides();
+    // main.dart carga .env antes de runApp; la prueba usa los valores de ejemplo.
+    dotenv.testLoad(fileInput: File('.env.example').readAsStringSync());
   });
 
   testWidgets('App renders landing smoke test', (WidgetTester tester) async {
