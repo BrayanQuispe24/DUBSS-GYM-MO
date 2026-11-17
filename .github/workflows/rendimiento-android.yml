@@ -1,0 +1,73 @@
+name: Rendimiento Android
+
+# Compila la app, la instala en emuladores de varias versiones de Android y mide:
+# tiempo de arranque, memoria, fotogramas y consumo estimado de batería.
+on:
+  workflow_dispatch:
+  push:
+    branches: [calidad/pruebas-ci]
+    paths: [".github/workflows/rendimiento-android.yml"]
+
+jobs:
+  apk:
+    name: Compilar APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: cp .env.example .env
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - name: Tamaño del APK
+        run: |
+          ls -l build/app/outputs/flutter-apk/app-release.apk
+          python3 -c "import os;b=os.path.getsize('build/app/outputs/flutter-apk/app-release.apk');print(f'::notice title=APK release::{b/1048576:.1f} MB')"
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -1)/aapt2 dump badging build/app/outputs/flutter-apk/app-release.apk | grep -E "sdkVersion|targetSdkVersion|package:" | sed 's/^/::notice title=Manifiesto::/'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  emulador:
+    name: Android API ${{ matrix.api }}
+    needs: apk
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 30, 34]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: apk
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Medir en el emulador
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: ${{ matrix.api == 34 && 'google_apis' || 'default' }}
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -memory 3072
+          script: |
+            adb install -r app-release.apk
+            PKG=com.example.dubss_app
+            adb shell dumpsys batterystats --reset > /dev/null
+            adb shell am start -W -n $PKG/.MainActivity | tee arranque.txt
+            sleep 25
+            adb shell input swipe 500 1500 500 500 300; sleep 2; adb shell input swipe 500 1500 500 500 300; sleep 5
+            adb shell dumpsys meminfo $PKG > meminfo.txt
+            adb shell dumpsys gfxinfo $PKG > gfxinfo.txt
+            adb shell dumpsys batterystats $PKG > bateria.txt
+            python3 -c "import re,sys;a=open('arranque.txt').read();m=re.search(r'TotalTime: (\d+)',a);print('::notice title=API ${{ matrix.api }} arranque::'+(m.group(1)+' ms' if m else 'sin dato'))"
+            python3 -c "import re;t=open('meminfo.txt').read();m=re.search(r'TOTAL(?: PSS)?:?\s+(\d+)',t);print('::notice title=API ${{ matrix.api }} memoria PSS::'+(f'{int(m.group(1))/1024:.1f} MB' if m else 'sin dato'))"
+            python3 -c "import re;t=open('gfxinfo.txt').read();a=re.search(r'Total frames rendered: (\d+)',t);b=re.search(r'Janky frames: (\d+) \(([\d.]+)%\)',t);print('::notice title=API ${{ matrix.api }} fotogramas::'+(f'{a.group(1)} renderizados, {b.group(1)} con retraso ({b.group(2)} %)' if a and b else 'sin dato'))"
+            python3 -c "import re;t=open('bateria.txt').read();m=re.search(r'Uid \S+:\s*([\d.]+)',t[t.find('Estimated power use'):]) if 'Estimated power use' in t else None;print('::notice title=API ${{ matrix.api }} bateria::'+(m.group(1)+' mAh estimados' if m else 'sin dato'))"
+            adb shell pidof $PKG && echo "::notice title=API ${{ matrix.api }} estado::la app sigue en ejecución (sin cierres)" || echo "::error title=API ${{ matrix.api }} estado::la app se cerró"
