@@ -20,8 +20,17 @@ jobs:
         run: flutter analyze --no-fatal-infos --no-fatal-warnings || echo "::warning::flutter analyze reportó observaciones"
       - name: Pruebas
         id: pruebas
-        run: flutter test --reporter expanded --file-reporter json:resultados.json
+        run: |
+          set -o pipefail
+          flutter test --reporter expanded --file-reporter json:resultados.json 2>&1 | tee salida.txt
         continue-on-error: true
+      - name: Salida de flutter test (últimas líneas)
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          lineas = open("salida.txt", encoding="utf-8", errors="replace").read().splitlines()[-40:]
+          print("::notice title=flutter test (final)::" + "%0A".join(l.replace("%", "%25") for l in lineas))
+          EOF
       - name: Resumen de resultados
         if: always()
         run: |
