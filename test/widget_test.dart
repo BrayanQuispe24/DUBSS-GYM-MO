@@ -17,7 +17,7 @@ void main() {
   setUpAll(() {
     HttpOverrides.global = _TestHttpOverrides();
     // main.dart carga .env antes de runApp; la prueba usa los valores de ejemplo.
-    dotenv.testLoad(fileInput: File('.env.example').readAsStringSync());
+    dotenv.loadFromString(envString: File('.env.example').readAsStringSync());
   });
 
   testWidgets('App renders landing smoke test', (WidgetTester tester) async {
