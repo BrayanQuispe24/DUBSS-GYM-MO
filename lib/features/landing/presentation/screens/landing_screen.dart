@@ -342,28 +342,35 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 3.5,
-                        height: 18,
-                        margin: const EdgeInsets.only(right: 10),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryCrimson,
-                          borderRadius: BorderRadius.circular(2),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 3.5,
+                          height: 18,
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryCrimson,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      ),
-                      const Text(
-                        'Disciplinas Deportivas',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.textWhite,
-                          letterSpacing: -0.3,
+                        const Flexible(
+                          child: Text(
+                            'Disciplinas Deportivas',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textWhite,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
