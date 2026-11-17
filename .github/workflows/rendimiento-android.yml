@@ -91,8 +91,7 @@ jobs:
           if adb shell pidof $PKG > /dev/null; then
             echo "::notice title=API $API estado::la app sigue en ejecución (sin cierres)"
           else
-            echo "::error title=API $API estado::la app se cerró%0A$(adb logcat -d | grep -E 'FATAL|AndroidRuntime|flutter' | tail -15 | sed 's/%/%25/g' | tr '
-' '~' | sed 's/~/%0A/g')"
+            echo "::error title=API $API estado::la app se cerró%0A$(adb logcat -d | grep -E 'FATAL|AndroidRuntime|flutter' | tail -15 | sed 's/%/%25/g' | paste -sd '~' | sed 's/~/%0A/g')"
           fi
           SH
           chmod +x medir.sh
