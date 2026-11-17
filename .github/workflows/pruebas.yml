@@ -19,4 +19,37 @@ jobs:
       - name: Análisis estático
         run: flutter analyze --no-fatal-infos --no-fatal-warnings || echo "::warning::flutter analyze reportó observaciones"
       - name: Pruebas
-        run: flutter test --reporter expanded
+        id: pruebas
+        run: flutter test --reporter expanded --file-reporter json:resultados.json
+        continue-on-error: true
+      - name: Resumen de resultados
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import json
+          tests, ok, fallas = {}, 0, []
+          errores = {}
+          for linea in open("resultados.json", encoding="utf-8"):
+              e = json.loads(linea)
+              if e.get("type") == "testStart":
+                  tests[e["test"]["id"]] = e["test"]
+              elif e.get("type") == "error":
+                  errores.setdefault(e["testID"], e.get("error", "")[:400])
+              elif e.get("type") == "testDone" and not e.get("hidden"):
+                  t = tests.get(e["testID"], {})
+                  if t.get("name", "").startswith("loading "):
+                      if e["result"] != "success":
+                          fallas.append((t.get("name"), errores.get(e["testID"], "")))
+                      continue
+                  if e["result"] == "success":
+                      ok += 1
+                  else:
+                      fallas.append((t.get("name"), errores.get(e["testID"], "")))
+          print(f"::notice title=Resultado flutter test::{ok} correctas, {len(fallas)} fallidas")
+          for nombre, err in fallas:
+              err = err.replace("\n", " | ")
+              print(f"::error title=Falla::{nombre} -> {err}")
+          EOF
+      - name: Estado final
+        if: steps.pruebas.outcome == 'failure'
+        run: exit 1
