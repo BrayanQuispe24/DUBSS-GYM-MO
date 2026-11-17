@@ -80,8 +80,7 @@ jobs:
           api = sys.argv[1]
           def n(t, v): print(f"::notice title=API {api} {t}::{v}")
           a = open("arranque.txt").read(); m = re.search(r"TotalTime: (\d+)", a)
-          n("arranque", m.group(1) + " ms" if m else "sin dato: " + a.strip().replace("
-", " | ")[:200])
+          n("arranque", m.group(1) + " ms" if m else "sin dato: " + a.strip().replace(chr(10), " | ")[:200])
           t = open("meminfo.txt").read(); m = re.search(r"TOTAL(?: PSS)?:?\s+(\d+)", t)
           n("memoria PSS", f"{int(m.group(1))/1024:.1f} MB" if m else "sin dato")
           g = open("gfxinfo.txt").read(); a = re.search(r"Total frames rendered: (\d+)", g); b = re.search(r"Janky frames: (\d+) \(([\d.]+)%\)", g)
